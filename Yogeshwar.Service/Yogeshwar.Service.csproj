@@ -1,10 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>preview</LangVersion>
 		<Nullable>annotations</Nullable>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Yogeshwar.DB\Yogeshwar.DB.csproj" />
+	  <ProjectReference Include="..\Yogeshwar.Helper\Yogeshwar.Helper.csproj" />
+	</ItemGroup>
 
 </Project>
