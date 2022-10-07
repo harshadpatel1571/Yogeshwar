@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -8,8 +8,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Yogeshwar.DB\Yogeshwar.DB.csproj" />
-	  <ProjectReference Include="..\Yogeshwar.Helper\Yogeshwar.Helper.csproj" />
+		<ProjectReference Include="..\Yogeshwar.DB\Yogeshwar.DB.csproj" />
+		<ProjectReference Include="..\Yogeshwar.Helper\Yogeshwar.Helper.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Abstraction\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Yogeshwar.Web" />
+	</ItemGroup>
 </Project>

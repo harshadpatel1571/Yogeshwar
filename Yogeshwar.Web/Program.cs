@@ -1,6 +1,25 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+var services = builder.Services;
+
+#region Built-In
+
+services.AddControllersWithViews();
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.LoginPath = new PathString("/Account/Login");
+    options.LogoutPath = new PathString("/Account/Logout");
+});
+
+#endregion
+
+#region Custom
+
+services.AddScoped<Yogeshwar.DB.Models.YogeshwarContext>();
+services.AddScoped<IUserService, UserService>()
+    .AddScoped<Lazy<IUserService>>(x => new Lazy<IUserService>(() => x.GetService<IUserService>()));
+
+#endregion
 
 var app = builder.Build();
 
@@ -11,14 +30,19 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCookiePolicy();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=SignIn}/{id?}");
 
 app.Run();
