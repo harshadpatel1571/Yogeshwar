@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Add/Edit Customer";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Customer</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Customer</a></li>
+                    <li class="breadcrumb-item active">Add/Edit</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Customer</h5>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary btn-label waves-effect waves-light">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                Go to List
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form class="row g-3 needs-validation">
+                    <div class="col-md-6">
+                        <label for="validationCustom01" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="validationCustom01">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom02" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="validationCustom02">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom03" class="form-label">Email Address</label>
+                        <input type="text" class="form-control" id="validationCustom03">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom04" class="form-label">Mobile number</label>
+                        <input type="text" class="form-control" id="validationCustom04">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="validationCustom04" class="form-label">Address</label>
+                        <textarea class="form-control" id="validationCustom04" rows="5"></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom05" class="form-label">City</label>
+                        <input type="text" class="form-control" id="validationCustom05">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom06" class="form-label">Pincode</label>
+                        <input type="text" class="form-control" id="validationCustom06">
+                    </div>
+
+                    <div class="col-12">
+                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

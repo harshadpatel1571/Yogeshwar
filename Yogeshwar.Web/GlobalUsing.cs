@@ -6,3 +6,4 @@ global using Yogeshwar.Service.Dto;
 global using System.Security.Claims;
 global using Microsoft.AspNetCore.Authentication;
 global using Yogeshwar.Service.Abstraction;
+global using Microsoft.AspNetCore.Authorization;
