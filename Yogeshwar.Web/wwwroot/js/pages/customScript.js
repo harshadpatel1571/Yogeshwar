@@ -86,9 +86,21 @@
                 }
             },
             {
+                extend: 'print',
+                text: 'Print',
+                titleAttr: 'Copy to clipboard',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5]
+                }
+            },
+            {
                 extend: 'colvis',
                 text: 'Column Visibility',
             },
+            //'copy', 'excel', 'csv', 'pdf', {
+            //    extend: 'print',
+            //    text: 'Print'
+            //}, 'colvis'
         ]
     }).buttons().container().appendTo('#grid_wrapper .col-md-6:eq(0)');
 });

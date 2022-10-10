@@ -29,7 +29,7 @@ public sealed class AccountController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError();
+            ModelState.AddModelError("","");
             return View(userLoginDto);
         }
 

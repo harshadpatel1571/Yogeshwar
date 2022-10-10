@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Web.Controllers;
+﻿using Yogeshwar.Helper.Extension;
+
+namespace Yogeshwar.Web.Controllers;
 
 [Authorize]
 public sealed class CustomerController : Controller
@@ -67,7 +69,7 @@ public sealed class CustomerController : Controller
 
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError();
+            ModelState.AddModelError("","");
             return View();
         }
 
@@ -87,5 +89,10 @@ public sealed class CustomerController : Controller
         }
 
         return NoContent();
+    }
+
+    public async Task<IActionResult> Detail(CustomerDto customer)
+    {
+        return View();
     }
 }

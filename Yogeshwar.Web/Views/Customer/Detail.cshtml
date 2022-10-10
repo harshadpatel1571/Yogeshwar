@@ -1,0 +1,90 @@
+﻿@model CustomerDto
+@{
+    ViewData["Title"] = "Detail Customer";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Customer</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Customer</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Customer</h5>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary btn-label waves-effect waves-light">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                Go to List
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form class="row g-3" asp-action="AddEdit">
+                    <input class="form-control" asp-for="Id" type="hidden" readonly>
+                    <div class="col-md-6">
+                        <label class="form-label">First Name</label>
+                        <label class="form-control">Harshad</label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Last Name</label>
+                        <label class="form-control">Patel</label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email Address</label>
+                        <label class="form-control">Harshad@gmail.com</label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Mobile number</label>
+                        <label class="form-control">8128382487</label>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Address</label>
+                        <label class="form-control">This is a multiline address enjoyee</label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">City</label>
+                        <label class="form-control">Rajkot</label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Pincode</label>
+                        <label class="form-control">360531</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $('#Pincode').keypress(function (e) {
+            return $(this).val().length < 6;
+        });
+        $('#PhoneNo').keypress(function (e) {
+            return $(this).val().length < 10;
+        });
+    </script>
+}

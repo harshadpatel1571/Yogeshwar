@@ -11626,7 +11626,11 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No data available in table",
+			"sEmptyTable": "<div class='noresult'>" +
+				"<div class='text-center'>" +
+				"<lord-icon src='https://cdn.lordicon.com/wbfqtbhv.json' trigger='loop' colors='primary:#121331,secondary:#08a88a' style='width:75px;height:75px'>" +
+				"</lord-icon><h5 class='mt-2'>Sorry! No Result Found</h5>" +
+				"<p class='text-muted mb-0'>We search in database no record found !!</p></div></div>",
 	
 	
 			/**
