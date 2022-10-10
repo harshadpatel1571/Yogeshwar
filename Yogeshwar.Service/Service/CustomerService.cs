@@ -15,7 +15,7 @@ internal class CustomerService : ICustomerService
         GC.SuppressFinalize(this);
     }
 
-    public async Task<IList<CustomerDto>> GetByFilterAsync(DataTableFilterDto filterDto)
+    async Task<IList<CustomerDto>> ICustomerService.GetByFilterAsync(DataTableFilterDto filterDto)
     {
         var result = _context.Customers.AsNoTracking();
 
@@ -89,7 +89,7 @@ internal class CustomerService : ICustomerService
     private async ValueTask<int> UpdateAsync(CustomerDto customer)
     {
         var dbModel = await _context.Customers
-             .FirstOrDefaultAsync(x => x.Id == customer.Id);
+            .FirstOrDefaultAsync(x => x.Id == customer.Id);
 
         if (dbModel == null)
         {
@@ -115,7 +115,7 @@ internal class CustomerService : ICustomerService
     public async Task<Customer?> DeleteAsync(int id)
     {
         var dbModel = await _context.Customers
-             .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (dbModel == null)
         {
