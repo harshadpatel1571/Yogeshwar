@@ -1,6 +1,4 @@
-﻿using Yogeshwar.Helper.Extension;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 public sealed class AccountController : Controller
 {
@@ -72,7 +70,7 @@ public sealed class AccountController : Controller
     [Authorize]
     public new async ValueTask<IActionResult> SignOut()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
 
         return RedirectToActionPermanent("SignIn");
     }

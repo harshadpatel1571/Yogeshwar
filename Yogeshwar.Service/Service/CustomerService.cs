@@ -34,7 +34,7 @@ internal class CustomerService : ICustomerService
         }
 
         return await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Select(x => DtoSelector(x)).ToListAsync();
+            .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
     }
 
     private static CustomerDto DtoSelector(Customer customer) =>
@@ -61,10 +61,10 @@ internal class CustomerService : ICustomerService
     {
         if (customer.Id < 1)
         {
-            return await CreateAsync(customer);
+            return await CreateAsync(customer).ConfigureAwait(false);
         }
 
-        return await UpdateAsync(customer);
+        return await UpdateAsync(customer).ConfigureAwait(false);
     }
 
     private async ValueTask<int> CreateAsync(CustomerDto customer)
@@ -81,15 +81,15 @@ internal class CustomerService : ICustomerService
             CreatedBy = customer.CreatedBy
         };
 
-        await _context.Customers.AddAsync(dbModel);
+        await _context.Customers.AddAsync(dbModel).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     private async ValueTask<int> UpdateAsync(CustomerDto customer)
     {
         var dbModel = await _context.Customers
-            .FirstOrDefaultAsync(x => x.Id == customer.Id);
+            .FirstOrDefaultAsync(x => x.Id == customer.Id).ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -109,13 +109,13 @@ internal class CustomerService : ICustomerService
 
         _context.Customers.Update(dbModel);
 
-        return await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task<Customer?> DeleteAsync(int id)
     {
         var dbModel = await _context.Customers
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -124,7 +124,7 @@ internal class CustomerService : ICustomerService
 
         _context.Customers.Remove(dbModel);
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return dbModel;
     }

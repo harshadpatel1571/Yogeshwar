@@ -1,6 +1,4 @@
-﻿using Yogeshwar.Helper.Extension;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 [Authorize]
 public sealed class CustomerController : Controller
@@ -31,7 +29,7 @@ public sealed class CustomerController : Controller
     {
         var filters = DataExtractor.Extract(Request);
 
-        var data = await _customerService.Value.GetByFilterAsync(filters);
+        var data = await _customerService.Value.GetByFilterAsync(filters).ConfigureAwait(false);
 
         var responseModel = new DataTableResponseDto<CustomerDto>
         {
@@ -49,10 +47,10 @@ public sealed class CustomerController : Controller
         if (id < 1)
         {
             var view = View();
-            return await Task.FromResult(view);
+            return await Task.FromResult(view).ConfigureAwait(false);
         }
 
-        var model = await _customerService.Value.GetSingleAsync(id);
+        var model = await _customerService.Value.GetSingleAsync(id).ConfigureAwait(false);
 
         if (model is null)
         {
@@ -73,7 +71,7 @@ public sealed class CustomerController : Controller
             return View();
         }
 
-        await _customerService.Value.CreateOrUpdateAsync(customer);
+        await _customerService.Value.CreateOrUpdateAsync(customer).ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index));
     }
@@ -81,7 +79,7 @@ public sealed class CustomerController : Controller
     [HttpPost]
     public async ValueTask<IActionResult> Delete(int id)
     {
-        var dbModel = await _customerService.Value.DeleteAsync(id);
+        var dbModel = await _customerService.Value.DeleteAsync(id).ConfigureAwait(false);
 
         if (dbModel is null)
         {

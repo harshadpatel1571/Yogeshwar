@@ -1,6 +1,4 @@
-﻿using Yogeshwar.Helper.Extension;
-
-namespace Yogeshwar.Service.Service;
+﻿namespace Yogeshwar.Service.Service;
 
 internal class UserService : IUserService
 {
