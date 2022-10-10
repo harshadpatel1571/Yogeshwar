@@ -4,6 +4,7 @@
         lengthChange: true,
         searching: true,
         ordering: true,
+        lengthMenu: [10, 25, 50, 75, 100],
         info: true,
         autoWidth: true,
         responsive: true,
@@ -50,7 +51,7 @@
                 }
             },
         ],
-        dom: 'Bfrtip',
+        dom: 'Blfrtip',
         buttons: [
             {
                 extend: 'pdfHtml5',
