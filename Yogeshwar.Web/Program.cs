@@ -7,8 +7,9 @@ var services = builder.Services;
 services.AddControllersWithViews();
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
-    options.LoginPath = new PathString("/Account/Login");
-    options.LogoutPath = new PathString("/Account/Logout");
+    options.LoginPath = new PathString("/Account/SignIn");
+    options.LogoutPath = new PathString("/Account/SignOut");
+    options.Cookie.Name = "Yogeshwar.Authentication";
 });
 
 #endregion
@@ -17,7 +18,9 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
 
 services.AddScoped<Yogeshwar.DB.Models.YogeshwarContext>();
 services.AddScoped<IUserService, UserService>()
-    .AddScoped<Lazy<IUserService>>(x => new Lazy<IUserService>(() => x.GetService<IUserService>()));
+    .AddScoped(x => new Lazy<IUserService>(() => x.GetService<IUserService>()!));
+services.AddScoped<ICustomerService, CustomerService>()
+    .AddScoped(x => new Lazy<ICustomerService>(() => x.GetService<ICustomerService>()!));
 
 #endregion
 
@@ -43,6 +46,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=SignIn}/{id?}");
+    // pattern: "{controller=Account}/{action=SignIn}/{id?}"
+    pattern: "{controller=Customer}/{action=Index}/{id?}"
+);
 
 app.Run();

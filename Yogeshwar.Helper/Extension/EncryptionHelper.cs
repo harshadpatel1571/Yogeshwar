@@ -1,4 +1,4 @@
-﻿namespace Yogeshwar.Helper;
+﻿namespace Yogeshwar.Helper.Extension;
 
 internal static class EncryptionHelper
 {

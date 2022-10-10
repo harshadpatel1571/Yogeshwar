@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-namespace Yogeshwar.Helper;
+﻿namespace Yogeshwar.Helper.Extension;
 
 internal static class MvcHelper
 {

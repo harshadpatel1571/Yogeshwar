@@ -1,5 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Add/Edit Customer";
+﻿@model CustomerDto
+@{
+    var addOrEdit = Model is null
+                    ? "Add"
+                    : "Edit";
+
+    ViewData["Title"] = $"{addOrEdit} Customer";
+
     Layout = "_Layout";
 }
 
@@ -7,18 +13,15 @@
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
             <h4 class="mb-sm-0">Customer</h4>
-
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item"><a href="javascript: void(0);">Customer</a></li>
-                    <li class="breadcrumb-item active">Add/Edit</li>
+                    <li class="breadcrumb-item active">@addOrEdit</li>
                 </ol>
             </div>
-
         </div>
     </div>
 </div>
-
 
 <div class="row">
     <div class="col-lg-12">
@@ -39,44 +42,52 @@
                 </div>
             </div>
             <div class="card-body">
-                <form class="row g-3 needs-validation">
+                <form class="row g-3 needs-validation" asp-action="AddEdit">
+                    <input class="form-control" asp-for="Id" type="hidden" readonly>
                     <div class="col-md-6">
-                        <label for="validationCustom01" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="validationCustom01">
+                        <label class="form-label">First Name</label>
+                        <input class="form-control" asp-for="FirstName">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="validationCustom02" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="validationCustom02">
+                        <label class="form-label">Last Name</label>
+                        <input class="form-control" asp-for="LastName">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="validationCustom03" class="form-label">Email Address</label>
-                        <input type="text" class="form-control" id="validationCustom03">
+                        <label class="form-label">Email Address</label>
+                        <input class="form-control" asp-for="Email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="validationCustom04" class="form-label">Mobile number</label>
-                        <input type="text" class="form-control" id="validationCustom04">
+                        <label class="form-label">Mobile number</label>
+                        <input class="form-control" asp-for="PhoneNo">
+                        <span asp-validation-for="PhoneNo" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-12">
-                        <label for="validationCustom04" class="form-label">Address</label>
-                        <textarea class="form-control" id="validationCustom04" rows="5"></textarea>
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" rows="5" asp-for="Address"></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="validationCustom05" class="form-label">City</label>
-                        <input type="text" class="form-control" id="validationCustom05">
+                        <label class="form-label">City</label>
+                        <input class="form-control" asp-for="City">
+                        <span asp-validation-for="City" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="validationCustom06" class="form-label">Pincode</label>
-                        <input type="text" class="form-control" id="validationCustom06">
+                        <label class="form-label">Pincode</label>
+                        <input class="form-control" asp-for="Pincode">
+                        <span asp-validation-for="Pincode" class="text-danger"></span>
                     </div>
 
                     <div class="col-12">
-                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light">
+                        <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
                             <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
                             Save
                         </button>
@@ -86,3 +97,14 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $('#Pincode').keypress(function (e) {
+            var foo = $(this).val()
+            if (foo.length >= 6) {
+                return false;
+            }
+            return true;
+        });
+    </script>
+}

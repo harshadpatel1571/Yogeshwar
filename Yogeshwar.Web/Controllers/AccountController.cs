@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Web.Controllers;
+﻿using Yogeshwar.Helper.Extension;
+
+namespace Yogeshwar.Web.Controllers;
 
 public sealed class AccountController : Controller
 {
@@ -15,6 +17,7 @@ public sealed class AccountController : Controller
         {
             _userService.Value.Dispose();
         }
+
         base.Dispose(disposing);
     }
 
@@ -64,5 +67,13 @@ public sealed class AccountController : Controller
             .ConfigureAwait(false);
 
         return RedirectToActionPermanent("Index", "Home");
+    }
+
+    [Authorize]
+    public new async ValueTask<IActionResult> SignOut()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return RedirectToActionPermanent("SignIn");
     }
 }
