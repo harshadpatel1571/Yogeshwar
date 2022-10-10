@@ -10,10 +10,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Yogeshwar.DB\Yogeshwar.DB.csproj" />
 		<ProjectReference Include="..\Yogeshwar.Helper\Yogeshwar.Helper.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Abstraction\" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
 	</ItemGroup>
 
 	<ItemGroup>

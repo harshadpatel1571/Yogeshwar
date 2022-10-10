@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Service;
+﻿using Yogeshwar.Helper.Extension;
+
+namespace Yogeshwar.Service.Service;
 
 internal class UserService : IUserService
 {
@@ -17,7 +19,6 @@ internal class UserService : IUserService
 
     public async Task<UserDetailDto?> GetUserByCredential(string username, string password)
     {
-        //N1LcABwvR0r8iucTgCZ1Rg==
         var encryptedPassword = EncryptionHelper.Encrypt(password);
 
         return await _context.Users

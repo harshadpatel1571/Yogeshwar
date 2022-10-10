@@ -1,7 +1,7 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
-//[Authorize]
-public class HomeController : Controller
+[Authorize]
+public sealed class HomeController : Controller
 {
     public IActionResult Index()
     {
