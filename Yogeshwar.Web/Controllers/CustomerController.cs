@@ -1,6 +1,4 @@
-﻿using Yogeshwar.Helper.Extension;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 [Authorize]
 public sealed class CustomerController : Controller
@@ -14,7 +12,7 @@ public sealed class CustomerController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        if (_customerService.IsValueCreated)
+        if (_customerService.IsValueCreated & disposing)
         {
             _customerService.Value.Dispose();
         }
@@ -69,7 +67,7 @@ public sealed class CustomerController : Controller
 
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("","");
+            ModelState.AddModelError();
             return View();
         }
 
@@ -91,8 +89,15 @@ public sealed class CustomerController : Controller
         return NoContent();
     }
 
-    public async Task<IActionResult> Detail(CustomerDto customer)
+    public async Task<IActionResult> Detail(int id)
     {
-        return View();
+        var model = await _customerService.Value.GetSingleAsync(id).ConfigureAwait(false);
+
+        if (model is null)
+        {
+            return NotFound();
+        }
+
+        return View(model);
     }
 }

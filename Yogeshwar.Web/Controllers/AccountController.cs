@@ -11,7 +11,7 @@ public sealed class AccountController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        if (_userService.IsValueCreated)
+        if (_userService.IsValueCreated & disposing)
         {
             _userService.Value.Dispose();
         }
@@ -29,7 +29,7 @@ public sealed class AccountController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("","");
+            ModelState.AddModelError();
             return View(userLoginDto);
         }
 
@@ -48,7 +48,7 @@ public sealed class AccountController : Controller
         {
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Email, user.Email ?? ""),
-            new Claim("Username", user.Username),
+            new Claim("UserName", user.Username),
             new Claim("UserType", user.UserType.ToString())
         };
 

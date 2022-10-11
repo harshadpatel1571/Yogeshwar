@@ -10,7 +10,7 @@
             <h4 class="mb-sm-0">Customer</h4>
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Customer</a></li>
+                    <li class="breadcrumb-item">Customer</li>
                     <li class="breadcrumb-item active">Detail</li>
                 </ol>
             </div>
@@ -41,50 +41,40 @@
                     <input class="form-control" asp-for="Id" type="hidden" readonly>
                     <div class="col-md-6">
                         <label class="form-label">First Name</label>
-                        <label class="form-control">Harshad</label>
+                        <label class="form-control">@Model.FirstName</label>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Last Name</label>
-                        <label class="form-control">Patel</label>
+                        <label class="form-control">@Model.LastName</label>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Email Address</label>
-                        <label class="form-control">Harshad@gmail.com</label>
+                        <label class="form-control">@Model.Email</label>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Mobile number</label>
-                        <label class="form-control">8128382487</label>
+                        <label class="form-control">@Model.PhoneNo</label>
                     </div>
 
                     <div class="col-md-12">
                         <label class="form-label">Address</label>
-                        <label class="form-control">This is a multiline address enjoyee</label>
+                        <label class="form-control">@Model.Address</label>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">City</label>
-                        <label class="form-control">Rajkot</label>
+                        <label class="form-control">@Model.City</label>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Pincode</label>
-                        <label class="form-control">360531</label>
+                        <label class="form-control">@Model.Pincode</label>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-@section Scripts {
-    <script>
-        $('#Pincode').keypress(function (e) {
-            return $(this).val().length < 6;
-        });
-        $('#PhoneNo').keypress(function (e) {
-            return $(this).val().length < 10;
-        });
-    </script>
-}

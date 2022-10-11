@@ -22,12 +22,18 @@
             searchable: false
         }],
         columns: [
-            { data: "id", name: "Id", "autoWidth": true },
-            { data: "firstName", name: "First name", "autoWidth": true },
-            { data: "lastName", name: "Last name", "autoWidth": true },
-            { data: "email", name: "Email", "autoWidth": true },
-            { data: "phoneNo", name: "Phone no", "autoWidth": true },
-            { data: "city", name: "City", "autoWidth": true },
+            {data: "id", name: "Id", "autoWidth": true},
+            {
+                name: "First name", "autoWidth": true,
+                sDefaultContent: "--",
+                render: function (data, type, row) {
+                    return "<a href='/Customer/Detail/" + row.id + "'>" + row.firstName + "</a>";
+                }
+            },
+            {data: "lastName", name: "Last name", "autoWidth": true},
+            {data: "email", name: "Email", "autoWidth": true},
+            {data: "phoneNo", name: "Phone no", "autoWidth": true},
+            {data: "city", name: "City", "autoWidth": true},
             {
                 bSortable: false,
                 autoWidth: true,
@@ -97,24 +103,20 @@
                 extend: 'colvis',
                 text: 'Column Visibility',
             },
-            //'copy', 'excel', 'csv', 'pdf', {
-            //    extend: 'print',
-            //    text: 'Print'
-            //}, 'colvis'
         ]
     }).buttons().container().appendTo('#grid_wrapper .col-md-6:eq(0)');
 });
 
 $(document).ready(function () {
-    var dtable = $('#grid').DataTable();
+    const table = $('#grid').DataTable();
     $('.dataTables_filter input')
         .unbind()
         .bind('input', function (e) {
-            if (this.value.length >= 3 || e.keyCode == 13) {
-                dtable.search(this.value).draw();
+            if (this.value.length >= 3 || e.keyCode === 13) {
+                table.search(this.value).draw();
             }
-            if (this.value == "") {
-                dtable.search("").draw();
+            if (this.value === "") {
+                table.search("").draw();
             }
         });
 });
@@ -131,6 +133,7 @@ function deleteRecord(id) {
         buttonsStyling: !1,
         showCloseButton: !0,
     }).then(function (t) {
+        if (!t.isConfirmed) return;
         $.ajax({
             type: "POST",
             url: "/Customer/Delete/" + id,
@@ -142,7 +145,7 @@ function deleteRecord(id) {
                     confirmButtonClass: "btn btn-primary w-xs mt-2",
                     buttonsStyling: !1
                 }).then(function () {
-                    var table = $("#grid").DataTable();
+                    const table = $("#grid").DataTable();
                     table.ajax.reload(null, false);
                 });
             }
