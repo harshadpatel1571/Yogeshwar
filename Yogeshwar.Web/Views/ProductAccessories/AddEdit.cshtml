@@ -1,0 +1,123 @@
+﻿@{
+    var addOrEdit = Model is null
+                    ? "Add"
+                    : "Edit";
+
+    ViewData["Title"] = $"{addOrEdit} Product Accessories";
+
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Product Accessories</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">Product Accessories</li>
+                    <li class="breadcrumb-item active">@addOrEdit</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Product Accessories</h5>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary btn-label waves-effect waves-light">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                Go to List
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form class="row g-3 needs-validation" asp-action="AddEdit">
+                    @*<input class="form-control" asp-for="" type="hidden" readonly>*@
+                    <div class="col-md-6">
+                        <label class="form-label">Accessories Name</label>
+                        <input class="form-control" maxlength="50" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Qtty</label>
+                        <input class="form-control" maxlength="50" required>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" rows="5" maxlength="250" required></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Upload Image <span class="text-info">(Only jpg, png, jpeg is allow.)</span></label>
+                        <input class="form-control md-2" type="file" id="formFile">
+                        @*@if (Model != null)
+                        {*@
+                            <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                                <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(0)'>
+                                        <span class="avatar-title rounded-circle bg-light text-body shadow">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        @*}*@
+
+                    </div>
+
+                    @*<select class="js-example-basic-multiple" name="states[]" id="selectCity" multiple="multiple">
+                        <optgroup label="UK">
+                            <option value="London">London</option>
+                            <option value="Manchester">Manchester</option>
+                            <option value="Liverpool">Liverpool</option>
+                        </optgroup>
+                        <optgroup label="FR">
+                            <option value="Paris">Paris</option>
+                            <option value="Lyon">Lyon</option>
+                            <option value="Marseille">Marseille</option>
+                        </optgroup>
+                        <optgroup label="SP">
+                            <option value="Madrid">Madrid</option>
+                            <option value="Barcelona">Barcelona</option>
+                            <option value="Malaga">Malaga</option>
+                        </optgroup>
+                        <optgroup label="CA">
+                            <option value="Montreal">Montreal</option>
+                            <option value="Toronto">Toronto</option>
+                            <option value="Vancouver">Vancouver</option>
+                        </optgroup>
+                    </select>*@
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $('#Pincode').keypress(function (e) {
+            return $(this).val().length < 6;
+        });
+        $('#PhoneNo').keypress(function (e) {
+            return $(this).val().length < 10;
+        });
+    </script>
+}

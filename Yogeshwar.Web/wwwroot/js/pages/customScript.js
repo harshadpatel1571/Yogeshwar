@@ -152,3 +152,48 @@ function deleteRecord(id) {
         });
     });
 }
+
+function deleteImage(id) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: !0,
+        confirmButtonClass: "btn btn-primary w-xs me-2 mt-2",
+        cancelButtonClass: "btn btn-danger w-xs mt-2",
+        confirmButtonText: "Yes, delete it!",
+        buttonsStyling: !1,
+        showCloseButton: !0,
+    }).then(function (t) {
+        if (!t.isConfirmed) return;
+        $.ajax({
+            type: "POST",
+            url: "/Customer/Delete/" + id,
+            success: function () {
+                t.value && Swal.fire({
+                    title: "Deleted!",
+                    text: "Your record has been deleted.",
+                    icon: "success",
+                    confirmButtonClass: "btn btn-primary w-xs mt-2",
+                    buttonsStyling: !1
+                }).then(function () {
+                    const table = $("#grid").DataTable();
+                    table.ajax.reload(null, false);
+                });
+            }
+        });
+    });
+}
+
+$(function () {
+    $('#grid2').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#grid2_wrapper .col-md-6:eq(0)');
+});
