@@ -25,7 +25,7 @@ public sealed class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> SignIn(UserLoginDto userLoginDto)
+    public async Task<IActionResult> SignIn(UserLoginDto userLoginDto, [FromServices] IConfiguration configuration)
     {
         if (!ModelState.IsValid)
         {
@@ -59,7 +59,7 @@ public sealed class AccountController : Controller
                 new ClaimsPrincipal(claimsIdentity),
                 new AuthenticationProperties
                 {
-                    ExpiresUtc = DateTimeOffset.Now.AddMonths(1),
+                    ExpiresUtc = DateTimeOffset.Now.AddMinutes(Convert.ToInt32(configuration["Session:TimeOut"])),
                     IsPersistent = userLoginDto.RememberMe
                 })
             .ConfigureAwait(false);

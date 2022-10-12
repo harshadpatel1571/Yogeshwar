@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yogeshwar.DB.Models
+namespace Yogeshwar.Web
 {
     public partial class Order
     {

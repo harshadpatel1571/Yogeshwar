@@ -1,1 +1,1 @@
-﻿Scaffold-DbContext "Data Source=.;Database=Yogeshwar;MultipleActiveResultSets=true;Trusted_Connection=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+﻿Scaffold-DbContext "Data Source=.;Database=Yogeshwar;MultipleActiveResultSets=true;Trusted_Connection=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context "YogeshwarContext" -Force

@@ -1,7 +1,7 @@
 CREATE DATABASE [Yogeshwar]
 GO
 
-use [Yogeshwar]
+USE [Yogeshwar]
 GO
 
 CREATE TABLE [User]
@@ -47,12 +47,21 @@ CREATE TABLE [Product]
 )
 GO
 
+CREATE TABLE [Accessories]
+(
+	Id int not null primary key identity(1, 1),
+	[Name] varchar(100) not null,
+	[Description] varchar(250),
+	[Image] varchar(250),
+	Quantity int not null
+)
+GO
+
 CREATE TABLE [ProductAccessories]
 (
 	Id int not null primary key identity(1, 1),
 	ProductId int not null constraint fk_productaccessories_product_id foreign key references [Product](Id),
-	[Name] varchar(100) not null,
-	[Description] varchar(250),
+	AccessoriesId int not null constraint fk_productaccessories_accessories_id foreign key references [Accessories](Id),
 	Quantity int not null
 )
 GO
