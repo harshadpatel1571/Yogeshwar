@@ -12,7 +12,7 @@
         serverSide: true,
         filter: true,
         ajax: {
-            url: "/Customer/BindData/",
+            url: "/Accessories/BindData/",
             type: "POST",
             datatype: "json"
         },
@@ -22,18 +22,16 @@
             searchable: false
         }],
         columns: [
-            {data: "id", name: "Id", "autoWidth": true},
+            { data: "id", name: "Id", "autoWidth": true },
             {
-                name: "First name", "autoWidth": true,
+                name: "name", "autoWidth": true,
                 sDefaultContent: "--",
                 render: function (data, type, row) {
-                    return "<a href='/Customer/Detail/" + row.id + "'>" + row.firstName + "</a>";
+                    return "<a href='/Accessories/Detail/" + row.id + "'>" + row.name + "</a>";
                 }
             },
-            {data: "lastName", name: "Last name", "autoWidth": true},
-            {data: "email", name: "Email", "autoWidth": true},
-            {data: "phoneNo", name: "Phone no", "autoWidth": true},
-            {data: "city", name: "City", "autoWidth": true},
+            { data: "description", name: "Description", "autoWidth": true },
+            { data: "quantity", name: "Quantity", "autoWidth": true },
             {
                 bSortable: false,
                 autoWidth: true,
@@ -41,13 +39,13 @@
                     "                                    <a href=\"javascript:void(0);\" class=\"link-success fs-20\">\n" +
                     "                                        <i class=\"ri-edit-2-line\"></i>\n" +
                     "                                    </a>\n" +
-                    "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick='foo(0)'>\n" +
+                    "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(0)'>\n" +
                     "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
                     "                                    </a>\n" +
                     "                                </div>",
                 render: function (data, type, row) {
                     return "<div class=\"hstack gap-3 flex-wrap\">\n" +
-                        "                                    <a href='/Customer/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
+                        "                                    <a href='/Accessories/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
                         "                                        <i class=\"ri-edit-2-line\"></i>\n" +
                         "                                    </a>\n" +
                         "                                    <a class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(" + row.id + ")'>\n" +
@@ -64,7 +62,7 @@
                 text: 'PDF',
                 titleAttr: 'Generate PDF',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5]
+                    columns: [1, 2, 3]
                 }
             },
             {
@@ -72,7 +70,7 @@
                 text: 'Excel',
                 titleAttr: 'Generate Excel',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5]
+                    columns: [1, 2, 3]
                 }
             },
             {
@@ -80,7 +78,7 @@
                 text: 'CSV',
                 titleAttr: 'Generate CSV',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5]
+                    columns: [1, 2, 3]
                 }
             },
             {
@@ -88,7 +86,7 @@
                 text: 'Copy',
                 titleAttr: 'Copy to clipboard',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5]
+                    columns: [1, 2, 3]
                 }
             },
             {
@@ -96,7 +94,7 @@
                 text: 'Print',
                 titleAttr: 'Copy to clipboard',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5]
+                    columns: [1, 2, 3]
                 }
             },
             {
@@ -136,7 +134,7 @@ function deleteRecord(id) {
         if (!t.isConfirmed) return;
         $.ajax({
             type: "POST",
-            url: "/Customer/Delete/" + id,
+            url: "/Accessories/Delete/" + id,
             success: function () {
                 t.value && Swal.fire({
                     title: "Deleted!",
@@ -152,48 +150,3 @@ function deleteRecord(id) {
         });
     });
 }
-
-function deleteImage(id) {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: !0,
-        confirmButtonClass: "btn btn-primary w-xs me-2 mt-2",
-        cancelButtonClass: "btn btn-danger w-xs mt-2",
-        confirmButtonText: "Yes, delete it!",
-        buttonsStyling: !1,
-        showCloseButton: !0,
-    }).then(function (t) {
-        if (!t.isConfirmed) return;
-        $.ajax({
-            type: "POST",
-            url: "/Customer/Delete/" + id,
-            success: function () {
-                t.value && Swal.fire({
-                    title: "Deleted!",
-                    text: "Your record has been deleted.",
-                    icon: "success",
-                    confirmButtonClass: "btn btn-primary w-xs mt-2",
-                    buttonsStyling: !1
-                }).then(function () {
-                    const table = $("#grid").DataTable();
-                    table.ajax.reload(null, false);
-                });
-            }
-        });
-    });
-}
-
-$(function () {
-    $('#grid2').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": true,
-        "responsive": true,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#grid2_wrapper .col-md-6:eq(0)');
-});

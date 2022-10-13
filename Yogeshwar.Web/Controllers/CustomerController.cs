@@ -34,9 +34,9 @@ public sealed class CustomerController : Controller
         var responseModel = new DataTableResponseDto<CustomerDto>
         {
             Draw = filters.Draw,
-            Data = data,
-            RecordsFiltered = data.Count,
-            RecordsTotal = data.Count,
+            Data = data.Data,
+            RecordsFiltered = data.Data.Count,
+            RecordsTotal = data.Data.Count,
         };
 
         return Json(responseModel);

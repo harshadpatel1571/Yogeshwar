@@ -10,3 +10,10 @@ internal class DataTableResponseDto<T>
 
     public IEnumerable<T> Data { get; set; }
 }
+
+internal class DetaTableResponseCarrier<T>
+{
+    public int TotalCount { get; set; }
+
+    public ICollection<T> Data { get; set; }
+}

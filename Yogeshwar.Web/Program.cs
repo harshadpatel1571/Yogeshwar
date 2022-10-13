@@ -21,6 +21,8 @@ services.AddScoped<IUserService, UserService>()
     .AddScoped(x => new Lazy<IUserService>(() => x.GetService<IUserService>()!));
 services.AddScoped<ICustomerService, CustomerService>()
     .AddScoped(x => new Lazy<ICustomerService>(() => x.GetService<ICustomerService>()!));
+services.AddScoped<IAccessoriesService, AccessoriesService>()
+    .AddScoped(x => new Lazy<IAccessoriesService>(() => x.GetService<IAccessoriesService>()!));
 
 #endregion
 

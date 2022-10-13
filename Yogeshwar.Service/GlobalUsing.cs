@@ -4,4 +4,7 @@ global using Microsoft.EntityFrameworkCore;
 global using Yogeshwar.Service.Abstraction;
 global using Yogeshwar.Service.Dto;
 global using System.Linq.Dynamic.Core;
+global using Microsoft.AspNetCore.Http;
 global using Yogeshwar.Helper.Extension;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.AspNetCore.Hosting;

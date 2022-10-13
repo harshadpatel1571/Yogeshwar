@@ -38,13 +38,14 @@
                 </div>
             </div>
             <div class="card-body">
-                <table id="grid2" class="display table caption-top table-nowrap" style="width:100%">
+                <table id="grid" class="display table caption-top table-nowrap" style="width:100%">
                     <thead class="table-light">
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Qtty</th>
+                            <th>Quantity</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -52,3 +53,6 @@
         </div>
     </div>
 </div>
+@section Scripts{
+    <script src="~/js/custom/accessoriesDatatable.js"></script>
+}

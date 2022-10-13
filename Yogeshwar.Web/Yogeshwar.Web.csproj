@@ -19,4 +19,8 @@
 		<ProjectReference Include="..\Yogeshwar.Service\Yogeshwar.Service.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\DataImages\Accessories\" />
+	</ItemGroup>
+
 </Project>

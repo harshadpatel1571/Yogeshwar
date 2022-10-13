@@ -15,7 +15,7 @@ internal class CustomerService : ICustomerService
         GC.SuppressFinalize(this);
     }
 
-    async Task<IList<CustomerDto>> ICustomerService.GetByFilterAsync(DataTableFilterDto filterDto)
+    async Task<DetaTableResponseCarrier<CustomerDto>> ICustomerService.GetByFilterAsync(DataTableFilterDto filterDto)
     {
         var result = _context.Customers.AsNoTracking();
 
@@ -26,6 +26,11 @@ internal class CustomerService : ICustomerService
                                        x.LastName.Contains(filterDto.SearchValue));
         }
 
+        var model = new DetaTableResponseCarrier<CustomerDto>
+        {
+            TotalCount = result.Count()
+        };
+
         result = result.Skip(filterDto.Skip);
 
         if (filterDto.Take != -1)
@@ -33,8 +38,12 @@ internal class CustomerService : ICustomerService
             result = result.Take(filterDto.Take);
         }
 
-        return await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
+        var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
             .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+
+        model.Data = data;
+
+        return model;
     }
 
     private static CustomerDto DtoSelector(Customer customer) =>
