@@ -21,7 +21,10 @@
 
 	<ItemGroup>
 	  <Folder Include="wwwroot\DataImages\Accessories\" />
-	  <Folder Include="wwwroot\DataImages\Product\Video" />
+	  <Folder Include="wwwroot\DataImages\Accessories\" />
+	  <Folder Include="wwwroot\DataImages\Product\Video\" />
+	  <Folder Include="wwwroot\lib\node-waves\" />
+	  <Folder Include="wwwroot\lib\particles.js\" />
 	</ItemGroup>
 
 </Project>

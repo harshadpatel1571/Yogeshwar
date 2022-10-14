@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+[Authorize]
 public class AccessoriesController : Controller
 {
     private readonly Lazy<IAccessoriesService> _accessoriesService;

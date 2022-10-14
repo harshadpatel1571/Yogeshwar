@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+[Authorize]
 public class ProductController : Controller
 {
     private readonly Lazy<IProductService> _productService;

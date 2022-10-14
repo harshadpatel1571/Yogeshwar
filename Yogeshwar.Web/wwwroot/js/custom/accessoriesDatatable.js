@@ -34,7 +34,7 @@
                 name: "Description", "autoWidth": true,
                 sDefaultContent: "--",
                 render: function (data, type, row) {
-                    if (row.description.length > 20) {
+                    if (row.description != null && row.description.length > 20) {
                         return row.description.substring(0, 20) + '...'
                     }
 
