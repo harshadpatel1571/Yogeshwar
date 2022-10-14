@@ -9,6 +9,7 @@ namespace Yogeshwar.DB.Models
         {
             OrderDetails = new HashSet<OrderDetail>();
             ProductAccessories = new HashSet<ProductAccessory>();
+            ProductImages = new HashSet<ProductImage>();
         }
 
         public int Id { get; set; }
@@ -16,11 +17,11 @@ namespace Yogeshwar.DB.Models
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
         public string ModelNo { get; set; } = null!;
-        public string Image { get; set; } = null!;
-        public string Video { get; set; } = null!;
+        public string? Video { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<ProductAccessory> ProductAccessories { get; set; }
+        public virtual ICollection<ProductImage> ProductImages { get; set; }
     }
 }

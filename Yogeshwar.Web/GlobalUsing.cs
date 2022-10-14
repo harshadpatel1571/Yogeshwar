@@ -7,4 +7,3 @@ global using Microsoft.AspNetCore.Authentication;
 global using Yogeshwar.Service.Abstraction;
 global using Microsoft.AspNetCore.Authorization;
 global using Yogeshwar.Helper.Extension;
-global using System.ComponentModel.DataAnnotations;

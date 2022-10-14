@@ -24,12 +24,14 @@ namespace Yogeshwar.DB.Models
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductAccessory> ProductAccessories { get; set; } = null!;
+        public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=.;Database=Yogeshwar;MultipleActiveResultSets=true;Trusted_Connection=true;TrustServerCertificate=True;");
             }
         }
@@ -43,7 +45,7 @@ namespace Yogeshwar.DB.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Image)
-                    .HasMaxLength(250)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
@@ -174,8 +176,6 @@ namespace Yogeshwar.DB.Models
 
                 entity.Property(e => e.Description).HasMaxLength(250);
 
-                entity.Property(e => e.Image).HasMaxLength(50);
-
                 entity.Property(e => e.ModelNo)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -202,6 +202,19 @@ namespace Yogeshwar.DB.Models
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_productaccessories_product_id");
+            });
+
+            modelBuilder.Entity<ProductImage>(entity =>
+            {
+                entity.Property(e => e.Image)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductImages)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_productimages_product_id");
             });
 
             modelBuilder.Entity<User>(entity =>

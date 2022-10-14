@@ -115,7 +115,7 @@ internal class AccessoriesService : IAccessoriesService
             var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
             await accessory.File.SaveAsync($"{_savePath}/{image}");
 
-            DeleteImageIdExist($"{_savePath}/{dbModel.Image}");
+            DeleteImageIfExist($"{_savePath}/{dbModel.Image}");
 
             dbModel.Image = image;
         }
@@ -130,7 +130,7 @@ internal class AccessoriesService : IAccessoriesService
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    private static void DeleteImageIdExist(string name)
+    private static void DeleteImageIfExist(string name)
     {
         if (File.Exists(name))
         {
@@ -152,7 +152,7 @@ internal class AccessoriesService : IAccessoriesService
 
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
-        DeleteImageIdExist($"{_savePath}/{dbModel.Image}");
+        DeleteImageIfExist($"{_savePath}/{dbModel.Image}");
 
         return dbModel;
     }

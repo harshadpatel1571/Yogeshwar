@@ -5,7 +5,7 @@ public class AccessoriesDto
     public int Id { get; set; }
 
     [Required(ErrorMessage = "Name is required.")]
-    [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be 1 to 100 character.")]
+    [StringLength(100, ErrorMessage = "Name must be up to 100 character.")]
     public string Name { get; set; }
 
     [StringLength(250, MinimumLength = 3, ErrorMessage = "Description must be up to 250 character.")]

@@ -41,8 +41,7 @@ CREATE TABLE [Product]
 	[Description] nvarchar(250) not null,
 	Price decimal(10, 2) not null,
 	[ModelNo] varchar(50) not null,
-	[Image] nvarchar(50) not null,
-	[Video] nvarchar(50) not null,
+	[Video] nvarchar(50),
 	CreatedDate datetime2(2) not null default (GETDATE())
 )
 GO
@@ -52,8 +51,16 @@ CREATE TABLE [Accessories]
 	Id int not null primary key identity(1, 1),
 	[Name] varchar(100) not null,
 	[Description] varchar(250),
-	[Image] varchar(250),
+	[Image] varchar(50),
 	Quantity int not null
+)
+GO
+
+CREATE TABLE [ProductImages]
+(
+	Id int not null primary key identity(1, 1),
+	ProductId int not null constraint fk_productimages_product_id foreign key references [Product](Id),
+	[Image] varchar(50) not null
 )
 GO
 
