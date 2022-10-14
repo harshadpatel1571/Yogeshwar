@@ -11629,8 +11629,8 @@
 			"sEmptyTable": "<div class='noresult'>" +
 				"<div class='text-center'>" +
 				"<lord-icon src='https://cdn.lordicon.com/wbfqtbhv.json' trigger='loop' colors='primary:#121331,secondary:#08a88a' style='width:75px;height:75px'>" +
-				"</lord-icon><h5 class='mt-2'>Sorry! No Result Found</h5>" +
-				"<p class='text-muted mb-0'>We search in database no record found !!</p></div></div>",
+				"</lord-icon><h5 class='mt-2'>No Result Found</h5>" +
+				"<p class='text-muted mb-0'>We searched database. No record found !!</p></div></div>",
 	
 	
 			/**
@@ -11963,8 +11963,8 @@
 			 */
 			"sZeroRecords": "<div class='noresult' style='display: block;'><div class='text-center'>" +
 				"<lord-icon src='https://cdn.lordicon.com/msoeawqm.json' trigger='loop' colors='primary:#121331,secondary:#08a88a' style='width:75px;height:75px'>" +
-				"</lord-icon><h5 class='mt-2'>Sorry! No Result Found</h5><p class='text-muted mb-0'>" +
-				"We search from database according your query can't find any relavent records. </p></div></div>"
+				"</lord-icon><h5 class='mt-2'>No Result Found</h5><p class='text-muted mb-0'>" +
+				"We searched database. No record found !!</p></div></div>"
 		},
 	
 	

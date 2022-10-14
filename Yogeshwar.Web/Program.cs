@@ -49,7 +49,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     // pattern: "{controller=Account}/{action=SignIn}/{id?}"
-    pattern: "{controller=Customer}/{action=Index}/{id?}"
+    pattern: "{controller=Accessories}/{action=Index}/{id?}"
 );
 
 app.Run();

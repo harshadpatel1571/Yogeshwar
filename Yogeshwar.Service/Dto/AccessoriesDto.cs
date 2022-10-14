@@ -8,7 +8,7 @@ public class AccessoriesDto
     [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be 1 to 100 character.")]
     public string Name { get; set; }
 
-    [StringLength(250, MinimumLength = 3, ErrorMessage = "First name must be 1 to 250 character.")]
+    [StringLength(250, MinimumLength = 3, ErrorMessage = "Description must be up to 250 character.")]
     public string? Description { get; set; }
 
     public string? Image { get; set; }

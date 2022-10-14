@@ -30,7 +30,17 @@
                     return "<a href='/Accessories/Detail/" + row.id + "'>" + row.name + "</a>";
                 }
             },
-            { data: "description", name: "Description", "autoWidth": true },
+            {
+                name: "Description", "autoWidth": true,
+                sDefaultContent: "--",
+                render: function (data, type, row) {
+                    if (row.description.length > 20) {
+                        return row.description.substring(0, 20) + '...'
+                    }
+
+                    return row.description;
+                }
+            },
             { data: "quantity", name: "Quantity", "autoWidth": true },
             {
                 bSortable: false,

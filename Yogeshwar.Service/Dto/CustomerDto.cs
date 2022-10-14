@@ -12,7 +12,6 @@ public class CustomerDto
     [StringLength(50, MinimumLength = 3, ErrorMessage = "Last name must be 3 to 50 character.")]
     public string LastName { get; set; }
 
-    [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Value must be email address.")]
     [StringLength(100, ErrorMessage = "Email must be less than 100 character.")]
     public string? Email { get; set; }

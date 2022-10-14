@@ -3,14 +3,14 @@
 internal class AccessoriesService : IAccessoriesService
 {
     private readonly YogeshwarContext _context;
-    private readonly IConfiguration _configuration;
+    private static string _readPath;
     private readonly string _savePath;
 
     public AccessoriesService(YogeshwarContext context, IConfiguration configuration,
         IWebHostEnvironment hostEnvironment)
     {
         _context = context;
-        _configuration = configuration;
+        _readPath = configuration["File:ReadPath"] + "/Accessories";
         _savePath = $"{hostEnvironment.WebRootPath}/DataImages/Accessories";
     }
 
@@ -49,13 +49,13 @@ internal class AccessoriesService : IAccessoriesService
         return model;
     }
 
-    private AccessoriesDto DtoSelector(Accessory accessory) =>
+    private static AccessoriesDto DtoSelector(Accessory accessory) =>
         new()
         {
             Id = accessory.Id,
             Name = accessory.Name,
             Description = accessory.Description,
-            Image = $"{_configuration["File:ReadPath"]}{accessory.Image}",
+            Image = accessory.Image == null ? null : $"{_readPath}/{accessory.Image}",
             Quantity = accessory.Quantity
         };
 
@@ -78,16 +78,20 @@ internal class AccessoriesService : IAccessoriesService
 
     private async ValueTask<int> CreateAsync(AccessoriesDto accessory)
     {
-        var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
+        var image = (string?)null;
 
-        await accessory.File.SaveAsync($"{_savePath}/{image}");
+        if (accessory.File is not null)
+        {
+            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
+            await accessory.File.SaveAsync($"{_savePath}/{image}");
+        }
 
         var dbModel = new Accessory
         {
             Id = accessory.Id,
             Name = accessory.Name,
             Description = accessory.Description,
-            Image = accessory.Image,
+            Image = image,
             Quantity = accessory.Quantity
         };
 
@@ -111,7 +115,7 @@ internal class AccessoriesService : IAccessoriesService
             var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
             await accessory.File.SaveAsync($"{_savePath}/{image}");
 
-            DeleteImage($"{_savePath}/{dbModel.Image}");
+            DeleteImageIdExist($"{_savePath}/{dbModel.Image}");
 
             dbModel.Image = image;
         }
@@ -126,7 +130,7 @@ internal class AccessoriesService : IAccessoriesService
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    private static void DeleteImage(string name)
+    private static void DeleteImageIdExist(string name)
     {
         if (File.Exists(name))
         {
@@ -148,6 +152,34 @@ internal class AccessoriesService : IAccessoriesService
 
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
+        DeleteImageIdExist($"{_savePath}/{dbModel.Image}");
+
         return dbModel;
+    }
+
+    public async ValueTask<bool> DeleteImageAsync(int id)
+    {
+        var dbModel = await _context.Accessories
+          .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+
+        if (dbModel == null)
+        {
+            return false;
+        }
+
+        var path = $"{_savePath}/{dbModel.Image}";
+
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+
+        File.Delete(path);
+
+        dbModel.Image = null;
+
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return true;
     }
 }

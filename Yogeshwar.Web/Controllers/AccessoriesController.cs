@@ -34,8 +34,8 @@ public class AccessoriesController : Controller
         {
             Draw = filters.Draw,
             Data = data.Data,
-            RecordsFiltered = data.Data.Count,
-            RecordsTotal = data.Data.Count,
+            RecordsFiltered = data.TotalCount,
+            RecordsTotal = data.TotalCount
         };
 
         return Json(responseModel);
@@ -62,6 +62,8 @@ public class AccessoriesController : Controller
     [HttpPost]
     public async Task<IActionResult> AddEdit(AccessoriesDto accessory)
     {
+        ModelState.Remove("Id");
+
         if (!ModelState.IsValid)
         {
             ModelState.AddModelError();
@@ -84,6 +86,20 @@ public class AccessoriesController : Controller
         }
 
         return NoContent();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteImage(int id)
+    {
+        var isDeleted = await _accessoriesService.Value.DeleteImageAsync(id)
+            .ConfigureAwait(false);
+
+        if (isDeleted)
+        {
+            return NoContent();
+        }
+
+        return NotFound();
     }
 
     public async Task<IActionResult> Detail(int id)

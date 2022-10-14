@@ -46,12 +46,14 @@
                     <input class="form-control" asp-for="Id" type="hidden" readonly>
                     <div class="col-md-6">
                         <label class="form-label">First Name</label>
+                        <span class="text-danger">*</span>
                         <input class="form-control" asp-for="FirstName" maxlength="50" required>
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Last Name</label>
+                        <span class="text-danger">*</span>
                         <input class="form-control" asp-for="LastName" maxlength="50" required>
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
@@ -64,24 +66,28 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Mobile number</label>
+                        <span class="text-danger">*</span>
                         <input class="form-control" asp-for="PhoneNo" type="number" required>
                         <span asp-validation-for="PhoneNo" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-12">
                         <label class="form-label">Address</label>
-                        <textarea class="form-control" rows="5" asp-for="Address" maxlength="250" required></textarea>
+                        <span class="text-danger">*</span>
+                        <textarea class="form-control" rows="2" asp-for="Address" maxlength="250" required></textarea>
                         <span asp-validation-for="Address" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">City</label>
+                        <span class="text-danger">*</span>
                         <input class="form-control" asp-for="City" maxlength="25" required>
                         <span asp-validation-for="City" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Pincode</label>
+                        <span class="text-danger">*</span>
                         <input class="form-control" asp-for="Pincode" required>
                         <span asp-validation-for="Pincode" class="text-danger"></span>
                     </div>

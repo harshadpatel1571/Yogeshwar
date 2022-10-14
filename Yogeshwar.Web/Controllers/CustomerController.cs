@@ -35,8 +35,8 @@ public sealed class CustomerController : Controller
         {
             Draw = filters.Draw,
             Data = data.Data,
-            RecordsFiltered = data.Data.Count,
-            RecordsTotal = data.Data.Count,
+            RecordsFiltered = data.TotalCount,
+            RecordsTotal = data.TotalCount
         };
 
         return Json(responseModel);

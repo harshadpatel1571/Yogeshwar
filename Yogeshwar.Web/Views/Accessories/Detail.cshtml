@@ -39,25 +39,28 @@
             <div class="card-body row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Accessories Name</label>
-                    <label class="form-control">Accessories Name</label>
+                    <label class="form-control">@Model.Name</label>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Quantity</label>
-                    <label class="form-control">Quantity</label>
+                    <label class="form-control">@Model.Quantity</label>
                 </div>
 
                 <div class="col-md-12">
                     <label class="form-label">Description</label>
-                    <label class="form-control">Description</label>
+                    <textarea class="form-control" asp-for="Description" rows="2" readonly></textarea>
                 </div>
 
-                <div class="col-md-6">
-                    <label class="form-label">Product Image</label><br />
-                    <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                        <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                @if (Model.Image is not null)
+                {
+                    <div class="col-md-6">
+                        <label class="form-label">Product Image</label><br />
+                        <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                            <img src="@Model.Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
