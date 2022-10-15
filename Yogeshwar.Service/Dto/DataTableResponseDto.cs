@@ -1,6 +1,6 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
-internal class DataTableResponseDto<T>
+internal record struct DataTableResponseDto<T>
 {
     public string Draw { get; set; }
 

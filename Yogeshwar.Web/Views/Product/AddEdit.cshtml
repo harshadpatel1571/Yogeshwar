@@ -84,16 +84,20 @@
                         <input class="form-control md-2" type="file" id="formFile">
                         @*@if (Model != null)
                         {*@
-                        <div class="profile-user position-relative d-inline-block mx-auto mt-3">
-                            <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
-                            <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(0)'>
-                                    <span class="avatar-title rounded-circle bg-light text-body shadow">
-                                        <i class="ri-delete-bin-line"></i>
-                                    </span>
-                                </label>
+                        @for (var i = 0; i < 10; i++)
+                        {
+                            <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                                <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(0)'>
+                                        <span class="avatar-title rounded-circle bg-light text-body shadow">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                        }
+
                         @*}*@
                     </div>
 
