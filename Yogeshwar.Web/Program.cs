@@ -17,6 +17,7 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
 #region Custom
 
 services.AddScoped<Yogeshwar.DB.Models.YogeshwarContext>();
+services.AddScoped<IDropDownService, DropDownService>();
 services.AddScoped<IUserService, UserService>()
     .AddScoped(x => new Lazy<IUserService>(() => x.GetService<IUserService>()!));
 services.AddScoped<ICustomerService, CustomerService>()
@@ -51,7 +52,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     // pattern: "{controller=Account}/{action=SignIn}/{id?}"
-    pattern: "{controller=Accessories}/{action=Index}/{id?}"
+    pattern: "{controller=Product}/{action=Index}/{id?}"
 );
 
 app.Run();

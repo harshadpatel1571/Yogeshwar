@@ -1,4 +1,4 @@
-﻿function chnageImage(input) {
+﻿function changeImage(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
@@ -11,23 +11,24 @@
 }
 
 $("#File").change(function () {
-    chnageImage(this);
+    changeImage(this);
+    $('#ImageDiv').show();
 });
 
 function deleteImage() {
-    var id = $('#Id').val();
+    const id = $('#Id').val();
 
     if (id == 0) {
         $('#File').val('')
-        $('#imageContainer').attr('src', '/images/users/avatar-1.jpg');
+        $('#ImageDiv').hide();
         return
     };
 
-    var imageName = $('#Image').val();
+    const imageName = $('#Image').val();
 
     if (imageName == undefined || imageName == '' || imageName == null) {
         $('#File').val('')
-        $('#imageContainer').attr('src', '/images/users/avatar-1.jpg');
+        $('#ImageDiv').hide();
         return;
     }
 
@@ -54,7 +55,7 @@ function deleteImage() {
                     confirmButtonClass: "btn btn-primary w-xs mt-2",
                     buttonsStyling: !1
                 }).then(function () {
-                    $('#imageContainer').attr('src', '/images/users/avatar-1.jpg');
+                    $('#ImageDiv').hide();
                     $('#Image').val('');
                 });
             }

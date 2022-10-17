@@ -1,7 +1,9 @@
-﻿@{
-    var addOrEdit = Model is null
-                    ? "Add"
-                    : "Edit";
+﻿@model ProductDto
+@{
+    var isCreate = Model?.Id == 0;
+    var addOrEdit = isCreate
+        ? "Add"
+        : "Edit";
 
     ViewData["Title"] = $"{addOrEdit} Product";
 
@@ -40,85 +42,89 @@
                     </a>
                 </div>
             </div>
+
             <div class="card-body">
-                <form class="row g-3 needs-validation" asp-action="AddEdit">
-                    @*<input class="form-control" asp-for="" type="hidden" readonly>*@
+                <form class="row g-3 needs-validation" asp-action="AddEdit" enctype="multipart/form-data">
+                    <input class="form-control" asp-for="Id" type="hidden" readonly>
                     <div class="col-md-6">
                         <label class="form-label">Product Name</label>
-                        <input class="form-control" maxlength="50" required>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="Name" maxlength="100" required>
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Price</label>
-                        <input class="form-control" maxlength="50" required>
-                    </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Model No</label>
-                        <input class="form-control" maxlength="50" required>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="ModelNo" maxlength="50" required>
+                        <span asp-validation-for="ModelNo" class="text-danger"></span>
                     </div>
-
                     <div class="col-md-6">
                         <label class="form-label">Select Accessories</label>
-                        <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                            <option value="1">London</option>
-                            <option value="2">Manchester</option>
-                            <option value="4">Liverpool</option>
-                            <option value="4">Paris</option>
-                            <option value="5">Lyon</option>
-                            <option value="6">Marseille</option>
-                            <option value="7">Madrid</option>
-                            <option value="8">Barcelona</option>
-                            <option value="9">Malaga</option>
-                            <option value="10">Montreal</option>
+                        <span class="text-danger">*</span>
+                        <select class="js-example-basic-multiple" asp-for="Accessories"
+                                asp-items="Model.SelectListsForAccessories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
                         </select>
+                        <span asp-validation-for="Accessories" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Price</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="Price" onkeypress="return isNumberKey(event, this);" required>
+                        <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
 
+                    @{
+                        var display = isCreate ? "none" : "initial";
+                    }
+
+                    <div class="col-md-12" style="display:@display" id="PAdiv">
+                        <label class="form-label">Product Accessories</label> <br />
+                        <ul class="list-group" id="PAList">
+                        </ul>
+                    </div>
                     <div class="col-md-12">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" rows="5" maxlength="250" required></textarea>
+                        <span class="text-danger">*</span>
+                        <textarea class="form-control" asp-for="Description" rows="2" maxlength="250" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
-
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="ImageApped">
                         <label class="form-label">Upload Image <span class="text-info">(Only jpg, png, jpeg is allow.)</span></label>
-                        <input class="form-control md-2" type="file" id="formFile">
-                        @*@if (Model != null)
-                        {*@
-                        @for (var i = 0; i < 10; i++)
-                        {
-                            <div class="profile-user position-relative d-inline-block mx-auto mt-3">
-                                <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
-                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(0)'>
-                                        <span class="avatar-title rounded-circle bg-light text-body shadow">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
+                        <input class="form-control md-2" asp-for="ImageFiles" accept="image/*" multiple>
+                        @{
+                            if (!isCreate)
+                            {
+                                for (var i = 0; i < Model?.Images?.Count; i++)
+                                {
+                                    var id = $"existingDiv{Model.Images[i].Id}";
+                                    <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="@id">
+                                        <img id="imageContainer" src="@Model.Images[i].Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                        <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                            <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(@Model.Images[i].Id)'>
+                                                <span class="avatar-title rounded-circle bg-light text-body shadow">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            }
                         }
-
-                        @*}*@
                     </div>
-
                     <div class="col-md-6">
-                        <label class="form-label">Upload Video <span class="text-info">(Only mp4 is allow.)</span></label>
-                        <input class="form-control md-2" type="file" id="formFile">
-                        @*@if (Model != null)
-                        {*@
+                        <label class="form-label">Upload Video <span class="text-info">(Only mp4 is allowed.)</span></label>
+                        <input class="form-control md-2" asp-for="VideoFile" accept="video/*">
                         <div class="profile-user position-relative d-inline-block mx-auto mt-3">
-                            <iframe src="https://www.youtube.com/embed/2RZQN_ko0iU" title="YouTube video" allowfullscreen=""></iframe>
+                            @* <iframe src="https://www.youtube.com/embed/2RZQN_ko0iU" title="YouTube video" allowfullscreen=""></iframe>
                             <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick="deleteImage(0)">
-                                    <span class="avatar-title rounded-circle bg-light text-body shadow">
-                                        <i class="ri-delete-bin-line"></i>
-                                    </span>
-                                </label>
-                            </div>
+                            <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick="deleteImage(0)">
+                            <span class="avatar-title rounded-circle bg-light text-body shadow">
+                            <i class="ri-delete-bin-line"></i>
+                            </span>
+                            </label>
+                            </div>*@
                         </div>
-                        @*}*@
                     </div>
-
                     <div class="col-12">
                         <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
                             <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
@@ -130,13 +136,7 @@
         </div>
     </div>
 </div>
-@section Scripts {
-    <script>
-        $('#Pincode').keypress(function (e) {
-            return $(this).val().length < 6;
-        });
-        $('#PhoneNo').keypress(function (e) {
-            return $(this).val().length < 10;
-        });
-    </script>
+
+@section Scripts{
+    <script src="~/js/custom/productaddedit.js"></script>
 }

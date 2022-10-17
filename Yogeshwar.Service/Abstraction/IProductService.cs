@@ -6,6 +6,8 @@ public interface IProductService : IDisposable
 
     Task<ProductDto?> GetSingleAsync(int id);
 
+    Task<object> GetAccessoriesQuantity(int id);
+
     Task<int> CreateOrUpdateAsync(ProductDto productDto);
 
     Task<Product?> DeleteAsync(int id);

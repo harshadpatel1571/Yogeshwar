@@ -4,7 +4,7 @@
         lengthChange: true,
         searching: true,
         ordering: true,
-        lengthMenu: [10, 25, 50, 75, 100],
+        lengthMenu: [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, 'All']],
         info: true,
         autoWidth: true,
         responsive: true,
@@ -12,7 +12,7 @@
         serverSide: true,
         filter: true,
         ajax: {
-            url: "/Accessories/BindData/",
+            url: "/Product/BindData/",
             type: "POST",
             datatype: "json"
         },
@@ -22,14 +22,15 @@
             searchable: false
         }],
         columns: [
-            { data: "id", name: "Id", "autoWidth": true },
+            {data: "id", name: "Id", "autoWidth": true},
             {
-                name: "name", "autoWidth": true,
+                name: "Name", "autoWidth": true,
                 sDefaultContent: "--",
                 render: function (data, type, row) {
-                    return "<a href='/Accessories/Detail/" + row.id + "'>" + row.name + "</a>";
+                    return "<a href='/Product/Detail/" + row.id + "'>" + row.name + "</a>";
                 }
             },
+            {data: "modelNo", name: "Model No", "autoWidth": true},
             {
                 name: "Description", "autoWidth": true,
                 sDefaultContent: "",
@@ -41,7 +42,7 @@
                     return row.description;
                 }
             },
-            { data: "quantity", name: "Quantity", "autoWidth": true },
+            {data: "price", name: "Price", "autoWidth": true},
             {
                 bSortable: false,
                 autoWidth: true,
@@ -55,7 +56,7 @@
                     "                                </div>",
                 render: function (data, type, row) {
                     return "<div class=\"hstack gap-3 flex-wrap\">\n" +
-                        "                                    <a href='/Accessories/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
+                        "                                    <a href='/Product/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
                         "                                        <i class=\"ri-edit-2-line\"></i>\n" +
                         "                                    </a>\n" +
                         "                                    <a class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(" + row.id + ")'>\n" +
@@ -72,7 +73,7 @@
                 text: 'PDF',
                 titleAttr: 'Generate PDF',
                 exportOptions: {
-                    columns: [1, 2, 3]
+                    columns: [1, 2, 3, 4, 5]
                 }
             },
             {
@@ -80,7 +81,7 @@
                 text: 'Excel',
                 titleAttr: 'Generate Excel',
                 exportOptions: {
-                    columns: [1, 2, 3]
+                    columns: [1, 2, 3, 4, 5]
                 }
             },
             {
@@ -88,7 +89,7 @@
                 text: 'CSV',
                 titleAttr: 'Generate CSV',
                 exportOptions: {
-                    columns: [1, 2, 3]
+                    columns: [1, 2, 3, 4, 5]
                 }
             },
             {
@@ -96,7 +97,7 @@
                 text: 'Copy',
                 titleAttr: 'Copy to clipboard',
                 exportOptions: {
-                    columns: [1, 2, 3]
+                    columns: [1, 2, 3, 4, 5]
                 }
             },
             {
@@ -104,7 +105,7 @@
                 text: 'Print',
                 titleAttr: 'Copy to clipboard',
                 exportOptions: {
-                    columns: [1, 2, 3]
+                    columns: [1, 2, 3, 4, 5]
                 }
             },
             {
@@ -144,7 +145,7 @@ function deleteRecord(id) {
         if (!t.isConfirmed) return;
         $.ajax({
             type: "POST",
-            url: "/Accessories/Delete/" + id,
+            url: "/Product/Delete/" + id,
             success: function () {
                 t.value && Swal.fire({
                     title: "Deleted!",

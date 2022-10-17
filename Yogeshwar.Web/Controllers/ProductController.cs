@@ -43,33 +43,67 @@ public class ProductController : Controller
         return Json(responseModel);
     }
 
-    public async ValueTask<IActionResult> AddEdit(int id)
+    [HttpPost]
+    public async Task<IActionResult> BindQuantity(int id)
     {
+        var data = await _productService.Value.GetAccessoriesQuantity(id);
+        return Ok(data);
+    }
+
+    public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService droDownService)
+    {
+        using var _ = droDownService;
+        var dropDownData = await droDownService.BindDropDownForAccessories();
+
+        ProductDto model;
+
         if (id < 1)
         {
-            var view = View();
-            return await Task.FromResult(view).ConfigureAwait(false);
+            model = new ProductDto
+            {
+                SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text")
+            };
+
+            return View(model);
         }
 
-        var model = await _productService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        model = await _productService.Value.GetSingleAsync(id).ConfigureAwait(false);
 
         if (model is null)
         {
             return NotFound();
         }
 
+        model.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
+
         return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddEdit(ProductDto productDto)
+    public async Task<IActionResult> AddEdit(ProductDto productDto, [FromServices] IDropDownService droDownService)
     {
+        using var _ = droDownService;
         ModelState.Remove("Id");
+
+        productDto.AccessoriesQuantity ??= new List<AccessoriesQuantity>();
+
+        for (int i = 0; i < Request.Form["AccessoriesQuantity.AccessoriesId"].Count; i++)
+        {
+            productDto.AccessoriesQuantity.Add(new AccessoriesQuantity
+            {
+                AccessoriesId = Convert.ToInt32(Request.Form["AccessoriesQuantity.AccessoriesId"][i]),
+                Quantity = Convert.ToInt32(Request.Form["AccessoriesQuantity.Quantity"][i])
+            });
+        }
 
         if (!ModelState.IsValid)
         {
             ModelState.AddModelError();
-            return View();
+
+            var dropDownData = await droDownService.BindDropDownForAccessories();
+            productDto.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
+
+            return View(productDto);
         }
 
         await _productService.Value.CreateOrUpdateAsync(productDto).ConfigureAwait(false);

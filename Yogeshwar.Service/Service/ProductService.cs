@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Service;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Yogeshwar.Service.Service;
 
 internal class ProductService : IProductService
 {
@@ -54,6 +56,13 @@ internal class ProductService : IProductService
         return model;
     }
 
+    public async Task<object> GetAccessoriesQuantity(int id)
+    {
+        return await _context.ProductAccessories.Where(x => x.ProductId == id)
+            .Select(x => new { key = x.Accessories.Name, value = x.Quantity })
+            .ToListAsync().ConfigureAwait(false);
+    }
+
     private static ProductDto DtoSelector(Product product) =>
         new()
         {
@@ -63,16 +72,22 @@ internal class ProductService : IProductService
             Description = product.Description,
             Price = product.Price,
             Video = product.Video != null ? $"{_videoReadPath}/{product.Video}" : null,
-            Images = product.ProductImages.Select(x => $"{_imageReadPath}/{x.Image}")
-                .ToArray(),
-            Accessories = product.ProductAccessories.Select(x => x.Id)
+            Images = product.ProductImages
+                .Select(x => new ImageIds
+                {
+                    Image = $"{_imageReadPath}/{x.Image}",
+                    Id = x.Id
+                }).ToArray(),
+            Accessories = product.ProductAccessories.Select(x => x.AccessoriesId)
                 .ToArray()
         };
 
     public async Task<ProductDto?> GetSingleAsync(int id)
     {
         return await _context.Products.AsNoTracking()
-            .Where(x => x.Id == id).Select(x => DtoSelector(x))
+            .Where(x => x.Id == id).Include(x => x.ProductAccessories)
+            .Include(x => x.ProductImages)
+            .Select(x => DtoSelector(x))
             .FirstOrDefaultAsync().ConfigureAwait(false);
     }
 
@@ -117,6 +132,13 @@ internal class ProductService : IProductService
             Name = productDto.Name,
             Description = productDto.Description,
             Video = video,
+            ModelNo = productDto.ModelNo,
+            Price = productDto.Price.Value,
+            ProductAccessories = productDto.AccessoriesQuantity.Select(x => new ProductAccessory
+            {
+                AccessoriesId = x.AccessoriesId,
+                Quantity = x.Quantity
+            }).ToArray(),
             ProductImages = images.Select(x => new ProductImage
             {
                 Image = x
@@ -170,12 +192,14 @@ internal class ProductService : IProductService
         dbModel.Name = productDto.Name;
         dbModel.Description = productDto.Description;
         dbModel.ModelNo = productDto.ModelNo;
-        dbModel.Price = productDto.Price;
+        dbModel.Price = productDto.Price.Value;
 
-        var newAccessories = productDto.Accessories
+        var newAccessories = productDto.AccessoriesQuantity
             .Select(x => new ProductAccessory
             {
-                ProductId = dbModel.Id
+                ProductId = dbModel.Id,
+                AccessoriesId = x.AccessoriesId,
+                Quantity = x.Quantity
             });
 
         if (images.Length > 0)

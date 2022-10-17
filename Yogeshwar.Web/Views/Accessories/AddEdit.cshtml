@@ -1,6 +1,7 @@
 ﻿@model AccessoriesDto
 @{
-    var addOrEdit = Model is null
+    var isCreate = Model is null;
+    var addOrEdit = isCreate
                     ? "Add"
                     : "Edit";
 
@@ -62,9 +63,16 @@
                         <textarea class="form-control" asp-for="Description" rows="2" maxlength="250"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
+
+                    @{
+                        var display = isCreate ? "none" : Model?.Image is null ? "none" : "initial";
+                    }
+
                     <div class="col-md-6">
                         <label class="form-label">Upload Image <span class="text-info">(Only jpg, png, jpeg are allowed.)</span></label>
-                        <input class="form-control md-2" asp-for="File">
+                        <input class="form-control md-2" asp-for="File" accept="image/*">
+                    </div>
+                    <div class="col-md-6" style="display:@display" id="ImageDiv">
                         <div class="profile-user position-relative d-inline-block mx-auto mt-3">
                             @if (Model?.Image is null)
                             {

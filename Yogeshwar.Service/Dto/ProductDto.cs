@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Dto;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Yogeshwar.Service.Dto;
 
 public class ProductDto
 {
@@ -13,7 +15,7 @@ public class ProductDto
     public string Description { get; set; }
 
     [Required(ErrorMessage = "Price is required.")]
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
     [Required(ErrorMessage = "Model no is required.")]
     [StringLength(50, ErrorMessage = "Name must be up to 50 character.")]
@@ -22,11 +24,30 @@ public class ProductDto
     [Required(ErrorMessage = "Accessories are required.")]
     public IList<int> Accessories { get; set; }
 
-    public IList<string>? Images { get; set; }
+    [Required(ErrorMessage = "Accessories quantities are required.")]
+    internal IList<AccessoriesQuantity> AccessoriesQuantity { get; set; }
+
+    internal IList<ImageIds>? Images { get; set; }
+
+    public SelectList? SelectListsForAccessories { get; set; }
 
     public string? Video { get; set; }
 
     public IList<IFormFile>? ImageFiles { get; set; }
 
     public IFormFile? VideoFile { get; set; }
+}
+
+internal class AccessoriesQuantity
+{
+    public int AccessoriesId { get; set; }
+
+    public int Quantity { get; set; }
+}
+
+internal class ImageIds
+{
+    public int Id { get; set; }
+
+    public string Image { get; set; }
 }
