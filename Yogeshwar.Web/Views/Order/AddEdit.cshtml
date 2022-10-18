@@ -1,0 +1,278 @@
+﻿@{
+    var isCreate = Model?.Id == 0;
+    var addOrEdit = isCreate
+        ? "Add"
+        : "Edit";
+
+    ViewData["Title"] = $"{addOrEdit} Order";
+
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Order</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">Order</li>
+                    <li class="breadcrumb-item active">@addOrEdit</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Order</h5>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary btn-label waves-effect waves-light">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                Go to List
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <form class="needs-validation" asp-action="AddEdit" enctype="multipart/form-data">
+                <div class="card-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">First Name</label>
+                        <span class="text-danger">*</span>
+                        <select class="js-example-disabled" name="state">
+                            <option value="">Select</option>
+                            <option value="AL">Harshad</option>
+                            <option value="MA">Soham</option>
+                            <option value="TO">Vaibhav</option>
+                            <option value="LO">Aesha</option>
+                            <option value="WY">Bhoomi</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Order Date</label>
+                        <span class="text-danger">*</span>
+                        <input type="date" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Discount</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-describedby="basic-addon2">
+                            <span class="input-group-text" id="basic-addon2">%</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <span class="text-danger">*</span>
+                        <select class="js-example-disabled" name="status">
+                            <option value="">Pending</option>
+                            <option value="AL">InProgress</option>
+                            <option value="AL">Completed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="orderDetail">
+                    <div class="card product">
+                        <div class="card-body">
+                            <div class="row gy-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label">Product</label>
+                                    <span class="text-danger">*</span>
+                                    <select class="js-example-disabled" name="status">
+                                        <option value="">Cycle</option>
+                                        <option value="AL">Bike</option>
+                                        <option value="AL">Car</option>
+                                    </select>
+                                    <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                                        <img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="form-label">Confirm Accessiories Stock</label> <br />
+                                    <ul class="list-group">
+                                        <li class="list-group-item" aria-disabled="true">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    James Ballard
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <li class="list-group-item" aria-disabled="true">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    James Ballard
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <li class="list-group-item" aria-disabled="true">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    James Ballard
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="text-lg-end">
+                                        <label class="form-label">Product Price :</label>
+                                        <h5 class="fs-14">$<span id="ticket_price" class="product-price">119.99</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row align-items-center gy-3">
+                                <div class="col-sm">
+                                    <div class="d-flex flex-wrap my-n1">
+                                        <div>
+                                            <a href="#" class="d-block text-body p-1 px-2" data-bs-toggle="modal" data-bs-target="#removeItemModal"><i class="ri-delete-bin-fill text-muted align-bottom me-1"></i> Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card product">
+                        <div class="card-body">
+                            <div class="row gy-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label">Product</label>
+                                    <span class="text-danger">*</span>
+                                    <select class="js-example-disabled" name="status">
+                                        <option value="">Cycle</option>
+                                        <option value="AL">Bike</option>
+                                        <option value="AL">Car</option>
+                                    </select>
+                                    <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                                        <img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="form-label">Confirm Accessiories Stock</label> <br />
+                                    <ul class="list-group">
+                                        <li class="list-group-item" aria-disabled="true">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    James Ballard
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <li class="list-group-item" aria-disabled="true">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    James Ballard
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <li class="list-group-item" aria-disabled="true">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    James Ballard
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="text-lg-end">
+                                        <label class="form-label">Product Price :</label>
+                                        <h5 class="fs-14">$<span id="ticket_price" class="product-price">119.99</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row align-items-center gy-3">
+                                <div class="col-sm">
+                                    <div class="d-flex flex-wrap my-n1">
+                                        <div>
+                                            <a href="#" class="d-block text-body p-1 px-2" data-bs-toggle="modal" data-bs-target="#removeItemModal"><i class="ri-delete-bin-fill text-muted align-bottom me-1"></i> Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body row g-3">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-info btn-label waves-effect waves-light">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Add Product
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body row g-3">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+}
