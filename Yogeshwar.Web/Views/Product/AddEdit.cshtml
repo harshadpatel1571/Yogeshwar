@@ -89,7 +89,7 @@
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <div class="col-md-6" id="ImageApped">
-                        <label class="form-label">Upload Image <span class="text-info">(Only jpg, png, jpeg is allow.)</span></label>
+                        <label class="form-label">Upload Image <span class="text-info">(Only images are allowed.)</span></label>
                         <input class="form-control md-2" asp-for="ImageFiles" accept="image/*" multiple>
                         @{
                             if (!isCreate)
@@ -112,17 +112,25 @@
                         }
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Upload Video <span class="text-info">(Only mp4 is allowed.)</span></label>
+                        <label class="form-label">Upload Video <span class="text-info">(Only videos are allowed.)</span></label>
                         <input class="form-control md-2" asp-for="VideoFile" accept="video/*">
-                        <div class="profile-user position-relative d-inline-block mx-auto mt-3">
-                            @* <iframe src="https://www.youtube.com/embed/2RZQN_ko0iU" title="YouTube video" allowfullscreen=""></iframe>
-                            <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                            <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick="deleteImage(0)">
-                            <span class="avatar-title rounded-circle bg-light text-body shadow">
-                            <i class="ri-delete-bin-line"></i>
-                            </span>
-                            </label>
-                            </div>*@
+                        <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="videoDiv">
+                            @{
+                                if (Model?.Video is not null)
+                                {
+                                    <video width="320" height="240" id="videoId" controls>
+                                        <source src="@Model.Video">
+                                    </video>
+                                    <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                        <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick="deleteVideo(@Model.Id)">
+                                            <span class="avatar-title rounded-circle bg-light text-body shadow">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+                            }
+
                         </div>
                     </div>
                     <div class="col-12">

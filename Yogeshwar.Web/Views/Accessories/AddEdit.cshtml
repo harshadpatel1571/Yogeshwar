@@ -2,8 +2,8 @@
 @{
     var isCreate = Model is null;
     var addOrEdit = isCreate
-                    ? "Add"
-                    : "Edit";
+        ? "Add"
+        : "Edit";
 
     ViewData["Title"] = $"{addOrEdit} Accessories";
 
@@ -45,8 +45,8 @@
             <div class="card-body">
                 <form class="row g-3 needs-validation" asp-action="AddEdit" enctype="multipart/form-data">
                     <div class="col-md-6">
-                        <input class="form-control" asp-for="Id" type="hidden">
-                        <input class="form-control" asp-for="Image" type="hidden">
+                        <input asp-for="Id" type="hidden">
+                        <input asp-for="Image" type="hidden">
                         <label class="form-label">Accessories Name</label>
                         <span class="text-danger">*</span>
                         <input class="form-control" asp-for="Name" maxlength="100" required>
@@ -63,32 +63,25 @@
                         <textarea class="form-control" asp-for="Description" rows="2" maxlength="250"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
-
-                    @{
-                        var display = isCreate ? "none" : Model?.Image is null ? "none" : "initial";
-                    }
-
                     <div class="col-md-6">
-                        <label class="form-label">Upload Image <span class="text-info">(Only jpg, png, jpeg are allowed.)</span></label>
+                        <label class="form-label">Upload Image <span class="text-info">(Only images are allowed.)</span></label>
                         <input class="form-control md-2" asp-for="File" accept="image/*">
-                    </div>
-                    <div class="col-md-6" style="display:@display" id="ImageDiv">
-                        <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                        <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="ImageDiv">
                             @if (Model?.Image is null)
                             {
-                                <img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                @*<img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">*@
                             }
                             else
                             {
                                 <img id="imageContainer" src="@Model.Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage()'>
+                                        <span class="avatar-title rounded-circle bg-light text-body shadow">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </span>
+                                    </label>
+                                </div>
                             }
-                            <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage()'>
-                                    <span class="avatar-title rounded-circle bg-light text-body shadow">
-                                        <i class="ri-delete-bin-line"></i>
-                                    </span>
-                                </label>
-                            </div>
                         </div>
                     </div>
                     <div class="col-12">
@@ -102,6 +95,7 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script src="~/js/custom/accessoriesaddedit.js"></script>
 }

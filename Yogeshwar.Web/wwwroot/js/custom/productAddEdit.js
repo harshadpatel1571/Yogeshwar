@@ -26,7 +26,7 @@ $(document).ready(function () {
             type: 'POST',
             success: function (response) {
                 for (let i = 0; i < response.length; i++) {
-                    quantities.push({key: response[i].key, value: response[i].value});
+                    quantities.push({ key: response[i].key, value: response[i].value });
                 }
 
                 displayMenu(true);
@@ -62,7 +62,7 @@ function displayMenu(edit) {
         const allValue = $('#Accessories option');
 
         allValue.each(function (x, y) {
-            dataAccessories.push({key: y.value, name: y.text})
+            dataAccessories.push({ key: y.value, name: y.text })
         });
 
         selectedValue.each(function (x, y) {
@@ -130,6 +130,12 @@ $("#ImageFiles").change(function () {
     displayImage(this);
 });
 
+
+$("#VideoFile").change(function () {
+    displayVideo(this);
+});
+
+
 let lastLength = 0
 
 function displayImage(input) {
@@ -160,6 +166,30 @@ function displayImage(input) {
     }
 }
 
+function displayVideo(input) {
+    if (input.files && input.files[0]) {
+        const videoDiv = $('#videoDiv');
+        videoDiv.empty();
+
+        const videoHtml = "<video width=\"320\" height=\"240\" id='videoId' controls>\n" +
+            "                                        <source src='-' >\n" +
+            "                                    </video>\n" +
+            "                                    <div class=\"avatar-xs p-0 rounded-circle profile-photo-edit\">\n" +
+            "                                        <label for=\"profile-img-file-input\" class=\"profile-photo-edit avatar-xs\" onclick=\"deleteVideo(0)\">\n" +
+            "                                            <span class=\"avatar-title rounded-circle bg-light text-body shadow\">\n" +
+            "                                                <i class=\"ri-delete-bin-line\"></i>\n" +
+            "                                            </span>\n" +
+            "                                        </label>\n" +
+            "                                    </div>";
+
+        videoDiv.append(videoHtml);
+
+        const video = $('#videoId');
+        const fileUrl = URL.createObjectURL(input.files[0]);
+        video.attr('src', fileUrl);
+    }
+}
+
 function isNumberKey(evt, element) {
     const charCode = (evt.which) ? evt.which : event.keyCode
     if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode == 46 || charCode == 8))
@@ -178,6 +208,43 @@ function isNumberKey(evt, element) {
         }
     }
     return true;
+}
+
+function deleteVideo(id) {
+    if (id == 0) {
+        const videoDiv = $('#videoDiv');
+        videoDiv.empty();
+        return;
+    }
+
+    Swal.fire({
+        title: "Are you sure want to delete video from system?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: !0,
+        confirmButtonClass: "btn btn-primary w-xs me-2 mt-2",
+        cancelButtonClass: "btn btn-danger w-xs mt-2",
+        confirmButtonText: "Yes, delete it!",
+        buttonsStyling: !1,
+        showCloseButton: !0,
+    }).then(function (t) {
+        if (!t.isConfirmed) return;
+        $.ajax({
+            type: "POST",
+            url: "/Product/DeleteVideo/" + id,
+            success: function () {
+                t.value && Swal.fire({
+                    title: "Deleted!",
+                    text: "Your video has been deleted.",
+                    icon: "success",
+                    confirmButtonClass: "btn btn-primary w-xs mt-2",
+                    buttonsStyling: !1
+                }).then(function () {
+                    $('#videoDiv').empty();
+                });
+            }
+        });
+    });
 }
 
 function deleteImage(id) {
@@ -199,7 +266,7 @@ function deleteImage(id) {
             success: function () {
                 t.value && Swal.fire({
                     title: "Deleted!",
-                    text: "Your record has been deleted.",
+                    text: "Your image has been deleted.",
                     icon: "success",
                     confirmButtonClass: "btn btn-primary w-xs mt-2",
                     buttonsStyling: !1
