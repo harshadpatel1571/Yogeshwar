@@ -41,6 +41,8 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 app.UseRouting();
 
 app.UseCookiePolicy();

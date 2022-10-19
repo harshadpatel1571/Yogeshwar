@@ -1,6 +1,4 @@
-﻿using Yogeshwar.Service.Dto;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 [Authorize]
 public class ProductController : Controller
