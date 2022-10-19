@@ -65,11 +65,12 @@
                             <li class="list-group-item">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
+                                        <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
                                     </div>
                                     <div class="flex-grow-1 ms-2">
                                         @item.Text
                                     </div>
-                                    <div class="flex-grow-2 ms-2" style="position:relative;right:40%;">
+                                    <div class="flex-grow-2 ms-2" style="position:relative;right:60%;">
                                         @Model.AccessoriesQuantity.First(x=>x.AccessoriesId.ToString() == item.Value).Quantity
                                     </div>
                                 </div>

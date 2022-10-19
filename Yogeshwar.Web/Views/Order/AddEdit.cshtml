@@ -80,7 +80,7 @@
                         </select>
                     </div>
                 </div>
-
+                <hr />
                 <div id="orderDetail">
                     <div class="card product">
                         <div class="card-body">
@@ -93,63 +93,53 @@
                                         <option value="AL">Bike</option>
                                         <option value="AL">Car</option>
                                     </select>
-                                    <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                                    <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4">
                                         <img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <label>Quantity</label><br />
+                                        <div class="input-step light">
+                                            <button type="button" class="minus shadow">–</button>
+                                            <input type="number" class="product-quantity" value="2" min="1" max="100">
+                                            <button type="button" class="plus shadow">+</button>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
                                     <label class="form-label">Confirm Accessiories Stock</label> <br />
                                     <ul class="list-group">
                                         <li class="list-group-item" aria-disabled="true">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0" style="padding: 6px;">
+                                                            <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-2">
+                                                            James Ballard
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
-                                                </div>
-                                                <div class="flex-grow-1 ms-2">
-                                                    James Ballard
-                                                </div>
-                                            </div>
-                                        </li>
-
-                                        <li class="list-group-item" aria-disabled="true">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
-                                                </div>
-                                                <div class="flex-grow-1 ms-2">
-                                                    James Ballard
-                                                </div>
-                                            </div>
-                                        </li>
-
-                                        <li class="list-group-item" aria-disabled="true">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
-                                                </div>
-                                                <div class="flex-grow-1 ms-2">
-                                                    James Ballard
+                                                <div class="col-sm-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0" style="padding: 6px;">
+                                                            <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-2">
+                                                            James Ballard
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </li>
                                     </ul>
-                                </div>
-
-                                <div class="col-sm-2">
-                                    <div class="text-lg-end">
-                                        <label class="form-label">Product Price :</label>
-                                        <h5 class="fs-14">$<span id="ticket_price" class="product-price">119.99</span></h5>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,6 +150,12 @@
                                         <div>
                                             <a href="#" class="d-block text-body p-1 px-2" data-bs-toggle="modal" data-bs-target="#removeItemModal"><i class="ri-delete-bin-fill text-muted align-bottom me-1"></i> Remove</a>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-auto">
+                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                        <div>Product Price :</div>
+                                        <h5 class="fs-14 mb-0">$<span class="product-line-price">119.99</span></h5>
                                     </div>
                                 </div>
                             </div>
@@ -177,63 +173,53 @@
                                         <option value="AL">Bike</option>
                                         <option value="AL">Car</option>
                                     </select>
-                                    <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                                    <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4">
                                         <img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <label>Quantity</label><br />
+                                        <div class="input-step light">
+                                            <button type="button" class="minus shadow">–</button>
+                                            <input type="number" class="product-quantity" value="2" min="1" max="100">
+                                            <button type="button" class="plus shadow">+</button>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
                                     <label class="form-label">Confirm Accessiories Stock</label> <br />
                                     <ul class="list-group">
                                         <li class="list-group-item" aria-disabled="true">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0" style="padding: 6px;">
+                                                            <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-2">
+                                                            James Ballard
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
-                                                </div>
-                                                <div class="flex-grow-1 ms-2">
-                                                    James Ballard
-                                                </div>
-                                            </div>
-                                        </li>
-
-                                        <li class="list-group-item" aria-disabled="true">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
-                                                </div>
-                                                <div class="flex-grow-1 ms-2">
-                                                    James Ballard
-                                                </div>
-                                            </div>
-                                        </li>
-
-                                        <li class="list-group-item" aria-disabled="true">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <input class="form-check-input" type="checkbox" id="formCheck1">
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
-                                                </div>
-                                                <div class="flex-grow-1 ms-2">
-                                                    James Ballard
+                                                <div class="col-sm-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0" style="padding: 6px;">
+                                                            <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-2">
+                                                            James Ballard
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </li>
                                     </ul>
-                                </div>
-
-                                <div class="col-sm-2">
-                                    <div class="text-lg-end">
-                                        <label class="form-label">Product Price :</label>
-                                        <h5 class="fs-14">$<span id="ticket_price" class="product-price">119.99</span></h5>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -246,17 +232,113 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-auto">
+                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                        <div>Product Price :</div>
+                                        <h5 class="fs-14 mb-0">$<span class="product-line-price">119.99</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card product">
+                        <div class="card-body">
+                            <div class="row gy-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label">Product</label>
+                                    <span class="text-danger">*</span>
+                                    <select class="js-example-disabled" name="status">
+                                        <option value="">Cycle</option>
+                                        <option value="AL">Bike</option>
+                                        <option value="AL">Car</option>
+                                    </select>
+                                    <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4">
+                                        <img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <label>Quantity</label><br />
+                                        <div class="input-step light">
+                                            <button type="button" class="minus shadow">–</button>
+                                            <input type="number" class="product-quantity" value="2" min="1" max="100">
+                                            <button type="button" class="plus shadow">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label class="form-label">Confirm Accessiories Stock</label> <br />
+                                    <ul class="list-group">
+                                        <li class="list-group-item" aria-disabled="true">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0" style="padding: 6px;">
+                                                            <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-2">
+                                                            James Ballard
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0" style="padding: 6px;">
+                                                            <input class="form-check-input" type="checkbox" id="formCheck1">
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                        </div>
+                                                        <div class="flex-grow-1 ms-2">
+                                                            James Ballard
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row align-items-center gy-3">
+                                <div class="col-sm">
+                                    <div class="d-flex flex-wrap my-n1">
+                                        <div>
+                                            <a href="#" class="d-block text-body p-1 px-2" data-bs-toggle="modal" data-bs-target="#removeItemModal"><i class="ri-delete-bin-fill text-muted align-bottom me-1"></i> Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-auto">
+                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                        <div>Product Price :</div>
+                                        <h5 class="fs-14 mb-0">$<span class="product-line-price">119.99</span></h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-body row g-3">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-info btn-label waves-effect waves-light">
-                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
-                            Add Product
-                        </button>
+                    <div class="row align-items-center gy-3">
+                        <div class="col-sm">
+                            <div class="d-flex flex-wrap my-n1">
+                                <button type="submit" class="btn btn-info btn-label waves-effect waves-light">
+                                    <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i>
+                                    Add Product
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div class="d-flex align-items-center gap-2 text-muted">
+                                <div>Total Amount :</div>
+                                <h5 class="fs-14 mb-0">$<span class="product-line-price">119.99</span></h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
