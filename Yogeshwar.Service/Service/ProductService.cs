@@ -72,6 +72,11 @@ internal class ProductService : IProductService
             Description = product.Description,
             Price = product.Price,
             Video = product.Video != null ? $"{_videoReadPath}/{product.Video}" : null,
+            AccessoriesQuantity = product.ProductAccessories.Select(x => new AccessoriesQuantity
+            {
+                AccessoriesId = x.AccessoriesId,
+                Quantity = x.Quantity,
+            }).ToArray(),
             Images = product.ProductImages
                 .Select(x => new ImageIds
                 {

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ProductDto
+@{
     ViewData["Title"] = "Detail Product";
     Layout = "_Layout";
 }
@@ -36,85 +37,71 @@
                 </div>
             </div>
             <div class="card-body row g-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Product Name</label>
-                    <label class="form-control">Product Name</label>
+                    <label class="form-control">@Model.Name</label>
                 </div>
 
-                <div class="col-md-6">
-                    <label class="form-label">Price</label>
-                    <label class="form-control">Price</label>
-                </div>
-
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Model No</label>
-                    <label class="form-control">Model No</label>
+                    <label class="form-control">@Model.ModelNo</label>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Price</label>
+                    <label class="form-control">@Model.Price</label>
                 </div>
 
                 <div class="col-md-12">
                     <label class="form-label">Description</label>
-                    <label class="form-control">Description</label>
+                    <textarea class="form-control" asp-for="Description" rows="2" readonly></textarea>
                 </div>
 
                 <div class="col-md-12">
                     <label class="form-label">Product Accessories</label> <br />
                     <ul class="list-group">
-                        <li class="list-group-item disabled" aria-disabled="true">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                        @foreach (var item in Model.SelectListsForAccessories.Where(x => Model.Accessories.Contains(Convert.ToInt32(x.Value))))
+                        {
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                    </div>
+                                    <div class="flex-grow-1 ms-2">
+                                        @item.Text
+                                    </div>
+                                    <div class="flex-grow-2 ms-2" style="position:relative;right:40%;">
+                                        @Model.AccessoriesQuantity.First(x=>x.AccessoriesId.ToString() == item.Value).Quantity
+                                    </div>
                                 </div>
-                                <div class="flex-grow-1 ms-2">
-                                    James Ballard
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <img src="~/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle">
-                                </div>
-                                <div class="flex-grow-1 ms-2">
-                                    Nancy Martino
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <img src="~/images/users/avatar-3.jpg" alt="" class="avatar-xs rounded-circle">
-                                </div>
-                                <div class="flex-grow-1 ms-2">
-                                    Henry Baird
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <img src="~/images/users/avatar-3.jpg" alt="" class="avatar-xs rounded-circle">
-                                </div>
-                                <div class="flex-grow-1 ms-2">
-                                    Erica Kernan
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        }
                     </ul>
                 </div>
+                @{
+                    if (Model.Images is { Count: > 0 })
+                    {
+                        <div class="col-md-6">
+                            <label class="form-label">Product Image</label><br />
+                            @for (int i = 0; i < Model.Images.Count; i++)
+                            {
+                                <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                                    <img src="@Model.Images[i].Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                </div>
+                            }
+                        </div>
+                    }
 
-                <div class="col-md-6">
-                    <label class="form-label">Product Image</label><br />
-                    <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                        <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Product Video</label><br />
-                    <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                        <iframe src="https://www.youtube.com/embed/2RZQN_ko0iU" title="YouTube video" allowfullscreen=""></iframe>
-                    </div>
-                </div>
+                    if (Model.Video is not null)
+                    {
+                        <div class="col-md-6">
+                            <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                                <video width="320" height="240" id="videoId" controls>
+                                    <source src="@Model.Video">
+                                </video>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
     </div>

@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Web.Controllers;
+﻿using Yogeshwar.Service.Dto;
+
+namespace Yogeshwar.Web.Controllers;
 
 [Authorize]
 public class ProductController : Controller
@@ -50,10 +52,10 @@ public class ProductController : Controller
         return Ok(data);
     }
 
-    public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService droDownService)
+    public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService)
     {
-        using var _ = droDownService;
-        var dropDownData = await droDownService.BindDropDownForAccessories();
+        using var _ = dropDownService;
+        var dropDownData = await dropDownService.BindDropDownForAccessories();
 
         ProductDto model;
 
@@ -80,9 +82,9 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddEdit(ProductDto productDto, [FromServices] IDropDownService droDownService)
+    public async Task<IActionResult> AddEdit(ProductDto productDto, [FromServices] IDropDownService dropDownService)
     {
-        using var _ = droDownService;
+        using var _ = dropDownService;
         ModelState.Remove("Id");
 
         productDto.AccessoriesQuantity ??= new List<AccessoriesQuantity>();
@@ -100,7 +102,7 @@ public class ProductController : Controller
         {
             ModelState.AddModelError();
 
-            var dropDownData = await droDownService.BindDropDownForAccessories();
+            var dropDownData = await dropDownService.BindDropDownForAccessories();
             productDto.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
 
             return View(productDto);
@@ -124,7 +126,7 @@ public class ProductController : Controller
         return NoContent();
     }
 
-    public async Task<IActionResult> Detail(int id)
+    public async Task<IActionResult> Detail(int id, [FromServices] IDropDownService dropDownService)
     {
         var model = await _productService.Value.GetSingleAsync(id).ConfigureAwait(false);
 
@@ -132,6 +134,9 @@ public class ProductController : Controller
         {
             return NotFound();
         }
+
+        var dropDownData = await dropDownService.BindDropDownForAccessories();
+        model.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
 
         return View(model);
     }
