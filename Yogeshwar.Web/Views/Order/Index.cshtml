@@ -10,7 +10,9 @@
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Order</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">Order</a>
+                    </li>
                     <li class="breadcrumb-item active">List</li>
                 </ol>
             </div>
@@ -38,23 +40,23 @@
                 </div>
             </div>
             <div class="card-body">
-                <table id="grid2" class="display table caption-top table-nowrap" style="width:100%">
+                <table id="grid" class="display table caption-top table-nowrap" style="width:100%">
                     <thead class="table-light">
-                        <tr>
-                            <th>Id</th>
-                            <th>Customer Name</th>
-                            <th>Discount Amount</th>
-                            <th>Total Amount</th>
-                            <th>Order Date</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Customer Name</th>
+                        <th>Amount</th>
+                        <th>Order Date</th>
+                        <th>Order Count</th>
+                        <th>Action</th>
+                    </tr>
                     </thead>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
 @section Scripts{
-    @*<script src="~/js/custom/customScript.js"></script>*@
+    <script src="js/custom/orderDatatable.js"></script>
 }

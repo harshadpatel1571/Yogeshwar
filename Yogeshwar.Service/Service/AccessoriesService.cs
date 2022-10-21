@@ -20,7 +20,7 @@ internal class AccessoriesService : IAccessoriesService
         GC.SuppressFinalize(this);
     }
 
-    async Task<DetaTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(DataTableFilterDto filterDto)
+    async Task<DataTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(DataTableFilterDto filterDto)
     {
         var result = _context.Accessories.AsNoTracking();
 
@@ -29,7 +29,7 @@ internal class AccessoriesService : IAccessoriesService
             result = result.Where(x => x.Name.Contains(filterDto.SearchValue));
         }
 
-        var model = new DetaTableResponseCarrier<AccessoriesDto>
+        var model = new DataTableResponseCarrier<AccessoriesDto>
         {
             TotalCount = result.Count(),
         };

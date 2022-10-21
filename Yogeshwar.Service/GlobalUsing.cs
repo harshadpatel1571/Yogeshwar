@@ -8,3 +8,4 @@ global using Microsoft.AspNetCore.Http;
 global using Yogeshwar.Helper.Extension;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.AspNetCore.Hosting;
+global using Yogeshwar.DB.Constant;

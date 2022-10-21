@@ -11,7 +11,7 @@ internal record struct DataTableResponseDto<T>
     public IEnumerable<T> Data { get; set; }
 }
 
-internal class DetaTableResponseCarrier<T>
+internal class DataTableResponseCarrier<T>
 {
     public int TotalCount { get; set; }
 

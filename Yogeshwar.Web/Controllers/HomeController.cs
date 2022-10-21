@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-
-namespace Yogeshwar.Web.Controllers;
-
-[Authorize]
+﻿[Authorize]
 public sealed class HomeController : Controller
 {
     public IActionResult Index()

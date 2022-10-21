@@ -2,7 +2,7 @@
 
 public interface ICustomerService : IDisposable
 {
-    internal Task<DetaTableResponseCarrier<CustomerDto>> GetByFilterAsync(DataTableFilterDto filterDto);
+    internal Task<DataTableResponseCarrier<CustomerDto>> GetByFilterAsync(DataTableFilterDto filterDto);
 
     Task<int> CreateOrUpdateAsync(CustomerDto customer);
 

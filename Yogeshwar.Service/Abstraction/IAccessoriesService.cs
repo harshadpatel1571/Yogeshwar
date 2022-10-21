@@ -2,7 +2,7 @@
 
 public interface IAccessoriesService : IDisposable
 {
-    internal Task<DetaTableResponseCarrier<AccessoriesDto>> GetByFilterAsync(DataTableFilterDto filterDto);
+    internal Task<DataTableResponseCarrier<AccessoriesDto>> GetByFilterAsync(DataTableFilterDto filterDto);
 
     Task<AccessoriesDto?> GetSingleAsync(int id);
 

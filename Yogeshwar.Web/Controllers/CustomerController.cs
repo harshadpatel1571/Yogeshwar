@@ -16,6 +16,7 @@ public sealed class CustomerController : Controller
         {
             _customerService.Value.Dispose();
         }
+
         base.Dispose(disposing);
     }
 

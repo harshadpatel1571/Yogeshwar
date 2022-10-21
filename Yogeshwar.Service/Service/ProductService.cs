@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Yogeshwar.Service.Service;
+﻿namespace Yogeshwar.Service.Service;
 
 internal class ProductService : IProductService
 {
     private readonly YogeshwarContext _context;
     private static string _imageReadPath;
     private static string _videoReadPath;
+    private static string _accessoriesImageReadPath;
     private readonly string _imageSavePath;
     private readonly string _videoSavePath;
 
@@ -18,6 +17,7 @@ internal class ProductService : IProductService
         _videoReadPath = configuration["File:ReadPath"] + "/Product/Video";
         _imageSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product";
         _videoSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product/Video";
+        _accessoriesImageReadPath = configuration["File:ReadPath"] + "/Accessories";
     }
 
     public void Dispose()
@@ -26,7 +26,7 @@ internal class ProductService : IProductService
         GC.SuppressFinalize(this);
     }
 
-    async Task<DetaTableResponseCarrier<ProductDto>> IProductService.GetByFilterAsync(DataTableFilterDto filterDto)
+    async Task<DataTableResponseCarrier<ProductDto>> IProductService.GetByFilterAsync(DataTableFilterDto filterDto)
     {
         var result = _context.Products.AsNoTracking();
 
@@ -36,7 +36,7 @@ internal class ProductService : IProductService
                                        x.ModelNo.Contains(filterDto.SearchValue));
         }
 
-        var model = new DetaTableResponseCarrier<ProductDto>
+        var model = new DataTableResponseCarrier<ProductDto>
         {
             TotalCount = result.Count(),
         };
@@ -76,6 +76,7 @@ internal class ProductService : IProductService
             {
                 AccessoriesId = x.AccessoriesId,
                 Quantity = x.Quantity,
+                Image = x.Accessories.Image != null ? $"{_accessoriesImageReadPath}/{x.Accessories.Image}" : null
             }).ToArray(),
             Images = product.ProductImages
                 .Select(x => new ImageIds
@@ -91,6 +92,7 @@ internal class ProductService : IProductService
     {
         return await _context.Products.AsNoTracking()
             .Where(x => x.Id == id).Include(x => x.ProductAccessories)
+            .ThenInclude(x => x.Accessories)
             .Include(x => x.ProductImages)
             .Select(x => DtoSelector(x))
             .FirstOrDefaultAsync().ConfigureAwait(false);
@@ -138,7 +140,7 @@ internal class ProductService : IProductService
             Description = productDto.Description,
             Video = video,
             ModelNo = productDto.ModelNo,
-            Price = productDto.Price.Value,
+            Price = productDto.Price!.Value,
             ProductAccessories = productDto.AccessoriesQuantity.Select(x => new ProductAccessory
             {
                 AccessoriesId = x.AccessoriesId,
@@ -197,7 +199,7 @@ internal class ProductService : IProductService
         dbModel.Name = productDto.Name;
         dbModel.Description = productDto.Description;
         dbModel.ModelNo = productDto.ModelNo;
-        dbModel.Price = productDto.Price.Value;
+        dbModel.Price = productDto.Price!.Value;
 
         var newAccessories = productDto.AccessoriesQuantity
             .Select(x => new ProductAccessory

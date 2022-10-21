@@ -60,18 +60,21 @@
                 <div class="col-md-12">
                     <label class="form-label">Product Accessories</label> <br />
                     <ul class="list-group">
-                        @foreach (var item in Model.SelectListsForAccessories.Where(x => Model.Accessories.Contains(Convert.ToInt32(x.Value))))
+                        @foreach (var item in Model.AccessoriesQuantity)
                         {
                             <li class="list-group-item">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
-                                        <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                        @if (item.Image is not null)
+                                        {
+                                            <img src="@item.Image" alt="" class="avatar-xs rounded-circle">
+                                        }
                                     </div>
                                     <div class="flex-grow-1 ms-2">
-                                        @item.Text
+                                        @Model.SelectListsForAccessories.Where(x => x.Value == item.AccessoriesId.ToString()).FirstOrDefault()?.Text
                                     </div>
                                     <div class="flex-grow-2 ms-2" style="position:relative;right:60%;">
-                                        @Model.AccessoriesQuantity.First(x=>x.AccessoriesId.ToString() == item.Value).Quantity
+                                        @item.Quantity
                                     </div>
                                 </div>
                             </li>

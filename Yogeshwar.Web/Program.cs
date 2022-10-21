@@ -26,6 +26,8 @@ services.AddScoped<IAccessoriesService, AccessoriesService>()
     .AddScoped(x => new Lazy<IAccessoriesService>(() => x.GetService<IAccessoriesService>()!));
 services.AddScoped<IProductService, ProductService>()
     .AddScoped(x => new Lazy<IProductService>(() => x.GetService<IProductService>()!));
+services.AddScoped<IOrderService, OrderService>()
+    .AddScoped(x => new Lazy<IOrderService>(() => x.GetService<IOrderService>()!));
 
 #endregion
 
@@ -54,7 +56,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     // pattern: "{controller=Account}/{action=SignIn}/{id?}"
-    pattern: "{controller=Product}/{action=Index}/{id?}"
+    pattern: "{controller=Order}/{action=Index}/{id?}"
 );
 
 app.Run();

@@ -15,7 +15,7 @@ internal class CustomerService : ICustomerService
         GC.SuppressFinalize(this);
     }
 
-    async Task<DetaTableResponseCarrier<CustomerDto>> ICustomerService.GetByFilterAsync(DataTableFilterDto filterDto)
+    async Task<DataTableResponseCarrier<CustomerDto>> ICustomerService.GetByFilterAsync(DataTableFilterDto filterDto)
     {
         var result = _context.Customers.AsNoTracking();
 
@@ -26,7 +26,7 @@ internal class CustomerService : ICustomerService
                                        x.LastName.Contains(filterDto.SearchValue));
         }
 
-        var model = new DetaTableResponseCarrier<CustomerDto>
+        var model = new DataTableResponseCarrier<CustomerDto>
         {
             TotalCount = result.Count()
         };

@@ -25,7 +25,7 @@ public class ProductDto
     public IList<int> Accessories { get; set; }
 
     [Required(ErrorMessage = "Accessories quantities are required.")]
-    internal IList<AccessoriesQuantity> AccessoriesQuantity { get; set; }
+    public IList<AccessoriesQuantity> AccessoriesQuantity { get; set; }
 
     internal IList<ImageIds>? Images { get; set; }
 
@@ -38,11 +38,13 @@ public class ProductDto
     public IFormFile? VideoFile { get; set; }
 }
 
-internal class AccessoriesQuantity
+public class AccessoriesQuantity
 {
     public int AccessoriesId { get; set; }
 
     public int Quantity { get; set; }
+
+    internal string? Image { get; set; }
 }
 
 internal class ImageIds
