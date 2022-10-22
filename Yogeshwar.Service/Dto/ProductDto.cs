@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Security.Principal;
 
 namespace Yogeshwar.Service.Dto;
 
@@ -52,4 +52,35 @@ internal class ImageIds
     public int Id { get; set; }
 
     public string Image { get; set; }
+}
+
+public class ProductAccessoriesDto
+{
+    public int Id { get; set; }
+
+    public int ProductId { get; set; }
+
+    public string Name { get; set; }
+
+    public string? Description { get; set; }
+
+    public int Quantity { get; set; }
+}
+
+internal class ProductAccessoriesDetailDto
+{
+    public string? Image { get; set; }
+
+    public IList<AccessoriesDetailDto> Accessories { get; set; }
+
+    public decimal Amount { get; set; }
+}
+
+public record struct AccessoriesDetailDto
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string? Image { get; set; }
 }

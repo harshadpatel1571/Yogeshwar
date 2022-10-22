@@ -24,7 +24,7 @@ public class OrderController : Controller
     {
         return View();
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> BindData()
     {
@@ -41,6 +41,19 @@ public class OrderController : Controller
         };
 
         return Json(responseModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> GetAccessoriesDetail(int productId)
+    {
+        var detail = await _orderService.Value.GetAccessoriesAsync(productId);
+
+        if (detail is null)
+        {
+            return NotFound();
+        }
+
+        return Json(detail);
     }
 
     public IActionResult AddEdit()

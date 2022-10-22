@@ -46,7 +46,7 @@
                     <div class="col-md-6">
                         <label class="form-label">First Name</label>
                         <span class="text-danger">*</span>
-                        <select class="js-example-disabled" name="state">
+                        <select class="js-example-disabled">
                             <option value="">Select Customer</option>
                             <option value="AL">Harshad</option>
                             <option value="MA">Soham</option>
@@ -80,7 +80,7 @@
                         </select>
                     </div>
                 </div>
-                <hr />
+                <hr/>
                 <div id="orderDetail">
                     <div class="card product" id="productDiv_0">
                         <div class="card-body">
@@ -94,11 +94,11 @@
                                         <option value="2">Bike</option>
                                         <option value="3">Car</option>
                                     </select>
-                                    <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4">
-                                        <img id="image_0" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                    <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4" id="imageAppender_0">
+                                        <img id="image_product_0" src="Product_image_source" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
                                     </div>
                                     <div class="d-inline-block" id="quantityDiv_0">
-                                        <label>Quantity</label><br />
+                                        <label>Quantity</label><br/>
                                         <div class="input-step light">
                                             <button type="button" id="minusButton_0" onclick="minusQuantity(this)" class="minus shadow">–</button>
                                             <input type="number" id="quantity_0" class="product-quantity" value="1" disabled>
@@ -106,34 +106,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6" id="accessioriesStock_0">
-                                    <label class="form-label">Confirm Accessiories Stock</label> <br />
-                                    <ul class="list-group" id="product_accessories_0">
-                                        <li class="list-group-item" aria-disabled="true">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="d-flex align-items-center">
+                                <div class="col-sm-6">
+                                    <label class="form-label" id="accessoriesStockLabel_0">Confirm Accessiories Stock</label> <br/>
+                                    <ul class="list-group">
+                                        <li class="list-group-item" id="accessoriesStockLI_0">
+                                            <div class="row" id="accessoriesStockAppender_0">
+                                                <div class="col-sm-6" id="accessoriesStock_0_0">
+                                                    <div class="d-flex align-items-center" id="accessoriesValueAppender_0_0">
                                                         <div class="flex-shrink-0" style="padding: 6px;">
-                                                            <input class="form-check-input" type="checkbox">
+                                                            <input class="form-check-input" id="accessories_0_accessoriesId_Chk" type="checkbox">
                                                         </div>
-                                                        <div class="flex-shrink-0">
-                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
+                                                        <div class="flex-shrink-0" id="accessories_0_accessoriesId_ImageAppender">
+                                                            <img id="accessories_0_accessoriesId_Image" src="Image_source" alt="Product Image" class="avatar-xs rounded-circle">
                                                         </div>
                                                         <div class="flex-grow-1 ms-2">
-                                                            James Ballard
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0" style="padding: 6px;">
-                                                            <input class="form-check-input" type="checkbox">
-                                                        </div>
-                                                        <div class="flex-shrink-0">
-                                                            <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-xs rounded-circle">
-                                                        </div>
-                                                        <div class="flex-grow-1 ms-2">
-                                                            James Ballard
+                                                            <label id="accessories_0_accessoriesId_Label" for="accessories_0_accessoriesId_Chk" style="margin-bottom: 1%">Accessories_Name</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -155,7 +142,7 @@
                                 <div class="col-sm-auto">
                                     <div class="d-flex align-items-center gap-2 text-muted">
                                         <div>Product Price :</div>
-                                        <h5 class="fs-14 mb-0">$<span class="product-line-price">119.99</span></h5>
+                                        <h5 class="fs-14 mb-0" id="productPrice_0">$<span class="product-line-price">119.99</span></h5>
                                     </div>
                                 </div>
                             </div>
@@ -176,7 +163,7 @@
                         <div class="col-sm-auto" style="position:relative;left:2.4%">
                             <div class="d-flex align-items-center gap-2 text-muted">
                                 <div>Total Amount :</div>
-                                <h5 class="fs-14 mb-0">$<span class="product-line-price">199.99</span></h5>
+                                <h5 class="fs-14 mb-0" id="totalAmount">$<span class="product-line-price">199.99</span></h5>
                             </div>
                         </div>
                     </div>

@@ -148,4 +148,20 @@ internal class OrderService : IOrderService
 
         return dbModel;
     }
+
+    async Task<ProductAccessoriesDetailDto?> IOrderService.GetAccessoriesAsync(int productId)
+    {
+        return await _context.Products.Where(x => x.Id == productId)
+            .Select(x => new ProductAccessoriesDetailDto
+            {
+                Image = x.ProductImages.FirstOrDefault().Image,
+                Amount = x.Price,
+                Accessories = x.ProductAccessories.Select(c => new AccessoriesDetailDto
+                {
+                    Id = c.AccessoriesId,
+                    Name = c.Accessories.Name,
+                    Image = c.Accessories.Image
+                }).ToArray()
+            }).FirstOrDefaultAsync();
+    }
 }
