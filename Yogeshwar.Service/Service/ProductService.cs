@@ -3,7 +3,7 @@
 internal class ProductService : IProductService
 {
     private readonly YogeshwarContext _context;
-    private static string _imageReadPath;
+    private static string _productImageReadPath;
     private static string _videoReadPath;
     private static string _accessoriesImageReadPath;
     private readonly string _imageSavePath;
@@ -13,7 +13,7 @@ internal class ProductService : IProductService
         IWebHostEnvironment hostEnvironment)
     {
         _context = context;
-        _imageReadPath = configuration["File:ReadPath"] + "/Product";
+        _productImageReadPath = configuration["File:ReadPath"] + "/Product";
         _videoReadPath = configuration["File:ReadPath"] + "/Product/Video";
         _imageSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product";
         _videoSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product/Video";
@@ -81,7 +81,7 @@ internal class ProductService : IProductService
             Images = product.ProductImages
                 .Select(x => new ImageIds
                 {
-                    Image = $"{_imageReadPath}/{x.Image}",
+                    Image = $"{_productImageReadPath}/{x.Image}",
                     Id = x.Id
                 }).ToArray(),
             Accessories = product.ProductAccessories.Select(x => x.AccessoriesId)

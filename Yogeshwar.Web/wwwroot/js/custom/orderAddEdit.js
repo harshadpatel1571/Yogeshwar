@@ -4,6 +4,7 @@ let productImageHtml;
 let accessoriesHtml;
 let accessoriesImageHtml;
 let times = 1;
+let productCount = 1;
 
 $(document).ready(function () {
     quantityDivHtml = $('#quantityDiv_0')[0].outerHTML;
@@ -18,13 +19,12 @@ $(document).ready(function () {
     removeAssociatedElement(0);
     hideAccessoriesStockLabel(0);
     hideAccessoriesStock(0);
-    cleanPrice(0)
 
     mainHtml = $('#productDiv_0')[0].outerHTML;
 
     makeDropDownSearchable(0);
 
-    cleanTotalAmount();
+    updateTotalAmount();
 });
 
 function minusQuantity(obj) {
@@ -58,10 +58,11 @@ function plusQuantity(obj) {
 function removeModule(obj) {
     const id = parseInt(obj.id.substring(13, obj.id.length));
 
-    if (id === 0) {
+    if (productCount <= 1) {
         return;
     }
 
+    productCount--;
     $('#productDiv_' + id).remove();
     updateTotalAmount();
 }
@@ -76,10 +77,6 @@ function hideAccessoriesStock(id) {
 
 function cleanPrice(id) {
     $('#productPrice_' + id).text('');
-}
-
-function cleanTotalAmount() {
-    $('#totalAmount').text('');
 }
 
 function hideAccessoriesStockLabel(id) {
@@ -128,28 +125,35 @@ function reBindProduct(obj) {
         updateTotalAmount();
     } else {
         removeAssociatedElement(id);
-        showAccessoriesStockLabel(id);
-        showAccessoriesStock(id);
 
-        const arr = [];
+        $.ajax({
+            type: "POST",
+            url: "/Order/GetAccessoriesDetail?productId=6",// + $('#selectAccessories_' + id).val(),
+            success: function (data) {
+                showAccessoriesStockLabel(id);
+                showAccessoriesStock(id);
 
-        arr.push({accessoriesId: times + 200, name: 'Harshad', image: '/images/users/avatar-1.jpg'});
-        arr.push({accessoriesId: times + 300, name: 'Vaibhav'});
-        arr.push({accessoriesId: times + 400, name: 'Sahil'});
-        arr.push({accessoriesId: times + 100, name: 'Soham', image: '/images/users/avatar-1.jpg'});
+                displayProductImage(id, data.image);
+                displayQuantityDiv(id);
 
-        const data = {Image: '/images/users/avatar-1.jpg', accessories: arr, amount: 500}
+                data.accessories.forEach(function (value) {
+                    displayAccessories(id, value);
+                });
 
-        displayProductImage(id, data.Image);
-        displayQuantityDiv(id);
+                updatePrice(id, data.amount + " RS")
 
-        data.accessories.forEach(function (value) {
-            displayAccessories(id, value);
+                updateTotalAmount();
+            },
+            error: function (xhr, status, error) {
+                hideAccessoriesStockLabel(id);
+                hideAccessoriesStock(id);
+                removeAssociatedElement(id);
+
+                cleanPrice(id);
+
+                updateTotalAmount();
+            }
         });
-
-        updatePrice(id, data.amount + " RS")
-
-        updateTotalAmount();
     }
 }
 
@@ -160,8 +164,9 @@ function removeAssociatedElement(id) {
 }
 
 function displayProductImage(id, source) {
-    $('#imageAppender_' + id).append(productImageHtml.replace('image_product_0', 'image_product_' + id)
-        .replace('Product_image_source', source));
+    if (source !== undefined)
+        $('#imageAppender_' + id).append(productImageHtml.replace('image_product_0', 'image_product_' + id)
+            .replace('Product_image_source', source));
 }
 
 function displayQuantityDiv(id) {
@@ -174,18 +179,18 @@ function displayQuantityDiv(id) {
 
 function displayAccessories(id, obj) {
     const newHtml = accessoriesHtml
-        .replace('accessoriesValueAppender_0_0', 'accessoriesValueAppender_' + id + '_' + obj.accessoriesId)
-        .replaceAll('accessories_0_accessoriesId_Chk', 'accessories_' + id + '_' + obj.accessoriesId + '_Chk')
-        .replace('accessories_0_accessoriesId_ImageAppender', 'accessories_' + id + '_' + obj.accessoriesId + '_ImageAppender')
-        .replace('accessories_0_accessoriesId_Label', 'accessories_' + id + '_' + obj.accessoriesId + '_Label')
+        .replace('accessoriesValueAppender_0_0', 'accessoriesValueAppender_' + id + '_' + obj.id)
+        .replaceAll('accessories_0_accessoriesId_Chk', 'accessories_' + id + '_' + obj.id + '_Chk')
+        .replace('accessories_0_accessoriesId_ImageAppender', 'accessories_' + id + '_' + obj.id + '_ImageAppender')
+        .replace('accessories_0_accessoriesId_Label', 'accessories_' + id + '_' + obj.id + '_Label')
         .replace('Accessories_Name', obj.name);
 
     $('#accessoriesStockAppender_' + id).append(newHtml);
 
     if (obj.image !== undefined) {
-        $('#accessories_' + id + '_' + obj.accessoriesId + '_ImageAppender').append(accessoriesImageHtml
+        $('#accessories_' + id + '_' + obj.id + '_ImageAppender').append(accessoriesImageHtml
             .replace('Image_source', obj.image)
-            .replace('accessories_0_accessoriesId_Image', 'accessories_' + id + '_' + obj.accessoriesId + '_Image'))
+            .replace('accessories_0_accessoriesId_Image', 'accessories_' + id + '_' + obj.id + '_Image'))
     }
 }
 
@@ -205,4 +210,5 @@ $('#addButton').click(function () {
     makeDropDownSearchable(times);
 
     times++;
+    productCount++;
 });

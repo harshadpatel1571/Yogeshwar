@@ -5,10 +5,14 @@ namespace Yogeshwar.Service.Service;
 internal class OrderService : IOrderService
 {
     private readonly YogeshwarContext _context;
+    private static string _productImageReadPath;
+    private static string _accessoriesImageReadPath;
 
-    public OrderService(YogeshwarContext context)
+    public OrderService(YogeshwarContext context, IConfiguration configuration)
     {
         _context = context;
+        _productImageReadPath = configuration["File:ReadPath"] + "/Product";
+        _accessoriesImageReadPath = configuration["File:ReadPath"] + "/Accessories";
     }
 
     public void Dispose()
@@ -154,13 +158,15 @@ internal class OrderService : IOrderService
         return await _context.Products.Where(x => x.Id == productId)
             .Select(x => new ProductAccessoriesDetailDto
             {
-                Image = x.ProductImages.FirstOrDefault().Image,
+                Image = x.ProductImages.Count < 1
+                    ? null
+                    : $"/DataImages/Product/{x.ProductImages.FirstOrDefault().Image}",
                 Amount = x.Price,
                 Accessories = x.ProductAccessories.Select(c => new AccessoriesDetailDto
                 {
                     Id = c.AccessoriesId,
                     Name = c.Accessories.Name,
-                    Image = c.Accessories.Image
+                    Image = c.Accessories.Image == null ? null : $"/DataImages/Accessories/{c.Accessories.Image}"
                 }).ToArray()
             }).FirstOrDefaultAsync();
     }

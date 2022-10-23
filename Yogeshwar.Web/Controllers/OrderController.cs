@@ -44,7 +44,7 @@ public class OrderController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetAccessoriesDetail(int productId)
+    public async Task<IActionResult> GetAccessoriesDetail([FromQuery] int productId)
     {
         var detail = await _orderService.Value.GetAccessoriesAsync(productId);
 
@@ -56,13 +56,17 @@ public class OrderController : Controller
         return Json(detail);
     }
 
-    public IActionResult AddEdit()
+    public async Task<IActionResult> AddEdit([FromServices] IDropDownService dropDownService)
     {
-        return View();
-    }
+        using var _ = dropDownService;
 
-    public IActionResult Detail()
-    {
+        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync(),
+            "Key", "Text");
+        ViewBag.Status = new SelectList(dropDownService.BindDropDownForStatus(),
+            "Key", "Text");
+        ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync(),
+            "Key", "Text");
+
         return View();
     }
 }

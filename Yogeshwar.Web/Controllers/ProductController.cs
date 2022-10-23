@@ -53,7 +53,7 @@ public class ProductController : Controller
     public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService)
     {
         using var _ = dropDownService;
-        var dropDownData = await dropDownService.BindDropDownForAccessories();
+        var dropDownData = await dropDownService.BindDropDownForAccessoriesAsync();
 
         ProductDto model;
 
@@ -100,7 +100,7 @@ public class ProductController : Controller
         {
             ModelState.AddModelError();
 
-            var dropDownData = await dropDownService.BindDropDownForAccessories();
+            var dropDownData = await dropDownService.BindDropDownForAccessoriesAsync();
             productDto.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
 
             return View(productDto);
@@ -133,7 +133,7 @@ public class ProductController : Controller
             return NotFound();
         }
 
-        var dropDownData = await dropDownService.BindDropDownForAccessories();
+        var dropDownData = await dropDownService.BindDropDownForAccessoriesAsync();
         model.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
 
         return View(model);

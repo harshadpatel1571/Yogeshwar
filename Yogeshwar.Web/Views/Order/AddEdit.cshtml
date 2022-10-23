@@ -46,13 +46,8 @@
                     <div class="col-md-6">
                         <label class="form-label">First Name</label>
                         <span class="text-danger">*</span>
-                        <select class="js-example-disabled">
+                        <select class="js-example-disabled" asp-items="@ViewBag.Customers" required>
                             <option value="">Select Customer</option>
-                            <option value="AL">Harshad</option>
-                            <option value="MA">Soham</option>
-                            <option value="TO">Vaibhav</option>
-                            <option value="LO">Aesha</option>
-                            <option value="WY">Bhoomi</option>
                         </select>
                     </div>
 
@@ -73,10 +68,8 @@
                     <div class="col-md-6">
                         <label class="form-label">Status</label>
                         <span class="text-danger">*</span>
-                        <select class="form-control" name="status">
-                            <option value="">Pending</option>
-                            <option value="AL">InProgress</option>
-                            <option value="AL">Completed</option>
+                        <select class="form-control" asp-items="@ViewBag.Status" required>
+                            <option value="">Select Status</option>
                         </select>
                     </div>
                 </div>
@@ -88,11 +81,8 @@
                                 <div class="col-sm-6" id="quantityAppend_0">
                                     <label class="form-label">Product</label>
                                     <span class="text-danger">*</span>
-                                    <select class="form-control" required id="selectAccessories_0" onchange="reBindProduct(this)">
+                                    <select class="form-control" asp-items="@ViewBag.Products" required id="selectAccessories_0" onchange="reBindProduct(this)">
                                         <option value="">Select Product</option>
-                                        <option value="1">Cycle</option>
-                                        <option value="2">Bike</option>
-                                        <option value="3">Car</option>
                                     </select>
                                     <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4" id="imageAppender_0">
                                         <img id="image_product_0" src="Product_image_source" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
@@ -142,14 +132,13 @@
                                 <div class="col-sm-auto">
                                     <div class="d-flex align-items-center gap-2 text-muted">
                                         <div>Product Price :</div>
-                                        <h5 class="fs-14 mb-0" id="productPrice_0">$<span class="product-line-price">119.99</span></h5>
+                                        <h5 class="fs-14 mb-0" id="productPrice_0"><span class="product-line-price"></span></h5>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="card-body row g-3">
                     <div class="row align-items-center gy-3">
                         <div class="col-sm">
@@ -163,12 +152,11 @@
                         <div class="col-sm-auto" style="position:relative;left:2.4%">
                             <div class="d-flex align-items-center gap-2 text-muted">
                                 <div>Total Amount :</div>
-                                <h5 class="fs-14 mb-0" id="totalAmount">$<span class="product-line-price">199.99</span></h5>
+                                <h5 class="fs-14 mb-0" id="totalAmount">$<span class="product-line-price"></span></h5>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="card-body row g-3">
                     <div class="col-12">
                         <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
