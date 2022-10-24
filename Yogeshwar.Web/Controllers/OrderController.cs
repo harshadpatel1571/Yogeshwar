@@ -69,4 +69,9 @@ public class OrderController : Controller
 
         return View();
     }
+
+    public IActionResult Detail()
+    {
+        return View();
+    }
 }

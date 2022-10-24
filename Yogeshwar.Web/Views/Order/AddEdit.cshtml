@@ -68,7 +68,7 @@
                     <div class="col-md-6">
                         <label class="form-label">Status</label>
                         <span class="text-danger">*</span>
-                        <select class="form-control" asp-items="@ViewBag.Status" required>
+                        <select class="form-select" asp-items="@ViewBag.Status" required>
                             <option value="">Select Status</option>
                         </select>
                     </div>
@@ -94,6 +94,19 @@
                                             <input type="number" id="quantity_0" class="product-quantity" value="1" disabled>
                                             <button type="button" id="plusButton_0" onclick="plusQuantity(this)" class="plus shadow">+</button>
                                         </div>
+                                    </div>
+                                    <div class="d-inline-block" id="quantityDiv_0">
+                                        <label>Deliverd Date</label><br />
+                                            <input type="date" id="deliverDate_0" class="form-control">
+                                    </div>
+                                    <div class="d-inline-block" id="quantityDiv_0">
+                                        <label>Order Status</label><br/>
+                                        <select class="form-select" id="orderStatus_0">
+                                            <option value="">Select Status</option>
+                                            <option value="">Pending</option>
+                                            <option value="">Production</option>
+                                            <option value="">Deliverd</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -171,5 +184,5 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/custom/orderaddedit.js"></script>
+    @*<script src="~/js/custom/orderaddedit.js"></script>*@
 }
