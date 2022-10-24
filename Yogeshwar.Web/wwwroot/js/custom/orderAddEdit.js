@@ -128,7 +128,7 @@ function reBindProduct(obj) {
 
         $.ajax({
             type: "POST",
-            url: "/Order/GetAccessoriesDetail?productId=6",// + $('#selectAccessories_' + id).val(),
+            url: "/Order/GetAccessoriesDetail?productId=" + $('#selectAccessories_' + id).val(),
             success: function (data) {
                 showAccessoriesStockLabel(id);
                 showAccessoriesStock(id);
