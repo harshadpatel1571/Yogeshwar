@@ -1,0 +1,95 @@
+﻿@model ServiceDto
+@{
+    var addOrEdit = Model is null
+                    ? "Add"
+                    : "Edit";
+
+    ViewData["Title"] = $"{addOrEdit} Service";
+
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Service</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">Service</li>
+                    <li class="breadcrumb-item active">@addOrEdit</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Service</h5>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary btn-label waves-effect waves-light">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                Go to List
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form class="row g-3 needs-validation" asp-action="AddEdit">
+                    <input class="form-control" asp-for="Id" type="hidden" readonly>
+                    <div class="col-md-6">
+                        <label class="form-label">Worker Name</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="WorkerName" maxlength="50" required>
+                        <span asp-validation-for="WorkerName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Select Customer</label>
+                        <span class="text-danger">*</span>
+                        <select class="js-example-disabled" asp-for="CustomerId" asp-items="@ViewBag.Customers">
+                            <option value="">Select</option>
+                        </select>
+                        <span asp-validation-for="CustomerId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Complain Detail</label>
+                        <span class="text-danger">*</span>
+                        <textarea class="form-control" asp-for="Description" rows="8" maxlength="500" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Completed Date</label>
+                        <span class="text-danger">*</span>
+                        <input type="text" asp-for="CompletedDate" class="form-control" placeholder="dd-mm-yyyy" data-provider="flatpickr" data-date-format="d-M-Y">
+                        <span asp-validation-for="CompletedDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Service Status</label>
+                        <select class="js-example-disabled" asp-for="ServiceStatus" asp-items="@ViewBag.Status">
+                            <option value="">Select</option>
+                        </select>
+                        <span asp-validation-for="ServiceStatus" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

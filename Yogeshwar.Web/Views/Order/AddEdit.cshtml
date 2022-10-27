@@ -54,7 +54,7 @@
                     <div class="col-md-6">
                         <label class="form-label">Order Date</label>
                         <span class="text-danger">*</span>
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" placeholder="dd-mm-yyyy" data-provider="flatpickr" data-date-format="d-M-Y">
                     </div>
 
                     <div class="col-md-6">
@@ -68,7 +68,7 @@
                     <div class="col-md-6">
                         <label class="form-label">Status</label>
                         <span class="text-danger">*</span>
-                        <select class="form-select" asp-items="@ViewBag.Status" required>
+                        <select class="js-example-disabled" asp-items="@ViewBag.Status" required>
                             <option value="">Select Status</option>
                         </select>
                     </div>
@@ -95,9 +95,9 @@
                                             <button type="button" id="plusButton_0" onclick="plusQuantity(this)" class="plus shadow">+</button>
                                         </div>
                                     </div>
-                                    <div class="d-inline-block" id="quantityDiv_0">
+                                    <div class="d-inline-block mt-3" id="quantityDiv_0">
                                         <label>Deliverd Date</label><br />
-                                            <input type="date" id="deliverDate_0" class="form-control">
+                                        <input type="date" id="deliverDate_0" class="form-control" placeholder="dd-mm-yyyy" data-provider="flatpickr" data-date-format="d-M-Y">
                                     </div>
                                     <div class="d-inline-block" id="quantityDiv_0">
                                         <label>Order Status</label><br/>
