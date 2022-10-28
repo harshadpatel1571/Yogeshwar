@@ -1,8 +1,8 @@
 ﻿namespace Yogeshwar.DB.Constant;
 
-public enum OrderStatus : byte
+public enum OrderDetailStatus : byte
 {
     Pending = 1,
-    Production = 2,
+    InProgress = 2,
     Delivered = 3
 }

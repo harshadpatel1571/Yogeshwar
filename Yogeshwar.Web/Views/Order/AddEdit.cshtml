@@ -41,144 +41,139 @@
                     </a>
                 </div>
             </div>
-            <form class="needs-validation" asp-action="AddEdit" enctype="multipart/form-data">
-                <div class="card-body row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">First Name</label>
-                        <span class="text-danger">*</span>
-                        <select class="js-example-disabled" asp-items="@ViewBag.Customers" required>
-                            <option value="">Select Customer</option>
-                        </select>
-                    </div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Customer</label>
+                    <span class="text-danger">*</span>
+                    <select class="js-example-disabled" id="customer" asp-items="@ViewBag.Customers" required>
+                        <option value="">Select Customer</option>
+                    </select>
+                </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Order Date</label>
-                        <span class="text-danger">*</span>
-                        <input type="date" class="form-control" placeholder="dd-mm-yyyy" data-provider="flatpickr" data-date-format="d-M-Y">
-                    </div>
+                <div class="col-md-6">
+                    <label class="form-label">Order Date</label>
+                    <span class="text-danger">*</span>
+                    <input type="date" id="orderDate" required class="form-control" placeholder="dd-MMM-yyyy" data-provider="flatpickr" data-date-format="d-M-Y">
+                </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Discount</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" aria-describedby="basic-addon2">
-                            <span class="input-group-text" id="basic-addon2">RS</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Status</label>
-                        <span class="text-danger">*</span>
-                        <select class="js-example-disabled" asp-items="@ViewBag.Status" required>
-                            <option value="">Select Status</option>
-                        </select>
+                <div class="col-md-6">
+                    <label class="form-label">Discount</label>
+                    <div class="input-group">
+                        <input type="number" id="discount" class="form-control" aria-describedby="basic-addon2">
+                        <span class="input-group-text" id="basic-addon2">RS</span>
                     </div>
                 </div>
-                <hr/>
-                <div id="orderDetail">
-                    <div class="card product" id="productDiv_0">
-                        <div class="card-body">
-                            <div class="row gy-3">
-                                <div class="col-sm-6" id="quantityAppend_0">
-                                    <label class="form-label">Product</label>
-                                    <span class="text-danger">*</span>
-                                    <select class="form-control" asp-items="@ViewBag.Products" required id="selectAccessories_0" onchange="reBindProduct(this)">
-                                        <option value="">Select Product</option>
+
+                <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <span class="text-danger">*</span>
+                    <select class="js-example-disabled" id="status" asp-items="ViewBag.Status" required>
+                        <option value="">Select Status</option>
+                    </select>
+                </div>
+            </div>
+            <hr />
+            <div id="orderDetail">
+                <div class="card product" id="productDiv_0">
+                    <div class="card-body">
+                        <div class="row gy-3">
+                            <div class="col-sm-6" id="quantityAppend_0">
+                                <label class="form-label">Product</label>
+                                <span class="text-danger">*</span>
+                                <select class="form-control" asp-items="ViewBag.Products" required id="selectAccessories_0" onchange="reBindProduct(this)">
+                                    <option value="">Select Product</option>
+                                </select>
+                                <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4" id="imageAppender_0">
+                                    <img id="image_product_0" src="Product_image_source" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                </div>
+                                <div class="d-inline-block mt-3" id="deliveredDateDiv_0">
+                                    <label>Delivered Date</label><br />
+                                    <input type="date" id="deliverDate_0" class="form-control">
+                                </div>
+                                <div class="d-inline-block" id="orderStatusDiv_0">
+                                    <label>Order Status</label><br />
+                                    <select class="form-select" id="orderStatus_0" asp-items="ViewBag.OrderStatus">
+                                        <option value="">Select Status</option>
                                     </select>
-                                    <div class="profile-user position-relative d-inline-block mx-auto m-3 me-4" id="imageAppender_0">
-                                        <img id="image_product_0" src="Product_image_source" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
-                                    </div>
-                                    <div class="d-inline-block" id="quantityDiv_0">
-                                        <label>Quantity</label><br/>
-                                        <div class="input-step light">
-                                            <button type="button" id="minusButton_0" onclick="minusQuantity(this)" class="minus shadow">–</button>
-                                            <input type="number" id="quantity_0" class="product-quantity" value="1" disabled>
-                                            <button type="button" id="plusButton_0" onclick="plusQuantity(this)" class="plus shadow">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block mt-3" id="quantityDiv_0">
-                                        <label>Deliverd Date</label><br />
-                                        <input type="date" id="deliverDate_0" class="form-control" placeholder="dd-mm-yyyy" data-provider="flatpickr" data-date-format="d-M-Y">
-                                    </div>
-                                    <div class="d-inline-block" id="quantityDiv_0">
-                                        <label>Order Status</label><br/>
-                                        <select class="form-select" id="orderStatus_0">
-                                            <option value="">Select Status</option>
-                                            <option value="">Pending</option>
-                                            <option value="">Production</option>
-                                            <option value="">Deliverd</option>
-                                        </select>
+                                </div>
+                                <div class="d-inline-block" id="quantityDiv_0">
+                                    <label>Quantity</label><br />
+                                    <div class="input-step light">
+                                        <button type="button" id="minusButton_0" onclick="minusQuantity(this)" class="minus shadow">–</button>
+                                        <input type="number" id="quantity_0" class="product-quantity" value="1" disabled>
+                                        <button type="button" id="plusButton_0" onclick="plusQuantity(this)" class="plus shadow">+</button>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" id="accessoriesStockLabel_0">Confirm Accessiories Stock</label> <br/>
-                                    <ul class="list-group">
-                                        <li class="list-group-item" id="accessoriesStockLI_0">
-                                            <div class="row" id="accessoriesStockAppender_0">
-                                                <div class="col-sm-6" id="accessoriesStock_0_0">
-                                                    <div class="d-flex align-items-center" id="accessoriesValueAppender_0_0">
-                                                        <div class="flex-shrink-0" style="padding: 6px;">
-                                                            <input class="form-check-input" id="accessories_0_accessoriesId_Chk" type="checkbox">
-                                                        </div>
-                                                        <div class="flex-shrink-0" id="accessories_0_accessoriesId_ImageAppender">
-                                                            <img id="accessories_0_accessoriesId_Image" src="Image_source" alt="Product Image" class="avatar-xs rounded-circle">
-                                                        </div>
-                                                        <div class="flex-grow-1 ms-2">
-                                                            <label id="accessories_0_accessoriesId_Label" for="accessories_0_accessoriesId_Chk" style="margin-bottom: 1%">Accessories_Name</label>
-                                                        </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label" id="accessoriesStockLabel_0">Confirm Accessories Stock</label> <br />
+                                <ul class="list-group">
+                                    <li class="list-group-item" id="accessoriesStockLI_0">
+                                        <div class="row" id="accessoriesStockAppender_0">
+                                            <div class="col-sm-6" id="accessoriesStock_0_0">
+                                                <div class="d-flex align-items-center" id="accessoriesValueAppender_0_0">
+                                                    <div class="flex-shrink-0" style="padding: 6px;">
+                                                        <input class="form-check-input" id="accessories_0_accessoriesId_Chk" type="checkbox">
+                                                    </div>
+                                                    <div class="flex-shrink-0" id="accessories_0_accessoriesId_ImageAppender">
+                                                        <img id="accessories_0_accessoriesId_Image" src="Image_source" alt="Product Image" class="avatar-xs rounded-circle">
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-2">
+                                                        <label id="accessories_0_accessoriesId_Label" for="accessories_0_accessoriesId_Chk" style="margin-bottom: 1%">Accessories_Name</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row align-items-center gy-3">
-                                <div class="col-sm">
-                                    <div class="d-flex flex-wrap my-n1">
-                                        <div>
-                                            <a class="btn d-block text-body p-1 px-2" id="removeButton_0" onclick="removeModule(this)"><i class="ri-delete-bin-fill text-muted align-bottom me-1"></i> Remove</a>
                                         </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row align-items-center gy-3">
+                            <div class="col-sm">
+                                <div class="d-flex flex-wrap my-n1">
+                                    <div>
+                                        <a class="btn d-block text-body p-1 px-2" id="removeButton_0" onclick="removeModule(this)"><i class="ri-delete-bin-fill text-muted align-bottom me-1"></i> Remove</a>
                                     </div>
                                 </div>
-                                <div class="col-sm-auto">
-                                    <div class="d-flex align-items-center gap-2 text-muted">
-                                        <div>Product Price :</div>
-                                        <h5 class="fs-14 mb-0" id="productPrice_0"><span class="product-line-price"></span></h5>
-                                    </div>
+                            </div>
+                            <div class="col-sm-auto">
+                                <div class="d-flex align-items-center gap-2 text-muted">
+                                    <div>Product Price :</div>
+                                    <h5 class="fs-14 mb-0" id="productPrice_0"><span class="product-line-price"></span></h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body row g-3">
-                    <div class="row align-items-center gy-3">
-                        <div class="col-sm">
-                            <div class="d-flex flex-wrap my-n1">
-                                <button id="addButton" type="button" class="btn btn-info btn-label waves-effect waves-light">
-                                    <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i>
-                                    Add Product
-                                </button>
-                            </div>
+            </div>
+            <div class="card-body row g-3">
+                <div class="row align-items-center gy-3">
+                    <div class="col-sm">
+                        <div class="d-flex flex-wrap my-n1">
+                            <button id="addButton" type="button" class="btn btn-info btn-label waves-effect waves-light">
+                                <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i>
+                                Add Product
+                            </button>
                         </div>
-                        <div class="col-sm-auto" style="position:relative;left:2.4%">
-                            <div class="d-flex align-items-center gap-2 text-muted">
-                                <div>Total Amount :</div>
-                                <h5 class="fs-14 mb-0" id="totalAmount">$<span class="product-line-price"></span></h5>
-                            </div>
+                    </div>
+                    <div class="col-sm-auto" style="position:relative;left:2.4%">
+                        <div class="d-flex align-items-center gap-2 text-muted">
+                            <div>Total Amount :</div>
+                            <h5 class="fs-14 mb-0" id="totalAmount"><span class="product-line-price"></span></h5>
                         </div>
                     </div>
                 </div>
-                <div class="card-body row g-3">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
-                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
-                            Save
-                        </button>
-                    </div>
+            </div>
+            <div class="card-body row g-3">
+                <div class="col-12">
+                    <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="submit()">
+                        <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                        Save
+                    </button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

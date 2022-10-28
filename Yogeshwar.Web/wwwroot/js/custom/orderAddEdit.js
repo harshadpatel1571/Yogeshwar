@@ -1,14 +1,22 @@
 ﻿let mainHtml;
 let quantityDivHtml;
+let deliveredDateDivHtml;
+let orderStatusDivHtml;
 let productImageHtml;
 let accessoriesHtml;
 let accessoriesImageHtml;
+
 let times = 1;
 let productCount = 1;
 
+const accessoriesKeyValuePair = [];
+
 $(document).ready(function () {
-    quantityDivHtml = $('#quantityDiv_0')[0].outerHTML;
+    quantityDivHtml = $('#quantityDiv_0').html();
     productImageHtml = $('#image_product_0')[0].outerHTML;
+
+    deliveredDateDivHtml = $('#deliveredDateDiv_0').html();
+    orderStatusDivHtml = $('#orderStatusDiv_0').html();
 
     const accessoryImage = $('#accessories_0_accessoriesId_Image');
     accessoriesImageHtml = accessoryImage[0].outerHTML;
@@ -64,6 +72,7 @@ function removeModule(obj) {
 
     productCount--;
     $('#productDiv_' + id).remove();
+
     updateTotalAmount();
 }
 
@@ -136,6 +145,9 @@ function reBindProduct(obj) {
                 displayProductImage(id, data.image);
                 displayQuantityDiv(id);
 
+                displayDeliveredDate(id);
+                displayOrderStatus(id);
+
                 data.accessories.forEach(function (value) {
                     displayAccessories(id, value);
                 });
@@ -144,7 +156,7 @@ function reBindProduct(obj) {
 
                 updateTotalAmount();
             },
-            error: function (xhr, status, error) {
+            error: function () {
                 hideAccessoriesStockLabel(id);
                 hideAccessoriesStock(id);
                 removeAssociatedElement(id);
@@ -159,8 +171,10 @@ function reBindProduct(obj) {
 
 function removeAssociatedElement(id) {
     $('#image_product_' + id).remove();
-    $('#quantityDiv_' + id).remove();
+    $('#quantityDiv_' + id).empty();
     $('#accessoriesStockAppender_' + id).empty();
+    $('#deliveredDateDiv_' + id).empty();
+    $('#orderStatusDiv_' + id).empty();
 }
 
 function displayProductImage(id, source) {
@@ -170,15 +184,26 @@ function displayProductImage(id, source) {
 }
 
 function displayQuantityDiv(id) {
-    $('#quantityAppend_' + id).append(quantityDivHtml
-        .replace('quantityDiv_0', 'quantityDiv_' + id)
+    $('#quantityDiv_' + id).append(quantityDivHtml
         .replace('minusButton_0', 'minusButton_' + id)
         .replace('quantity_0', 'quantity_' + id)
         .replace('plusButton_0', 'plusButton_' + id))
 }
 
+function displayDeliveredDate(id) {
+    $('#deliveredDateDiv_' + id).append(deliveredDateDivHtml.replace('deliverDate_0', 'deliverDate_' + id));
+}
+
+function displayOrderStatus(id) {
+    $('#orderStatusDiv_' + id).append(orderStatusDivHtml.replace('orderStatus_0', 'orderStatus_' + id));
+}
+
 function displayAccessories(id, obj) {
+
+    accessoriesKeyValuePair.push({ id: id, accessoryId: obj.id, value: 'accessories_' + id + '_' + obj.id + '_Chk' });
+
     const newHtml = accessoriesHtml
+        .replace('accessoriesStock_0_0', 'accessoriesStock_' + id + '_' + obj.id)
         .replace('accessoriesValueAppender_0_0', 'accessoriesValueAppender_' + id + '_' + obj.id)
         .replaceAll('accessories_0_accessoriesId_Chk', 'accessories_' + id + '_' + obj.id + '_Chk')
         .replace('accessories_0_accessoriesId_ImageAppender', 'accessories_' + id + '_' + obj.id + '_ImageAppender')
@@ -199,6 +224,9 @@ $('#addButton').click(function () {
         .replace('quantityAppend_0', 'quantityAppend_' + times)
         .replace('selectAccessories_0', 'selectAccessories_' + times)
         .replace('imageAppender_0', 'imageAppender_' + times)
+        .replace('deliveredDateDiv_0', 'deliveredDateDiv_' + times)
+        .replace('orderStatusDiv_0', 'orderStatusDiv_' + times)
+        .replace('quantityDiv_0', 'quantityDiv_' + times)
         .replace('accessoriesStockLabel_0', 'accessoriesStockLabel_' + times)
         .replace('accessoriesStockLI_0', 'accessoriesStockLI_' + times)
         .replace('accessoriesStockAppender_0', 'accessoriesStockAppender_' + times)
@@ -212,3 +240,62 @@ $('#addButton').click(function () {
     times++;
     productCount++;
 });
+
+function submit() {
+    const customer = $('#customer').val();
+
+    const orderDate = $('#orderDate');
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const splitedValues = orderDate.val().split('-');
+    orderDateFormatted = splitedValues[0] + '-' + (months.indexOf(splitedValues[1]) + 1) + '-' + splitedValues[2];
+
+    const discount = $('#discount').val();
+
+    const status = $('#status').val();
+
+    const orderDetails = [];
+
+    for (let i = 0; i < times; i++) {
+        let product = $('#selectAccessories_' + i);
+
+        if (product.length < 1) {
+            continue;
+        }
+
+        product = $('#selectAccessories_' + i).val();
+
+        const deliveredDate = $('#deliverDate_' + i).val();
+
+        const orderStatus = $('#orderStatus_' + i).val();
+
+        const quantity = $('#quantity_' + i).val();
+
+        const accessories = [];
+
+        for (let x = 0; x < accessoriesKeyValuePair.length; x++) {
+            if (accessoriesKeyValuePair[x].id === i) {
+                const isChecked = $('#' + accessoriesKeyValuePair[x].value).prop('checked');
+                accessories.push({ isSelected: isChecked, accessoryId: accessoriesKeyValuePair[x].accessoryId })
+            }
+        }
+
+        orderDetails.push({ productId: parseInt(product), orderStatus: parseInt(orderStatus), quantity: parseInt(quantity), deliveredDate, accessories });
+    }
+
+    const obj = { customerId: parseInt(customer), discount: parseInt(discount), orderDate: orderDateFormatted, status: parseInt(status) , orderDetails };
+
+    create(obj);
+}
+
+function create(obj) {
+    //$.ajax({
+    //    type: "POST",
+    //    url: "/Order/AddEdit",
+    //    data: obj,
+    //    success: function () {
+    //        window.location.href = window.location.hostname;
+    //    }
+    //});
+
+    console.log(obj);
+}

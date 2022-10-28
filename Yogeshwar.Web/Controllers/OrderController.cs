@@ -64,6 +64,8 @@ public class OrderController : Controller
             "Key", "Text");
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForStatus(),
             "Key", "Text");
+        ViewBag.OrderStatus = new SelectList(dropDownService.BindDropDownForOrderStatus(),
+           "Key", "Text");
         ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync(),
             "Key", "Text");
 

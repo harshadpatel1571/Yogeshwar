@@ -8,5 +8,7 @@ public interface IDropDownService : IDisposable
     
     internal Task<IList<DropDownDto<int>>> BindDropDownForProductsAsync();
 
-    internal IList<DropDownDto<string>> BindDropDownForStatus();
+    internal IList<DropDownDto<byte>> BindDropDownForStatus();
+
+    internal IList<DropDownDto<byte>> BindDropDownForOrderStatus();
 }

@@ -42,12 +42,21 @@ internal class DropDownService : IDropDownService
         }).ToListAsync().ConfigureAwait(false);
     }
 
-    IList<DropDownDto<string>> IDropDownService.BindDropDownForStatus()
+    IList<DropDownDto<byte>> IDropDownService.BindDropDownForStatus()
     {
-        return Enum.GetNames<OrderStatus>().Select(x => new DropDownDto<string>
+        return ((byte[])Enum.GetValuesAsUnderlyingType<OrderStatus>()).Select(x => new DropDownDto<byte>
         {
             Key = x,
-            Text = x
+            Text = ((OrderStatus)x).ToString()
+        }).ToArray();
+    }
+
+    IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderStatus()
+    {
+        return ((byte[])Enum.GetValuesAsUnderlyingType<OrderDetailStatus>()).Select(x => new DropDownDto<byte>
+        {
+            Key = x,
+            Text = ((OrderDetailStatus)x).ToString()
         }).ToArray();
     }
 }

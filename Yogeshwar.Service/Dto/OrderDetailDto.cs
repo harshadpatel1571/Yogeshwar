@@ -15,5 +15,5 @@ public class OrderDetailDto
     public string? ReceivedDate { get; set; }
 
     [Required(ErrorMessage = "Status is required.")]
-    public OrderStatus Status { get; set; }
+    public OrderDetailStatus Status { get; set; }
 }
