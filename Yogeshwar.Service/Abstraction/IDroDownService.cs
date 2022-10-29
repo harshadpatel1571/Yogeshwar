@@ -11,4 +11,5 @@ public interface IDropDownService : IDisposable
     internal IList<DropDownDto<byte>> BindDropDownForStatus();
 
     internal IList<DropDownDto<byte>> BindDropDownForOrderStatus();
+    internal IList<DropDownDto<byte>> BindDropDownForService();
 }

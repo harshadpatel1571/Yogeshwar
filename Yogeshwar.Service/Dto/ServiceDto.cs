@@ -21,9 +21,13 @@ namespace Yogeshwar.Service.Dto
         [Required(ErrorMessage = "Customer are required.")]
         public int CustomerId { get; set; }
 
-        [Required(ErrorMessage = "Customer are required.")]
-        public int ServiceStatus { get; set; }
+        public string? CustomerName { get; set; }
 
-        public DateTime CompletedDate { get; set; }
+        [Required(ErrorMessage = "Status are required.")]
+        public byte ServiceStatus { get; set; }
+
+        public string? ComplainDate { get; set; }
+
+        public DateTime? CompletedDate { get; set; }
     }
 }

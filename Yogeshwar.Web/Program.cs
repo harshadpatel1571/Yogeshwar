@@ -34,6 +34,8 @@ services.AddScoped<IProductService, ProductService>()
     .AddScoped(x => new Lazy<IProductService>(() => x.GetService<IProductService>()!));
 services.AddScoped<IOrderService, OrderService>()
     .AddScoped(x => new Lazy<IOrderService>(() => x.GetService<IOrderService>()!));
+services.AddScoped<IServiceService, ServiceService>()
+    .AddScoped(x => new Lazy<IServiceService>(() => x.GetService<IServiceService>()!));
 
 #endregion
 

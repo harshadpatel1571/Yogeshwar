@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ServiceDto
+@{
     ViewData["Title"] = "Detail Service";
     Layout = "_Layout";
 }
@@ -38,13 +39,33 @@
             </>
             <div class="card-body row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">First Name</label>
-                    @*<label class="form-control">@Model.FirstName</label>*@
+                    <label class="form-label">Worker Name</label>
+                    <label class="form-control">@Model.WorkerName</label>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Last Name</label>
-                    @*<label class="form-control">@Model.LastName</label>*@
+                    <label class="form-label">Customer Name</label>
+                    <label class="form-control">@Model.CustomerName</label>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Description</label>
+                    <label class="form-control">@Model.Description</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Complain Date</label>
+                    <label class="form-control">@Model.ComplainDate</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Completed Date</label>
+                    <label class="form-control">@Model.CompletedDate?.ToString("dd-MM-yyyy")</label>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <label class="form-control">@Model.ServiceStatus</label>
                 </div>
 
             </div>

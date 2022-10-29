@@ -59,4 +59,13 @@ internal class DropDownService : IDropDownService
             Text = ((OrderDetailStatus)x).ToString()
         }).ToArray();
     }
+
+    IList<DropDownDto<byte>> IDropDownService.BindDropDownForService()
+    {
+        return ((byte[])Enum.GetValuesAsUnderlyingType<ServiceStatus>()).Select(x => new DropDownDto<byte>
+        {
+            Key = x,
+            Text = ((ServiceStatus)x).ToString()
+        }).ToArray();
+    }
 }
