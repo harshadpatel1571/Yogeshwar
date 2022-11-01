@@ -65,11 +65,25 @@ public class OrderController : Controller
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForStatus(),
             "Key", "Text");
         ViewBag.OrderStatus = new SelectList(dropDownService.BindDropDownForOrderStatus(),
-           "Key", "Text");
+            "Key", "Text");
         ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync(),
             "Key", "Text");
 
         return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddEdit(OrderDto orderDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.GetKeyErrors();
+            return BadRequest(errors);
+        }
+
+        await _orderService.Value.CreateOrUpdateAsync(orderDto);
+
+        return Ok();
     }
 
     public IActionResult Detail()

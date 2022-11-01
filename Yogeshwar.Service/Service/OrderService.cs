@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Yogeshwar.Service.Dto;
 
 namespace Yogeshwar.Service.Service;
 
@@ -44,6 +45,8 @@ internal class OrderService : IOrderService
         }
 
         var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
+            .Include(x => x.Customer)
+            .Include(x => x.OrderDetails)
             .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
 
         model.Data = data;
@@ -76,18 +79,34 @@ internal class OrderService : IOrderService
 
     private async ValueTask<int> CreateAsync(OrderDto orderDto)
     {
+        var orderDetails = orderDto.OrderDetails.Select(x => new OrderDetail
+        {
+            ProductId = x.ProductId,
+            Amount = _context.Products.Where(y => y.Id == x.ProductId).Select(c => c.Price).FirstOrDefault() * x.Quantity,
+            Status = (byte)x.Status,
+            Quantity = x.Quantity,
+            ReceiveDate = x.deliveredDate == null ? null : DateTime.ParseExact(x.deliveredDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+        }).ToArray();
+
+        var notifications = orderDto.OrderDetails.Select(x => new { x.ProductId, x.Accessories })
+            .SelectMany(x => x.Accessories.Where(c => !c.IsSelected)
+                .Select(c => new Notification
+                {
+                    ProductAccessoriesId = _context.ProductAccessories
+                        .Where(y => y.ProductId == x.ProductId && y.AccessoriesId == c.Id)
+                        .Select(o => o.Id)
+                        .FirstOrDefault(),
+                    Status = 1,
+                    Date = DateTime.Now
+                })).ToArray();
+
         var dbModel = new Order
         {
-            CustomerId = orderDto.CustomerId,
+            CustomerId = orderDto.CustomerId!.Value,
             Discount = orderDto.Discount,
             OrderDate = DateTime.ParseExact(orderDto.OrderDate, "dd-MM-yyyy", CultureInfo.InvariantCulture),
-            OrderDetails = orderDto.OrderDetail.Select(x => new OrderDetail
-            {
-                ProductId = x.ProductId,
-                Amount = x.Amount,
-                Status = (byte)x.Status,
-                Quantity = x.Quantity
-            }).ToArray()
+            OrderDetails = orderDetails,
+            Notifications = notifications
         };
 
         await _context.Orders.AddAsync(dbModel).ConfigureAwait(false);
@@ -106,12 +125,13 @@ internal class OrderService : IOrderService
             return 0;
         }
 
-        dbModel.CustomerId = orderDto.CustomerId;
+        dbModel.CustomerId = orderDto.CustomerId!.Value;
         dbModel.Discount = orderDto.Discount;
         dbModel.OrderDate = DateTime.ParseExact(orderDto.OrderDate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
         foreach (var dbModelOrderDetail in dbModel.OrderDetails)
         {
-            var orderDetail = orderDto.OrderDetail.FirstOrDefault(x => x.Id == dbModelOrderDetail.Id);
+            var orderDetail = orderDto.OrderDetails.FirstOrDefault(x => x.Id == dbModelOrderDetail.Id);
 
             if (orderDetail is null)
             {
@@ -121,9 +141,9 @@ internal class OrderService : IOrderService
             dbModelOrderDetail.Amount = orderDetail.Amount;
             dbModelOrderDetail.Status = (byte)orderDetail.Status;
             dbModelOrderDetail.Quantity = orderDetail.Quantity;
-            if (orderDetail.ReceivedDate != null)
+            if (orderDetail.deliveredDate != null)
             {
-                dbModelOrderDetail.ReceiveDate = DateTime.ParseExact(orderDetail.ReceivedDate, "dd-MM-yyyy",
+                dbModelOrderDetail.ReceiveDate = DateTime.ParseExact(orderDetail.deliveredDate, "dd-MM-yyyy",
                     CultureInfo.InvariantCulture);
             }
         }
@@ -160,13 +180,13 @@ internal class OrderService : IOrderService
             {
                 Image = x.ProductImages.Count < 1
                     ? null
-                    : $"/DataImages/Product/{x.ProductImages.FirstOrDefault().Image}",
+                    : $"{_productImageReadPath}/{x.ProductImages.FirstOrDefault().Image}",
                 Amount = x.Price,
                 Accessories = x.ProductAccessories.Select(c => new AccessoriesDetailDto
                 {
                     Id = c.AccessoriesId,
                     Name = c.Accessories.Name,
-                    Image = c.Accessories.Image == null ? null : $"/DataImages/Accessories/{c.Accessories.Image}"
+                    Image = c.Accessories.Image == null ? null : $"{_accessoriesImageReadPath}/{c.Accessories.Image}"
                 }).ToArray()
             }).FirstOrDefaultAsync();
     }

@@ -10,6 +10,7 @@ let times = 1;
 let productCount = 1;
 
 const accessoriesKeyValuePair = [];
+const divContainer = [0];
 
 $(document).ready(function () {
     quantityDivHtml = $('#quantityDiv_0').html();
@@ -47,6 +48,8 @@ function minusQuantity(obj) {
     }
 
     quantityElement.val(quantity - 1);
+
+    updateTotalAmount();
 }
 
 function plusQuantity(obj) {
@@ -61,6 +64,8 @@ function plusQuantity(obj) {
     }
 
     quantityElement.val(quantity + 1);
+
+    updateTotalAmount();
 }
 
 function removeModule(obj) {
@@ -74,6 +79,12 @@ function removeModule(obj) {
     $('#productDiv_' + id).remove();
 
     updateTotalAmount();
+
+    const index = divContainer.indexOf(id);
+
+    if (index > -1) {
+        divContainer.splice(index, 1);
+    }
 }
 
 function makeDropDownSearchable(number) {
@@ -112,8 +123,14 @@ function updateTotalAmount() {
         const val = parseInt(priceStr);
 
         if (!(val === undefined || val === null || isNaN(val))) {
-            amount += val;
+            amount += (val * parseInt($('#quantity_' + i).val()));
         }
+    }
+
+    const discount = $('#discount').val();
+
+    if (!isNaN(discount)) {
+        amount -= discount;
     }
 
     $('#totalAmount').text(amount + " RS");
@@ -200,7 +217,7 @@ function displayOrderStatus(id) {
 
 function displayAccessories(id, obj) {
 
-    accessoriesKeyValuePair.push({ id: id, accessoryId: obj.id, value: 'accessories_' + id + '_' + obj.id + '_Chk' });
+    accessoriesKeyValuePair.push({id: id, accessoryId: obj.id, value: 'accessories_' + id + '_' + obj.id + '_Chk'});
 
     const newHtml = accessoriesHtml
         .replace('accessoriesStock_0_0', 'accessoriesStock_' + id + '_' + obj.id)
@@ -237,6 +254,8 @@ $('#addButton').click(function () {
 
     makeDropDownSearchable(times);
 
+    divContainer.push(times);
+
     times++;
     productCount++;
 });
@@ -245,9 +264,12 @@ function submit() {
     const customer = $('#customer').val();
 
     const orderDate = $('#orderDate');
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const splitedValues = orderDate.val().split('-');
-    orderDateFormatted = splitedValues[0] + '-' + (months.indexOf(splitedValues[1]) + 1) + '-' + splitedValues[2];
+    let orderDateFormatted = null;
+    if (splitedValues.length === 3) {
+        orderDateFormatted = splitedValues[0] + '-' + (months.indexOf(splitedValues[1]) + 1) + '-' + splitedValues[2];
+    }
 
     const discount = $('#discount').val();
 
@@ -256,13 +278,11 @@ function submit() {
     const orderDetails = [];
 
     for (let i = 0; i < times; i++) {
-        let product = $('#selectAccessories_' + i);
+        const product = $('#selectAccessories_' + i).val();
 
-        if (product.length < 1) {
+        if (product === undefined || product == null || product === '') {
             continue;
         }
-
-        product = $('#selectAccessories_' + i).val();
 
         const deliveredDate = $('#deliverDate_' + i).val();
 
@@ -275,27 +295,126 @@ function submit() {
         for (let x = 0; x < accessoriesKeyValuePair.length; x++) {
             if (accessoriesKeyValuePair[x].id === i) {
                 const isChecked = $('#' + accessoriesKeyValuePair[x].value).prop('checked');
-                accessories.push({ isSelected: isChecked, accessoryId: accessoriesKeyValuePair[x].accessoryId })
+                accessories.push({isSelected: isChecked, id: accessoriesKeyValuePair[x].accessoryId})
             }
         }
+        const orderDetail = {
+            productId: parseInt(product),
+            status: parseInt(orderStatus),
+            quantity: parseInt(quantity),
+            deliveredDate,
+            accessories
+        };
 
-        orderDetails.push({ productId: parseInt(product), orderStatus: parseInt(orderStatus), quantity: parseInt(quantity), deliveredDate, accessories });
+        if (isNaN(orderDetail.status)) {
+            orderDetail.status = null;
+        }
+
+        orderDetails.push(orderDetail);
     }
 
-    const obj = { customerId: parseInt(customer), discount: parseInt(discount), orderDate: orderDateFormatted, status: parseInt(status) , orderDetails };
+    const obj = {
+        customerId: parseInt(customer),
+        discount: parseInt(discount),
+        orderDate: orderDateFormatted,
+        status: parseInt(status),
+        orderDetails
+    };
+
+    if (isNaN(obj.discount)) {
+        obj.discount = null;
+    }
+
+    if (isNaN(obj.customerId)) {
+        obj.customerId = null;
+    }
+
+    if (isNaN(obj.status)) {
+        obj.status = null;
+    }
 
     create(obj);
 }
 
 function create(obj) {
-    //$.ajax({
-    //    type: "POST",
-    //    url: "/Order/AddEdit",
-    //    data: obj,
-    //    success: function () {
-    //        window.location.href = window.location.hostname;
-    //    }
-    //});
-
     console.log(obj);
+
+    $.ajax({
+        type: "POST",
+        url: "/Order/AddEdit",
+        data: obj,
+        success: function () {
+            window.location.href = window.location.origin;
+        },
+        error: function (x) {
+            console.log(x.responseJSON);
+
+            for (let i = 0; i < x.responseJSON.length; i++) {
+                const validationId = getValidationId(x.responseJSON[i].key);
+                if (validationId !== '') {
+                    $('#' + validationId).text(x.responseJSON[i].message)
+                }
+            }
+        }
+    });
+}
+
+function getValidationId(key) {
+    if (key === 'Status') {
+        return 'orderStatusValidation';
+    }
+
+    if (key === "OrderDate") {
+        return 'orderDateValidation';
+    }
+
+    if (key === "CustomerId") {
+        return 'customerValidation';
+    }
+
+    if (key === "OrderDetails") {
+        return 'orderDetailValidation';
+    }
+
+    if (key.startsWith("OrderDetails")) {
+        const number = parseInt(key.split(']')[0].split('[')[1]);
+        console.log(number);
+
+        console.log(divContainer);
+        console.log(divContainer[number]);
+
+        return 'orderDetailStatusValidation_' + divContainer[number];
+    }
+
+    return "";
+}
+
+$('#customer').change(function () {
+    const value = $(this).val();
+    const span = $('#customerValidation');
+
+    if (!(value === undefined || value === '')) {
+        span.text('');
+    } else {
+        span.text('Customer is required.');
+    }
+});
+
+$('#status').change(function () {
+    const value = $(this).val();
+    const span = $('#orderStatusValidation');
+
+    if (!(value === undefined || value === '')) {
+        span.text('');
+    } else {
+        span.text('Status is required.');
+    }
+});
+
+$('#orderDate').change(function () {
+    $('#orderDateValidation').text('');
+});
+
+function removeOrderDetailValidationMessage() {
+    $('#orderDetailValidation').text('');
 }

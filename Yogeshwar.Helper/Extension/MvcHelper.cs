@@ -18,4 +18,18 @@ internal static class MvcHelper
             modelState.AddModelError(item.Key, item.Message!);
         }
     }
+
+    public static object GetKeyErrors(this ModelStateDictionary modelState)
+    {
+        var keyError = modelState
+            .Where(x => x.Value?.ValidationState == ModelValidationState.Invalid)
+            .Select(x => new
+            {
+                x.Key,
+                Message = x.Value.Errors
+                    .Select(c => c.ErrorMessage).FirstOrDefault()
+            });
+
+        return keyError;
+    }
 }

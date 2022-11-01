@@ -12,8 +12,18 @@ public class OrderDetailDto
 
     public decimal Amount { get; set; }
 
-    public string? ReceivedDate { get; set; }
+    public string? deliveredDate { get; set; }
 
     [Required(ErrorMessage = "Status is required.")]
-    public OrderDetailStatus Status { get; set; }
+    public OrderDetailStatus? Status { get; set; }
+
+    public IList<AccessoriesOrderDto>? Accessories { get; set; }
+}
+
+public class AccessoriesOrderDto
+{
+    [Required(ErrorMessage = "Accessory id is required.")]
+    public int Id { get; set; }
+
+    public bool IsSelected { get; set; }
 }
