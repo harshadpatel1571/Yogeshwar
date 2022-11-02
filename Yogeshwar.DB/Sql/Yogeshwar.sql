@@ -100,7 +100,7 @@ CREATE TABLE [Notification]
 	Id int not null primary key identity(1, 1),
 	ProductAccessoriesId int not null constraint fk_notification_productaccessories_id foreign key references [ProductAccessories](Id),
 	OrderId int not null constraint fk_notification_order_id foreign key references [Order](Id),
-	[Status] tinyint not null,
+	IsCompleted bit not null,
 	[Date] datetime2(3) not null
 )
 GO

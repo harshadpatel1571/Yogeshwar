@@ -56,7 +56,7 @@ internal class CustomerService : ICustomerService
             Address = customer.Address,
             City = customer.City,
             PhoneNo = customer.PhoneNo,
-            Pincode = customer.Pincode
+            PinCode = customer.Pincode
         };
 
     public async Task<CustomerDto?> GetSingleAsync(int id)
@@ -86,7 +86,7 @@ internal class CustomerService : ICustomerService
             PhoneNo = customer.PhoneNo,
             Address = customer.Address,
             City = customer.City,
-            Pincode = customer.Pincode,
+            Pincode = customer.PinCode,
             CreatedBy = customer.CreatedBy
         };
 
@@ -111,8 +111,8 @@ internal class CustomerService : ICustomerService
         dbModel.PhoneNo = customer.PhoneNo;
         dbModel.Address = customer.Address;
         dbModel.City = customer.City;
-        dbModel.Pincode = customer.Pincode;
-        dbModel.Pincode = customer.Pincode;
+        dbModel.Pincode = customer.PinCode;
+        dbModel.Pincode = customer.PinCode;
         dbModel.ModifiedBy = customer.ModifiedBy;
         dbModel.ModifiedDate = DateTime.Now;
 

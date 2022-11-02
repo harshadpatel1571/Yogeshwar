@@ -29,7 +29,7 @@ public class CustomerDto
     public string City { get; set; }
 
     [Required(ErrorMessage = "Pincode is required.")]
-    public int Pincode { get; set; }
+    public int PinCode { get; set; }
 
     public int CreatedBy { get; set; }
 

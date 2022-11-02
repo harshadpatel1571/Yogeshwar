@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using Yogeshwar.Service.Dto;
-
-namespace Yogeshwar.Service.Service;
+﻿namespace Yogeshwar.Service.Service;
 
 internal class OrderService : IOrderService
 {
@@ -83,20 +80,19 @@ internal class OrderService : IOrderService
         {
             ProductId = x.ProductId,
             Amount = _context.Products.Where(y => y.Id == x.ProductId).Select(c => c.Price).FirstOrDefault() * x.Quantity,
-            Status = (byte)x.Status,
+            Status = (byte)x.Status!,
             Quantity = x.Quantity,
             ReceiveDate = x.deliveredDate == null ? null : DateTime.ParseExact(x.deliveredDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
         }).ToArray();
 
         var notifications = orderDto.OrderDetails.Select(x => new { x.ProductId, x.Accessories })
-            .SelectMany(x => x.Accessories.Where(c => !c.IsSelected)
+            .SelectMany(x => x.Accessories!.Where(c => !c.IsSelected)
                 .Select(c => new Notification
                 {
                     ProductAccessoriesId = _context.ProductAccessories
                         .Where(y => y.ProductId == x.ProductId && y.AccessoriesId == c.Id)
                         .Select(o => o.Id)
                         .FirstOrDefault(),
-                    Status = 1,
                     Date = DateTime.Now
                 })).ToArray();
 
@@ -139,7 +135,7 @@ internal class OrderService : IOrderService
             }
 
             dbModelOrderDetail.Amount = orderDetail.Amount;
-            dbModelOrderDetail.Status = (byte)orderDetail.Status;
+            dbModelOrderDetail.Status = (byte)orderDetail.Status!;
             dbModelOrderDetail.Quantity = orderDetail.Quantity;
             if (orderDetail.deliveredDate != null)
             {

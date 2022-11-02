@@ -10,3 +10,4 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.AspNetCore.Hosting;
 global using Yogeshwar.DB.Constant;
 global using Microsoft.AspNetCore.Mvc.Rendering;
+global using System.Globalization;

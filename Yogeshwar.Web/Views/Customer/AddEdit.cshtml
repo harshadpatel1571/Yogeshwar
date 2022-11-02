@@ -88,8 +88,8 @@
                     <div class="col-md-6">
                         <label class="form-label">Pincode</label>
                         <span class="text-danger">*</span>
-                        <input class="form-control" asp-for="Pincode" required>
-                        <span asp-validation-for="Pincode" class="text-danger"></span>
+                        <input class="form-control" asp-for="PinCode" required>
+                        <span asp-validation-for="PinCode" class="text-danger"></span>
                     </div>
 
                     <div class="col-12">
@@ -105,7 +105,7 @@
 </div>
 @section Scripts {
     <script>
-        $('#Pincode').keypress(function (e) {
+        $('#PinCode').keypress(function (e) {
             return $(this).val().length < 6;
         });
         $('#PhoneNo').keypress(function (e) {
