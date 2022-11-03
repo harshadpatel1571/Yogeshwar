@@ -275,7 +275,13 @@ function submit() {
     const splitedValues = orderDate.val().split('-');
     let orderDateFormatted = null;
     if (splitedValues.length === 3) {
-        orderDateFormatted = splitedValues[0] + '-' + (months.indexOf(splitedValues[1]) + 1) + '-' + splitedValues[2];
+        const month = months.indexOf(splitedValues[1]) + 1;
+        if (month > 9) {
+            orderDateFormatted = splitedValues[0] + '-' + month + '-' + splitedValues[2];
+        }
+        else {
+            orderDateFormatted = splitedValues[0] + '-' + '0' + month + '-' + splitedValues[2];
+        }
     } else {
         validations.push({ id: "orderDateValidation", message: "Order date is required." });
     }
@@ -291,7 +297,13 @@ function submit() {
     const orderDetails = [];
 
     for (let i = 0; i < times; i++) {
-        const product = $('#selectAccessories_' + i).val();
+        let product = $('#selectAccessories_' + i);
+
+        if (product.length < 1) {
+            continue;
+        }
+
+        product = product.val();
 
         if (product === undefined || product == null || product === '') {
             validations.push({ id: "orderDetailValidation", message: "Order details are required." });

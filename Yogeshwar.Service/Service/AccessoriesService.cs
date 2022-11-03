@@ -83,7 +83,7 @@ internal class AccessoriesService : IAccessoriesService
         if (accessory.File is not null)
         {
             image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
-            await accessory.File.SaveAsync($"{_savePath}/{image}");
+            await accessory.File.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
         }
 
         var dbModel = new Accessory
@@ -113,7 +113,7 @@ internal class AccessoriesService : IAccessoriesService
         if (accessory.File is not null)
         {
             var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
-            await accessory.File.SaveAsync($"{_savePath}/{image}");
+            await accessory.File.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
 
             DeleteImageIfExist($"{_savePath}/{dbModel.Image}");
 

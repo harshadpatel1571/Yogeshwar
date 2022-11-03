@@ -1,6 +1,4 @@
-﻿using Yogeshwar.DB.Models;
-
-namespace Yogeshwar.Service.Service;
+﻿namespace Yogeshwar.Service.Service;
 
 internal class ServiceService : IServiceService
 {
@@ -40,25 +38,26 @@ internal class ServiceService : IServiceService
             result = result.Take(filterDto.Take);
         }
 
-        var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Include(x=>x.Customer)
+        IList<ServiceDto> data = await result.Include(x => x.Customer)
             .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+
+        data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
 
         model.Data = data;
 
         return model;
     }
 
-    private static ServiceDto DtoSelector(Yogeshwar.DB.Models.CustomerService service) =>
-    new()
+    private static ServiceDto DtoSelector(DB.Models.CustomerService service) => new()
     {
         Id = service.Id,
         CompletedDate = service.ServiceCompletedDate,
-        CustomerId= service.CustomerId,
-        Description= service.Description,
+        CustomerId = service.CustomerId,
+        Description = service.Description,
         WorkerName = service.WorkerName,
         ServiceStatus = service.Status,
-        CustomerName = service.Customer.FirstName + " " + service.Customer.LastName,        
+        ServiceStatusString = ((ServiceStatus)service.Status).ToString(),
+        CustomerName = service.Customer.FirstName + " " + service.Customer.LastName,
         ComplainDate = service.ComplainDate.ToString("dd-MM-yyyy"),
     };
 
@@ -77,9 +76,9 @@ internal class ServiceService : IServiceService
         var dbModel = new Yogeshwar.DB.Models.CustomerService
         {
             WorkerName = service.WorkerName,
-            ComplainDate= DateTime.Now,
-            CustomerId= service.CustomerId,
-            Description= service.Description,
+            ComplainDate = DateTime.Now,
+            CustomerId = service.CustomerId,
+            Description = service.Description,
             ServiceCompletedDate = service.CompletedDate,
             Status = service.ServiceStatus
         };

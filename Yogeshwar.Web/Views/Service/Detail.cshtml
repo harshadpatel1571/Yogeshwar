@@ -53,19 +53,19 @@
                     <label class="form-control">@Model.Description</label>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Complain Date</label>
                     <label class="form-control">@Model.ComplainDate</label>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Completed Date</label>
                     <label class="form-control">@Model.CompletedDate?.ToString("dd-MM-yyyy")</label>
                 </div>
                 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Status</label>
-                    <label class="form-control">@Model.ServiceStatus</label>
+                    <label class="form-control">@Model.ServiceStatusString</label>
                 </div>
 
             </div>

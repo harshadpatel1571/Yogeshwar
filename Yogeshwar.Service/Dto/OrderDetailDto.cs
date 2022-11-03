@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Dto;
+﻿using System.Diagnostics;
+
+namespace Yogeshwar.Service.Dto;
 
 public class OrderDetailDto
 {
@@ -26,4 +28,50 @@ public class AccessoriesOrderDto
     public int Id { get; set; }
 
     public bool IsSelected { get; set; }
+}
+
+public class CustomerViewDto
+{
+    public required int Id { get; set; }
+
+    public required string Name { get; set; }
+
+    public string? Email { get; set; }
+
+    public required string PhoneNo { get; set; }
+
+    public required string Address { get; set; }
+}
+
+[DebuggerDisplay("Price is {Price}")]
+public class OrderDetailsViewDto
+{
+    public string? Image { get; set; }
+    
+    public required string ProductName { get; set; }
+
+    public required string Status { get; set; }
+
+    public required string Price { get; set; }
+
+    public required int Quantity { get; set; }
+
+    public required string TotalAmount { get; set; }
+
+    public required string DeliveredDate { get; set; }
+}
+
+public class OrderDetailViewModel
+{
+    public required string OrderId { get; set; }
+
+    public required CustomerViewDto Customer { get; set; }
+
+    public required IList<OrderDetailsViewDto> OrderDetails { get; set; }
+
+    public required string SubTotal { get; set; }
+
+    public required string Discount { get; set; }
+
+    public required string Total { get; set; }
 }

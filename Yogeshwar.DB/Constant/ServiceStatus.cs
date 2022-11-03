@@ -5,6 +5,6 @@ namespace Yogeshwar.DB.Constant
     {
         Pending = 1,
         InProgress = 2,
-        Resolve = 3
+        Resolved = 3
     }
 }

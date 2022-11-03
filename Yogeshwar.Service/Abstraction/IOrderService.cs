@@ -8,5 +8,7 @@ public interface IOrderService : IDisposable
     
     Task<int> CreateOrUpdateAsync(OrderDto orderDto);
 
+    Task<OrderDetailViewModel?> GetDetailsAsync(int id);
+
     Task<Order?> DeleteAsync(int id);
 }

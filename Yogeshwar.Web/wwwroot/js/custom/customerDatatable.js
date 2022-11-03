@@ -27,7 +27,7 @@
                 name: "First name", "autoWidth": true,
                 sDefaultContent: "--",
                 render: function (data, type, row) {
-                    return "<a href='/Customer/Detail/" + row.id + "'>" + row.firstName + "</a>";
+                    return "<a href='/Customer/Detail/" + row.id + "' style='color:hotpink'>" + row.firstName + "</a>";
                 }
             },
             { data: "lastName", name: "Last name", "autoWidth": true },

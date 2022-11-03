@@ -27,7 +27,7 @@
                 name: "Worker name", "autoWidth": true,
                 sDefaultContent: "--",
                 render: function (data, type, row) {
-                    return "<a href='/Service/Detail/" + row.id + "'>" + row.workerName + "</a>";
+                    return "<a href='/Service/Detail/" + row.id + "' style='color:hotpink'>" + row.workerName + "</a>";
                 }
             },
             { data: "customerName", name: "Customer name", "autoWidth": true },

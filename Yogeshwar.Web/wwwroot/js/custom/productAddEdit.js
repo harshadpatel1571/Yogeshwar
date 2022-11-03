@@ -12,7 +12,7 @@ const html = "<li class=\"list-group-item\" id=\"replace_id\">\n" +
     "                                    replace_name\n" +
     "                                </div>\n" +
     "                                <div class=\"flex-grow-2 ms-2\" style='position:relative;right:40%;'>\n" +
-    "                                    <input class=\"form-control\" value='quantity_value' name='AccessoriesQuantity.Quantity' type=\"number\" />\n" +
+    "                                    <input class=\"form-control\" value='quantity_value' name='AccessoriesQuantity.Quantity' required type=\"number\" />\n" +
     "                                </div>\n" +
     "                            </div>\n" +
     "                        </li>";

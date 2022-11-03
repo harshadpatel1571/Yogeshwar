@@ -117,7 +117,7 @@ internal class ProductService : IProductService
         {
             video = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                     Path.GetExtension(productDto.VideoFile.FileName);
-            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}");
+            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}").ConfigureAwait(false);
         }
 
         if (productDto.ImageFiles is { Count: > 0 })
@@ -129,7 +129,7 @@ internal class ProductService : IProductService
                 images[i] = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
-                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}");
+                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}").ConfigureAwait(false);
             }
         }
 
@@ -173,7 +173,7 @@ internal class ProductService : IProductService
             var video = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                         Path.GetExtension(productDto.VideoFile.FileName);
 
-            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}");
+            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}").ConfigureAwait(false);
 
             DeleteFileIfExist($"{_videoSavePath}/{dbModel.Video}");
 
@@ -191,7 +191,7 @@ internal class ProductService : IProductService
                 images[i] = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
-                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}");
+                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}").ConfigureAwait(false);
             }
         }
 
@@ -217,11 +217,11 @@ internal class ProductService : IProductService
                 Image = x
             });
 
-            await _context.ProductImages.AddRangeAsync(newImages);
+            await _context.ProductImages.AddRangeAsync(newImages).ConfigureAwait(false);
         }
 
         _context.ProductAccessories.RemoveRange(dbModel.ProductAccessories);
-        await _context.ProductAccessories.AddRangeAsync(newAccessories);
+        await _context.ProductAccessories.AddRangeAsync(newAccessories).ConfigureAwait(false);
         _context.Products.Update(dbModel);
 
         return await _context.SaveChangesAsync().ConfigureAwait(false);

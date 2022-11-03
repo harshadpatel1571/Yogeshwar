@@ -27,7 +27,7 @@
                 name: "Customer Name", "autoWidth": true,
                 sDefaultContent: "--",
                 render: function (data, type, row) {
-                    return "<a href='/Order/Detail/" + row.id + "'>" + row.customerName + "</a>";
+                    return "<a href='/Order/Detail/" + row.id + "' style='color:hotpink'>" + row.customerName + "</a>";
                 }
             },
             {data: "amount", name: "Amount", "autoWidth": true},

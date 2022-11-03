@@ -41,10 +41,10 @@ internal class OrderService : IOrderService
             result = result.Take(filterDto.Take);
         }
 
-        var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Include(x => x.Customer)
-            .Include(x => x.OrderDetails)
+        IList<OrderDto> data = await result.Include(x => x.Customer).Include(x => x.OrderDetails)
             .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+
+        data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
 
         model.Data = data;
 
@@ -59,7 +59,7 @@ internal class OrderService : IOrderService
             CustomerName = order.Customer.FirstName + " " + order.Customer.LastName,
             OrderDate = order.OrderDate.ToString("dd-MM-yyyy"),
             IsCompleted = order.IsCompleted,
-            Amount = order.OrderDetails.Sum(c => c.Amount),
+            Amount = order.OrderDetails.Sum(c => c.Amount) - (order.Discount ?? 0),
             OrderCount = order.OrderDetails.Count
         };
     }
@@ -82,7 +82,9 @@ internal class OrderService : IOrderService
             Amount = _context.Products.Where(y => y.Id == x.ProductId).Select(c => c.Price).FirstOrDefault() * x.Quantity,
             Status = (byte)x.Status!,
             Quantity = x.Quantity,
-            ReceiveDate = x.deliveredDate == null ? null : DateTime.ParseExact(x.deliveredDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+            ReceiveDate = x.deliveredDate == null
+                ? null
+                : DateTime.ParseExact(x.deliveredDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
         }).ToArray();
 
         var notifications = orderDto.OrderDetails.Select(x => new { x.ProductId, x.Accessories })
@@ -154,6 +156,7 @@ internal class OrderService : IOrderService
     {
         var dbModel = await _context.Orders
             .Include(x => x.OrderDetails)
+            .Include(x => x.Notifications)
             .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
 
         if (dbModel == null)
@@ -162,6 +165,7 @@ internal class OrderService : IOrderService
         }
 
         _context.OrderDetails.RemoveRange(dbModel.OrderDetails);
+        _context.Notifications.RemoveRange(dbModel.Notifications);
         _context.Orders.Remove(dbModel);
 
         await _context.SaveChangesAsync().ConfigureAwait(false);
@@ -184,6 +188,38 @@ internal class OrderService : IOrderService
                     Name = c.Accessories.Name,
                     Image = c.Accessories.Image == null ? null : $"{_accessoriesImageReadPath}/{c.Accessories.Image}"
                 }).ToArray()
-            }).FirstOrDefaultAsync();
+            }).FirstOrDefaultAsync().ConfigureAwait(false);
     }
+
+    public async Task<OrderDetailViewModel?> GetDetailsAsync(int id) =>
+        await _context.Orders.Where(x => x.Id == id)
+            .Select(x => new OrderDetailViewModel
+            {
+                OrderId = "Order #" + x.Id,
+                Customer = new CustomerViewDto
+                {
+                    Id = x.CustomerId,
+                    Name = x.Customer.FirstName + " " + x.Customer.LastName,
+                    Email = x.Customer.Email,
+                    PhoneNo = x.Customer.PhoneNo,
+                    Address = x.Customer.Address + ", " + x.Customer.City + " - " + x.Customer.Pincode + "."
+                },
+                OrderDetails = x.OrderDetails.Select(c => new OrderDetailsViewDto
+                {
+                    ProductName = c.Product.Name + " - " + c.Product.ModelNo,
+                    Status = ((OrderDetailStatus)c.Status).ToString(),
+                    Quantity = c.Quantity,
+                    TotalAmount = c.Amount + " RS",
+                    DeliveredDate = c.ReceiveDate == null
+                        ? "Not delivered"
+                        : c.ReceiveDate.Value.ToString("dd-MM-yyyy"),
+                    Price = (c.Amount / c.Quantity).ToString("0.00") + " RS",
+                    Image = c.Product.ProductImages.Count < 1
+                        ? null
+                        : $"{_productImageReadPath}/{c.Product.ProductImages.First().Image}"
+                }).ToArray(),
+                SubTotal = x.OrderDetails.Sum(c => c.Amount) + " RS",
+                Discount = x.Discount == null ? "0 RS" : x.Discount.Value + " RS",
+                Total = x.OrderDetails.Sum(c => c.Amount) - (x.Discount ?? 0) + " RS"
+            }).FirstOrDefaultAsync().ConfigureAwait(false);
 }

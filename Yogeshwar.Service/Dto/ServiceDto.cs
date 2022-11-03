@@ -26,6 +26,8 @@ namespace Yogeshwar.Service.Dto
         [Required(ErrorMessage = "Status are required.")]
         public byte ServiceStatus { get; set; }
 
+        public string? ServiceStatusString { get; set; }
+
         public string? ComplainDate { get; set; }
 
         public DateTime? CompletedDate { get; set; }

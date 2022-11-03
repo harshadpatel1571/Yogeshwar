@@ -27,7 +27,7 @@
                 name: "Name", "autoWidth": true,
                 sDefaultContent: "--",
                 render: function (data, type, row) {
-                    return "<a href='/Product/Detail/" + row.id + "'>" + row.name + "</a>";
+                    return "<a href='/Product/Detail/" + row.id + "' style='color:hotpink'>" + row.name + "</a>";
                 }
             },
             {data: "modelNo", name: "Model No", "autoWidth": true},

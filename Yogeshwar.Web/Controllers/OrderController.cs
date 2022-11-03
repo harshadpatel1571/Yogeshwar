@@ -46,7 +46,7 @@ public class OrderController : Controller
     [HttpPost]
     public async Task<IActionResult> GetAccessoriesDetail([FromQuery] int productId)
     {
-        var detail = await _orderService.Value.GetAccessoriesAsync(productId);
+        var detail = await _orderService.Value.GetAccessoriesAsync(productId).ConfigureAwait(false);
 
         if (detail is null)
         {
@@ -60,13 +60,13 @@ public class OrderController : Controller
     {
         using var _ = dropDownService;
 
-        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync(),
+        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync().ConfigureAwait(false),
             "Key", "Text");
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForStatus(),
             "Key", "Text");
         ViewBag.OrderStatus = new SelectList(dropDownService.BindDropDownForOrderStatus(),
             "Key", "Text");
-        ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync(),
+        ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync().ConfigureAwait(false),
             "Key", "Text");
 
         return View();
@@ -81,13 +81,33 @@ public class OrderController : Controller
             return BadRequest(errors);
         }
 
-        await _orderService.Value.CreateOrUpdateAsync(orderDto);
+        await _orderService.Value.CreateOrUpdateAsync(orderDto).ConfigureAwait(false);
 
         return Ok();
     }
 
-    public IActionResult Detail()
+    public async Task<IActionResult> Detail(int id)
     {
-        return View();
+        var model = await _orderService.Value.GetDetailsAsync(id).ConfigureAwait(false);
+
+        if (model is null)
+        {
+            return NotFound();
+        }
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async ValueTask<IActionResult> Delete(int id)
+    {
+        var dbModel = await _orderService.Value.DeleteAsync(id).ConfigureAwait(false);
+
+        if (dbModel is null)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
     }
 }

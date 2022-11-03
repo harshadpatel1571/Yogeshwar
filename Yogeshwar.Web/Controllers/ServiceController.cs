@@ -47,7 +47,7 @@ public sealed class ServiceController : Controller
     {
         using var _ = dropDownService;
 
-        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync(),
+        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync().ConfigureAwait(false),
             "Key", "Text");
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForService(),
             "Key", "Text");
