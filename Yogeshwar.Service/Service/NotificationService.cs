@@ -17,40 +17,35 @@ internal class NotificationService : INotificationService
 
     async Task<DataTableResponseCarrier<NotificationDto>> INotificationService.GetByFilterAsync(DataTableFilterDto filterDto)
     {
-        try
+        var result = _context.Notifications.AsNoTracking();
+
+        if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
-            var result = _context.Notifications.AsNoTracking();
-
-            if (!string.IsNullOrEmpty(filterDto.SearchValue))
-            {
-                result = result.Where(x => x.ProductAccessories.Product.Name.Contains(filterDto.SearchValue) ||
-                                           x.ProductAccessories.Accessories.Name.Contains(filterDto.SearchValue));
-            }
-
-            var model = new DataTableResponseCarrier<NotificationDto>
-            {
-                TotalCount = result.Count()
-            };
-
-            result = result.Skip(filterDto.Skip);
-
-            if (filterDto.Take != -1)
-            {
-                result = result.Take(filterDto.Take);
-            }
-
-            var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-                .Include(x => x.ProductAccessories).ThenInclude(x => x.Product).Include(x=>x.ProductAccessories.Accessories)
-                .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
-
-            model.Data = data;
-
-            return model;
+            result = result.Where(x => x.ProductAccessories.Product.Name.Contains(filterDto.SearchValue) ||
+                                       x.ProductAccessories.Accessories.Name.Contains(filterDto.SearchValue));
         }
-        catch(Exception e)
+
+        var model = new DataTableResponseCarrier<NotificationDto>
         {
-            return null;
+            TotalCount = result.Count()
+        };
+
+        result = result.Skip(filterDto.Skip);
+
+        if (filterDto.Take != -1)
+        {
+            result = result.Take(filterDto.Take);
         }
+
+        IList<NotificationDto> data = await result.Include(x => x.ProductAccessories).ThenInclude(x => x.Product).Include(x => x.ProductAccessories.Accessories)
+            .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+
+        data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
+
+
+        model.Data = data;
+
+        return model;
     }
 
     private static NotificationDto DtoSelector(Notification service) =>
@@ -60,7 +55,7 @@ internal class NotificationService : INotificationService
         ProductId = service.ProductAccessories.ProductId,
         ProductName = service.ProductAccessories.Product.Name,
         OrderId = service.OrderId,
-        ProductAccessoriesId= service.ProductAccessoriesId,
+        ProductAccessoriesId = service.ProductAccessoriesId,
         ProductAccessoriesName = service.ProductAccessories.Accessories.Name,
         IsCompleted = service.IsCompleted,
         StrIsCompleted = service.IsCompleted ? "Completed" : "Pending"
