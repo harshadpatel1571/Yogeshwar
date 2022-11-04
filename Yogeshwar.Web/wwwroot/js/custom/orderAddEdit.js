@@ -439,7 +439,3 @@ $('#status').change(function () {
 $('#orderDate').change(function () {
     $('#orderDateValidation').text('');
 });
-
-function removeOrderDetailValidationMessage() {
-    $('#orderDetailValidation').text('');
-}

@@ -4,7 +4,7 @@
         lengthChange: true,
         searching: true,
         ordering: true,
-        lengthMenu: [10, 25, 50, 75, 100],
+        lengthMenu: [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, 'All']],
         info: true,
         autoWidth: true,
         responsive: true,
@@ -26,29 +26,29 @@
             { data: "productName", name: "Product Name", "autoWidth": true },
             { data: "productAccessoriesName", name: "Product Accessories Name", "autoWidth": true },
             { data: "orderId", name: "Order Id", "autoWidth": true },
-            { data: "strIsCompleted", name: "Status", "autoWidth": true },
-            {
-                bSortable: false,
-                autoWidth: true,
-                sDefaultContent: "<div class=\"hstack gap-3 flex-wrap\">\n" +
-                    "                                    <a href=\"javascript:void(0);\" class=\"link-success fs-20\">\n" +
-                    "                                        <i class=\"ri-edit-2-line\"></i>\n" +
-                    "                                    </a>\n" +
-                    "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(0)'>\n" +
-                    "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
-                    "                                    </a>\n" +
-                    "                                </div>",
-                render: function (data, type, row) {
-                    return "<div class=\"hstack gap-3 flex-wrap\">\n" +
-                        "                                    <a href='/Notification/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
-                        "                                        <i class=\"ri-edit-2-line\"></i>\n" +
-                        "                                    </a>\n" +
-                        "                                    <a class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(" + row.id + ")'>\n" +
-                        "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
-                        "                                    </a>\n" +
-                        "                                </div>";
-                }
-            },
+            { data: "strIsCompleted", name: "StrIsCompleted", "autoWidth": true },
+            //{
+            //    bSortable: false,
+            //    autoWidth: true,
+            //    sDefaultContent: "<div class=\"hstack gap-3 flex-wrap\">\n" +
+            //        "                                    <a href=\"javascript:void(0);\" class=\"link-success fs-20\">\n" +
+            //        "                                        <i class=\"ri-edit-2-line\"></i>\n" +
+            //        "                                    </a>\n" +
+            //        "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(0)'>\n" +
+            //        "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
+            //        "                                    </a>\n" +
+            //        "                                </div>",
+            //    render: function (data, type, row) {
+            //        return "<div class=\"hstack gap-3 flex-wrap\">\n" +
+            //            "                                    <a href='/Notification/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
+            //            "                                        <i class=\"ri-edit-2-line\"></i>\n" +
+            //            "                                    </a>\n" +
+            //            "                                    <a class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(" + row.id + ")'>\n" +
+            //            "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
+            //            "                                    </a>\n" +
+            //            "                                </div>";
+            //    }
+            //},
         ],
         dom: 'Blfrtip',
         buttons: [
@@ -141,6 +141,21 @@ function deleteRecord(id) {
                     const table = $("#grid").DataTable();
                     table.ajax.reload(null, false);
                 });
+            },
+            error: function (response) {
+                let message = "This entity is being referred somewhere else.";
+
+                if (response.status === 404) {
+                    message = "Entity can not be found.";
+                }
+
+                t.value && Swal.fire({
+                    title: "Unable to delete.",
+                    text: message,
+                    icon: "warning",
+                    confirmButtonClass: "btn btn-primary w-xs mt-2",
+                    buttonsStyling: !1
+                })
             }
         });
     });

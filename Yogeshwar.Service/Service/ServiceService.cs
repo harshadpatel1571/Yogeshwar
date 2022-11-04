@@ -22,8 +22,7 @@ internal class ServiceService : IServiceService
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
             result = result.Where(x => x.WorkerName.Contains(filterDto.SearchValue) ||
-                                       x.Customer.FirstName.Contains(filterDto.SearchValue) ||
-                                       x.Customer.LastName.Contains(filterDto.SearchValue));
+                                ("Order #" + x.OrderId + " - " + x.Order.Customer.FirstName + " " + x.Order.Customer.LastName).Contains(filterDto.SearchValue));
         }
 
         var model = new DataTableResponseCarrier<ServiceDto>
@@ -38,7 +37,8 @@ internal class ServiceService : IServiceService
             result = result.Take(filterDto.Take);
         }
 
-        IList<ServiceDto> data = await result.Include(x => x.Customer)
+        IList<ServiceDto> data = await result.Include(x => x.Order)
+            .ThenInclude(x => x.Customer)
             .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
 
         data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
@@ -52,12 +52,13 @@ internal class ServiceService : IServiceService
     {
         Id = service.Id,
         CompletedDate = service.ServiceCompletedDate,
-        CustomerId = service.CustomerId,
+        OrderId = service.Order.CustomerId,
         Description = service.Description,
         WorkerName = service.WorkerName,
         ServiceStatus = service.Status,
         ServiceStatusString = ((ServiceStatus)service.Status).ToString(),
-        CustomerName = service.Customer.FirstName + " " + service.Customer.LastName,
+        OrderCustomerName = "Order #" + service.OrderId + " - " +
+            service.Order.Customer.FirstName + " " + service.Order.Customer.LastName,
         ComplainDate = service.ComplainDate.ToString("dd-MM-yyyy"),
     };
 
@@ -77,7 +78,7 @@ internal class ServiceService : IServiceService
         {
             WorkerName = service.WorkerName,
             ComplainDate = DateTime.Now,
-            CustomerId = service.CustomerId,
+            OrderId = service.OrderId,
             Description = service.Description,
             ServiceCompletedDate = service.CompletedDate,
             Status = service.ServiceStatus
@@ -99,7 +100,7 @@ internal class ServiceService : IServiceService
         }
 
         dbModel.WorkerName = service.WorkerName;
-        dbModel.CustomerId = service.CustomerId;
+        dbModel.OrderId = service.OrderId;
         dbModel.Description = service.Description;
         dbModel.ServiceCompletedDate = service.CompletedDate;
         dbModel.Status = service.ServiceStatus;
@@ -112,7 +113,7 @@ internal class ServiceService : IServiceService
     public async Task<ServiceDto?> GetSingleAsync(int id)
     {
         return await _context.CustomerServices.AsNoTracking()
-            .Where(x => x.Id == id).Include(x => x.Customer).Select(x => DtoSelector(x))
+            .Where(x => x.Id == id).Include(x => x.Order).ThenInclude(x => x.Customer).Select(x => DtoSelector(x))
             .FirstOrDefaultAsync().ConfigureAwait(false);
     }
 

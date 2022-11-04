@@ -147,6 +147,21 @@ function deleteRecord(id) {
                     const table = $("#grid").DataTable();
                     table.ajax.reload(null, false);
                 });
+            },
+            error: function (response) {
+                let message = "This entity is being referred somewhere else.";
+
+                if (response.status === 404) {
+                    message = "Entity can not be found.";
+                }
+
+                t.value && Swal.fire({
+                    title: "Unable to delete.",
+                    text: message,
+                    icon: "warning",
+                    confirmButtonClass: "btn btn-primary w-xs mt-2",
+                    buttonsStyling: !1
+                })
             }
         });
     });

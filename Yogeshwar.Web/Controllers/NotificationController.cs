@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 [Authorize]
 public class NotificationController : Controller

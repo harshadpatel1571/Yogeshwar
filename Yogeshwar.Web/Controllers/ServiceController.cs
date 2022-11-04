@@ -43,14 +43,12 @@ public sealed class ServiceController : Controller
         return Json(responseModel);
     }
 
-    public async ValueTask<IActionResult> AddEdit([FromServices] IDropDownService dropDownService, int id)
+    public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService)
     {
         using var _ = dropDownService;
 
-        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync().ConfigureAwait(false),
-            "Key", "Text");
-        ViewBag.Status = new SelectList(dropDownService.BindDropDownForService(),
-            "Key", "Text");
+        ViewBag.Orders = new SelectList(await dropDownService.BindDropDownForOrdersAsync().ConfigureAwait(false), "Key", "Text");
+        ViewBag.Status = new SelectList(dropDownService.BindDropDownForService(), "Key", "Text");
 
         if (id < 1)
         {
@@ -69,12 +67,17 @@ public sealed class ServiceController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddEdit(ServiceDto service)
+    public async Task<IActionResult> AddEdit(ServiceDto service, [FromServices] IDropDownService dropDownService)
     {
         ModelState.Remove("Id");
 
+        using var _ = dropDownService;
+
         if (!ModelState.IsValid)
         {
+            ViewBag.Orders = new SelectList(await dropDownService.BindDropDownForOrdersAsync().ConfigureAwait(false), "Key", "Text");
+            ViewBag.Status = new SelectList(dropDownService.BindDropDownForService(), "Key", "Text");
+
             ModelState.AddModelError();
             return View();
         }
@@ -87,14 +90,21 @@ public sealed class ServiceController : Controller
     [HttpPost]
     public async ValueTask<IActionResult> Delete(int id)
     {
-        var dbModel = await _serviceService.Value.DeleteAsync(id).ConfigureAwait(false);
-
-        if (dbModel is null)
+        try
         {
-            return NotFound();
-        }
+            var dbModel = await _serviceService.Value.DeleteAsync(id).ConfigureAwait(false);
 
-        return NoContent();
+            if (dbModel is null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+        catch
+        {
+            return BadRequest();
+        }
     }
 
     public async Task<IActionResult> Detail(int id)

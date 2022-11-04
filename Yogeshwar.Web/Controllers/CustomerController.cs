@@ -80,14 +80,21 @@ public sealed class CustomerController : Controller
     [HttpPost]
     public async ValueTask<IActionResult> Delete(int id)
     {
-        var dbModel = await _customerService.Value.DeleteAsync(id).ConfigureAwait(false);
-
-        if (dbModel is null)
+        try
         {
-            return NotFound();
-        }
+            var dbModel = await _customerService.Value.DeleteAsync(id).ConfigureAwait(false);
 
-        return NoContent();
+            if (dbModel is null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+        catch
+        {
+            return BadRequest();
+        }
     }
 
     public async Task<IActionResult> Detail(int id)

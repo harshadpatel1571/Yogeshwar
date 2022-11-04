@@ -52,12 +52,12 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Select Customer</label>
+                        <label class="form-label">Select Order</label>
                         <span class="text-danger">*</span>
-                        <select class="js-example-disabled" asp-for="CustomerId" asp-items="@ViewBag.Customers">
-                            <option value="">Select</option>
+                        <select class="js-example-disabled" asp-for="OrderId" asp-items="@ViewBag.Orders">
+                            <option value="">Select Order</option>
                         </select>
-                        <span asp-validation-for="CustomerId" class="text-danger"></span>
+                        <span asp-validation-for="OrderId" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-12">

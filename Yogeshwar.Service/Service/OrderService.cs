@@ -156,7 +156,6 @@ internal class OrderService : IOrderService
     {
         var dbModel = await _context.Orders
             .Include(x => x.OrderDetails)
-            .Include(x => x.Notifications)
             .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
 
         if (dbModel == null)
@@ -165,7 +164,6 @@ internal class OrderService : IOrderService
         }
 
         _context.OrderDetails.RemoveRange(dbModel.OrderDetails);
-        _context.Notifications.RemoveRange(dbModel.Notifications);
         _context.Orders.Remove(dbModel);
 
         await _context.SaveChangesAsync().ConfigureAwait(false);

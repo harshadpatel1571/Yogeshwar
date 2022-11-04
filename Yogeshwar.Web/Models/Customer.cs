@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yogeshwar.DB.Models;
+namespace Yogeshwar.Web.Models;
 
 public partial class Customer
 {
@@ -29,5 +29,5 @@ public partial class Customer
 
     public int? ModifiedBy { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

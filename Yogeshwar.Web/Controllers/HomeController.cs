@@ -1,4 +1,6 @@
-﻿[Authorize]
+﻿namespace Yogeshwar.Web.Controllers;
+
+[Authorize]
 public sealed class HomeController : Controller
 {
     public IActionResult Index()
@@ -12,7 +14,7 @@ public sealed class HomeController : Controller
         var view = statusCode switch
         {
             404 => (IActionResult)View("404"),
-            _ => Ok()
+            _ => StatusCode(statusCode)
         };
 
         return view;

@@ -8,3 +8,4 @@ global using Yogeshwar.Service.Abstraction;
 global using Microsoft.AspNetCore.Authorization;
 global using Yogeshwar.Helper.Extension;
 global using Microsoft.AspNetCore.Mvc.Rendering;
+global using System.Text.Json.Serialization;

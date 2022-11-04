@@ -275,12 +275,10 @@ internal class ProductService : IProductService
 
         var path = $"{_imageSavePath}/{dbModel.Image}";
 
-        if (!File.Exists(path))
+        if (File.Exists(path))
         {
-            return false;
+            File.Delete(path);
         }
-
-        File.Delete(path);
 
         _context.ProductImages.Remove(dbModel);
         await _context.SaveChangesAsync().ConfigureAwait(false);
@@ -300,12 +298,10 @@ internal class ProductService : IProductService
 
         var path = $"{_videoSavePath}/{dbModel.Video}";
 
-        if (!File.Exists(path))
+        if (File.Exists(path))
         {
-            return false;
+            File.Delete(path);
         }
-
-        File.Delete(path);
 
         dbModel.Video = null;
         await _context.SaveChangesAsync().ConfigureAwait(false);

@@ -22,7 +22,8 @@ internal class NotificationService : INotificationService
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
             result = result.Where(x => x.ProductAccessories.Product.Name.Contains(filterDto.SearchValue) ||
-                                       x.ProductAccessories.Accessories.Name.Contains(filterDto.SearchValue));
+                                       x.ProductAccessories.Accessories.Name.Contains(filterDto.SearchValue)||
+                                       x.OrderId.ToString() == filterDto.SearchValue);
         }
 
         var model = new DataTableResponseCarrier<NotificationDto>
@@ -37,19 +38,18 @@ internal class NotificationService : INotificationService
             result = result.Take(filterDto.Take);
         }
 
-        IList<NotificationDto> data = await result.Include(x => x.ProductAccessories).ThenInclude(x => x.Product).Include(x => x.ProductAccessories.Accessories)
+        IList<NotificationDto> data = await result.Include(x => x.ProductAccessories)
+            .ThenInclude(x => x.Product).Include(x => x.ProductAccessories.Accessories)
             .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
 
         data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
-
 
         model.Data = data;
 
         return model;
     }
 
-    private static NotificationDto DtoSelector(Notification service) =>
-    new()
+    private static NotificationDto DtoSelector(Notification service) => new()
     {
         Id = service.Id,
         ProductId = service.ProductAccessories.ProductId,

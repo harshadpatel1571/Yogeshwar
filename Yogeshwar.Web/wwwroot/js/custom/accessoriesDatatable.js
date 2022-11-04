@@ -4,7 +4,7 @@
         lengthChange: true,
         searching: true,
         ordering: true,
-        lengthMenu: [10, 25, 50, 75, 100],
+        lengthMenu: [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, 'All']],
         info: true,
         autoWidth: true,
         responsive: true,
@@ -147,7 +147,7 @@ function deleteRecord(id) {
             url: "/Accessories/Delete/" + id,
             success: function () {
                 t.value && Swal.fire({
-                    title: "Deleted!",
+                    title: "Deleted.",
                     text: "Your record has been deleted.",
                     icon: "success",
                     confirmButtonClass: "btn btn-primary w-xs mt-2",
@@ -156,6 +156,21 @@ function deleteRecord(id) {
                     const table = $("#grid").DataTable();
                     table.ajax.reload(null, false);
                 });
+            },
+            error: function (response) {
+                let message = "This entity is being referred somewhere else.";
+
+                if (response.status === 404) {
+                    message = "Entity can not be found.";
+                }
+
+                t.value && Swal.fire({
+                    title: "Unable to delete.",
+                    text: message,
+                    icon: "warning",
+                    confirmButtonClass: "btn btn-primary w-xs mt-2",
+                    buttonsStyling: !1
+                })
             }
         });
     });

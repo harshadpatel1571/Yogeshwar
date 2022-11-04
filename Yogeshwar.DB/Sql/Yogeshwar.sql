@@ -109,7 +109,7 @@ CREATE TABLE [CustomerService]
 (
 	Id int not null primary key identity(1, 1),
 	WorkerName varchar(100) not null,
-	CustomerId int not null constraint fk_customerservice_customer_id foreign key references [Customer](Id),
+	OrderId int not null constraint fk_customerservice_order_id foreign key references [Order](Id),
 	[Description] varchar(250),
 	[ComplainDate] datetime2(2) not null,
 	[Status] tinyint not null,

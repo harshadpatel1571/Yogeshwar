@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yogeshwar.DB.Models;
+namespace Yogeshwar.Web.Models;
 
 public partial class Order
 {
@@ -17,9 +17,9 @@ public partial class Order
 
     public virtual Customer Customer { get; set; } = null!;
 
-    public virtual ICollection<CustomerService> CustomerServices { get; set; } = new List<CustomerService>();
+    public virtual ICollection<CustomerService> CustomerServices { get; } = new List<CustomerService>();
 
-    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+    public virtual ICollection<Notification> Notifications { get; } = new List<Notification>();
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+    public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 }
