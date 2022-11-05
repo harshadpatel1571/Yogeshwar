@@ -15,14 +15,15 @@ internal class NotificationService : INotificationService
         GC.SuppressFinalize(this);
     }
 
-    async Task<DataTableResponseCarrier<NotificationDto>> INotificationService.GetByFilterAsync(DataTableFilterDto filterDto)
+    async Task<DataTableResponseCarrier<NotificationDto>> INotificationService.GetByFilterAsync(
+        DataTableFilterDto filterDto)
     {
         var result = _context.Notifications.AsNoTracking();
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
             result = result.Where(x => x.ProductAccessories.Product.Name.Contains(filterDto.SearchValue) ||
-                                       x.ProductAccessories.Accessories.Name.Contains(filterDto.SearchValue)||
+                                       x.ProductAccessories.Accessories.Name.Contains(filterDto.SearchValue) ||
                                        x.OrderId.ToString() == filterDto.SearchValue);
         }
 

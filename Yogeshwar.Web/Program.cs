@@ -21,6 +21,7 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
 
 #region Custom
 
+services.AddHostedService<NotificationBackgroundService>();
 services.AddScoped<Yogeshwar.DB.Models.YogeshwarContext>();
 services.AddScoped<IDropDownService, DropDownService>();
 services.AddScoped<IUserService, UserService>()

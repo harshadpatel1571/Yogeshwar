@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Yogeshwar.Web.Models;
+﻿namespace Yogeshwar.Web.Models;
 
 public partial class Order
 {

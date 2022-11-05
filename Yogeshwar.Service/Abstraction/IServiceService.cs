@@ -1,6 +1,4 @@
-﻿using Yogeshwar.DB.Models;
-
-namespace Yogeshwar.Service.Abstraction;
+﻿namespace Yogeshwar.Service.Abstraction;
 
 public interface IServiceService : IDisposable
 {

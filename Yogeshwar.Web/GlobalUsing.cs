@@ -9,3 +9,7 @@ global using Microsoft.AspNetCore.Authorization;
 global using Yogeshwar.Helper.Extension;
 global using Microsoft.AspNetCore.Mvc.Rendering;
 global using System.Text.Json.Serialization;
+global using Yogeshwar.Web;
+global using System.Data;
+global using Dapper;
+global using Microsoft.Data.SqlClient;

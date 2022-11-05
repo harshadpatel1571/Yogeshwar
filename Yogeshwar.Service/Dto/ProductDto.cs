@@ -1,6 +1,4 @@
-﻿using System.Security.Principal;
-
-namespace Yogeshwar.Service.Dto;
+﻿namespace Yogeshwar.Service.Dto;
 
 public class ProductDto
 {

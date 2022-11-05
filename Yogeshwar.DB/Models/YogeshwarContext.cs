@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
-namespace Yogeshwar.DB.Models;
+﻿namespace Yogeshwar.DB.Models;
 
 public partial class YogeshwarContext : DbContext
 {
