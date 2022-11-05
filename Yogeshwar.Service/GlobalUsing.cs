@@ -11,3 +11,6 @@ global using Microsoft.AspNetCore.Hosting;
 global using Yogeshwar.DB.Constant;
 global using Microsoft.AspNetCore.Mvc.Rendering;
 global using System.Globalization;
+global using OneSignal.RestAPIv3.Client;
+global using OneSignal.RestAPIv3.Client.Resources;
+global using OneSignal.RestAPIv3.Client.Resources.Notifications;
