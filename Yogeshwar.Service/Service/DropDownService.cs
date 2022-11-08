@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+[RegisterService(ServiceLifetime.Scoped, typeof(IDropDownService))]
 internal class DropDownService : IDropDownService
 {
     private readonly YogeshwarContext _context;

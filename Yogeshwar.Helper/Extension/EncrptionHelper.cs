@@ -1,6 +1,6 @@
 ﻿namespace Yogeshwar.Helper.Extension;
 
-internal static class EncryptionHelper
+internal static class ServiceExtension
 {
     private const string Key = "657148c456ac4415be3ef076ab1132f0";
 

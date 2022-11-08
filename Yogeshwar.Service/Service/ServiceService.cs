@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+[RegisterService(ServiceLifetime.Scoped, typeof(IServiceService))]
 internal class ServiceService : IServiceService
 {
     private readonly YogeshwarContext _context;

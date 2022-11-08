@@ -20,8 +20,4 @@
         <InternalsVisibleTo Include="Yogeshwar.Web" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Attribute\" />
-    </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+[RegisterService(ServiceLifetime.Scoped, typeof(IUserService))]
 internal class UserService : IUserService
 {
     private readonly YogeshwarContext _context;
@@ -17,7 +18,7 @@ internal class UserService : IUserService
 
     public async Task<UserDetailDto?> GetUserByCredential(string username, string password)
     {
-        var encryptedPassword = EncryptionHelper.Encrypt(password);
+        var encryptedPassword = ServiceExtension.Encrypt(password);
 
         return await _context.Users
             .Where(x => x.Username == username && x.Password == encryptedPassword)

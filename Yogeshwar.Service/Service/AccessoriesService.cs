@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+[RegisterService(ServiceLifetime.Scoped, typeof(IAccessoriesService))]
 internal class AccessoriesService : IAccessoriesService
 {
     private readonly YogeshwarContext _context;
@@ -20,7 +21,8 @@ internal class AccessoriesService : IAccessoriesService
         GC.SuppressFinalize(this);
     }
 
-    async Task<DataTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(DataTableFilterDto filterDto)
+    async Task<DataTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(
+        DataTableFilterDto filterDto)
     {
         var result = _context.Accessories.AsNoTracking();
 
@@ -82,7 +84,8 @@ internal class AccessoriesService : IAccessoriesService
 
         if (accessory.File is not null)
         {
-            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
+            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                    Path.GetExtension(accessory.File.FileName);
             await accessory.File.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
         }
 
@@ -112,7 +115,8 @@ internal class AccessoriesService : IAccessoriesService
 
         if (accessory.File is not null)
         {
-            var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) + Path.GetExtension(accessory.File.FileName);
+            var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                        Path.GetExtension(accessory.File.FileName);
             await accessory.File.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
 
             DeleteImageIfExist($"{_savePath}/{dbModel.Image}");
@@ -160,7 +164,7 @@ internal class AccessoriesService : IAccessoriesService
     public async ValueTask<bool> DeleteImageAsync(int id)
     {
         var dbModel = await _context.Accessories
-          .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
 
         if (dbModel == null)
         {

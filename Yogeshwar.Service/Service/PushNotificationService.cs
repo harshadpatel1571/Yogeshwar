@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+[RegisterService(ServiceLifetime.Singleton, enableLazyLoading: false)]
 internal class PushNotificationService
 {
     private readonly IConfiguration _configuration;

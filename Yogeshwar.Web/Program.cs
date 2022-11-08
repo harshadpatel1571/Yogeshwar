@@ -21,24 +21,9 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
 
 #region Custom
 
-services.AddHostedService<NotificationBackgroundService>();
-services.AddSingleton<PushNotificationService>();
 services.AddScoped<Yogeshwar.DB.Models.YogeshwarContext>();
-services.AddScoped<IDropDownService, DropDownService>();
-services.AddScoped<IUserService, UserService>()
-    .AddScoped(x => new Lazy<IUserService>(() => x.GetService<IUserService>()!));
-services.AddScoped<ICustomerService, CustomerService>()
-    .AddScoped(x => new Lazy<ICustomerService>(() => x.GetService<ICustomerService>()!));
-services.AddScoped<IAccessoriesService, AccessoriesService>()
-    .AddScoped(x => new Lazy<IAccessoriesService>(() => x.GetService<IAccessoriesService>()!));
-services.AddScoped<IProductService, ProductService>()
-    .AddScoped(x => new Lazy<IProductService>(() => x.GetService<IProductService>()!));
-services.AddScoped<IOrderService, OrderService>()
-    .AddScoped(x => new Lazy<IOrderService>(() => x.GetService<IOrderService>()!));
-services.AddScoped<IServiceService, ServiceService>()
-    .AddScoped(x => new Lazy<IServiceService>(() => x.GetService<IServiceService>()!));
-services.AddScoped<INotificationService, NotificationService>()
-    .AddScoped(x => new Lazy<INotificationService>(() => x.GetService<INotificationService>()!));
+services.AddCustomServices(typeof(UserService));
+services.AddHostedService<NotificationBackgroundService>();
 
 #endregion
 

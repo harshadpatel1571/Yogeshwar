@@ -1,5 +1,6 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+[RegisterService(ServiceLifetime.Scoped, typeof(INotificationService))]
 internal class NotificationService : INotificationService
 {
     private readonly YogeshwarContext _context;
