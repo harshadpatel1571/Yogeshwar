@@ -1,4 +1,4 @@
-﻿namespace Yogeshwar.Service.Abstraction;
+namespace Yogeshwar.Service.Abstraction;
 
 public interface IDropDownService : IDisposable
 {
