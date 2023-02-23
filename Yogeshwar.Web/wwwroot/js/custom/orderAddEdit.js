@@ -156,10 +156,10 @@ function reBindProduct(obj) {
             type: "POST",
             url: "/Order/GetAccessoriesDetail?productId=" + $('#selectAccessories_' + id).val(),
             success: function (data) {
-                showAccessoriesStockLabel(id);
-                showAccessoriesStock(id);
-
-                displayProductImage(id, data.image);
+                // showAccessoriesStockLabel(id);
+                // showAccessoriesStock(id);
+                //
+                // displayProductImage(id, data.image);
                 displayQuantityDiv(id);
 
                 displayDeliveredDate(id);

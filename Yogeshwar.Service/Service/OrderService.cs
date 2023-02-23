@@ -4,8 +4,8 @@
 internal class OrderService : IOrderService
 {
     private readonly YogeshwarContext _context;
-    private static string _productImageReadPath;
-    private static string _accessoriesImageReadPath;
+    private static string? _productImageReadPath;
+    private static string? _accessoriesImageReadPath;
 
     public OrderService(YogeshwarContext context, IConfiguration configuration)
     {
@@ -80,7 +80,9 @@ internal class OrderService : IOrderService
         var orderDetails = orderDto.OrderDetails.Select(x => new OrderDetail
         {
             ProductId = x.ProductId,
-            Amount = _context.Products.Where(y => y.Id == x.ProductId).Select(c => c.Price).FirstOrDefault() * x.Quantity,
+            Amount = _context.Products.Where(y => y.Id == x.ProductId)
+                .Select(c => c.Price)
+                .FirstOrDefault() * x.Quantity,
             Status = (byte)x.Status!,
             Quantity = x.Quantity,
             ReceiveDate = x.deliveredDate == null

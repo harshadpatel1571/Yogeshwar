@@ -3,15 +3,15 @@
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class RegisterServiceAttribute : System.Attribute
 {
-    public RegisterServiceAttribute(ServiceLifetime serviceLifetime, Type? baseType = null,
+    public RegisterServiceAttribute(ServiceLifetime serviceLifetime, Type? parentType = null,
         bool enableLazyLoading = true)
     {
-        BaseType = baseType;
+        ParentType = parentType;
         ServiceLifetime = serviceLifetime;
         EnableLazyLoading = enableLazyLoading;
     }
 
-    public Type? BaseType { get; }
+    public Type? ParentType { get; }
 
     public ServiceLifetime ServiceLifetime { get; }
 

@@ -12,6 +12,16 @@ public partial class Order
 
     public bool IsCompleted { get; set; }
 
+    public bool IsDeleted { get; set; }
+
+    public DateTime CreatedDate { get; set; }
+
+    public int CreatedBy { get; set; }
+
+    public DateTime? UpdatedDate { get; set; }
+
+    public int? UpdatedBy { get; set; }
+
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual ICollection<CustomerService> CustomerServices { get; set; } = new List<CustomerService>();

@@ -11,7 +11,7 @@ public static class ExtensionHelper
 
         foreach (var type in types)
         {
-            var baseType = type.Attribute!.BaseType;
+            var baseType = type.Attribute!.ParentType;
             var serviceLifetime = type.Attribute.ServiceLifetime;
 
             if (baseType is not null)

@@ -13,6 +13,8 @@ public partial class YogeshwarContext : DbContext
 
     public virtual DbSet<Accessory> Accessories { get; set; }
 
+    public virtual DbSet<Category> Categories { get; set; }
+
     public virtual DbSet<Customer> Customers { get; set; }
 
     public virtual DbSet<CustomerService> CustomerServices { get; set; }
@@ -27,19 +29,21 @@ public partial class YogeshwarContext : DbContext
 
     public virtual DbSet<ProductAccessory> ProductAccessories { get; set; }
 
+    public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
     public virtual DbSet<ProductImage> ProductImages { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.;Database=Yogeshwar;MultipleActiveResultSets=true;Trusted_Connection=true;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=65.108.57.75;Database=Yogeshwar;MultipleActiveResultSets=true;TrustServerCertificate=True;User Id=sa;Password=Harshad@@1234;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Accessory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Accessor__3214EC07DE9738F0");
+            entity.HasKey(e => e.Id).HasName("PK__Accessor__3214EC0762AD5F61");
 
             entity.Property(e => e.Description)
                 .HasMaxLength(250)
@@ -52,9 +56,16 @@ public partial class YogeshwarContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.ToTable("Category");
+
+            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Customer__3214EC077E567B4C");
+            entity.HasKey(e => e.Id).HasName("PK__Customer__3214EC07A6E7EE92");
 
             entity.ToTable("Customer");
 
@@ -84,7 +95,7 @@ public partial class YogeshwarContext : DbContext
 
         modelBuilder.Entity<CustomerService>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Customer__3214EC0777640A07");
+            entity.HasKey(e => e.Id).HasName("PK__Customer__3214EC0743B23ADF");
 
             entity.ToTable("CustomerService");
 
@@ -105,7 +116,7 @@ public partial class YogeshwarContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07762D69A8");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07EEE41DF9");
 
             entity.ToTable("Notification");
 
@@ -124,7 +135,7 @@ public partial class YogeshwarContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Order__3214EC075E555B1C");
+            entity.HasKey(e => e.Id).HasName("PK__Order__3214EC0751AAEB3F");
 
             entity.ToTable("Order");
 
@@ -139,7 +150,7 @@ public partial class YogeshwarContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC079134E4D7");
+            entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC071C9029AE");
 
             entity.ToTable("OrderDetail");
 
@@ -159,12 +170,12 @@ public partial class YogeshwarContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Product__3214EC0790CD5186");
+            entity.HasKey(e => e.Id).HasName("PK__Product__3214EC070625F62F");
 
             entity.ToTable("Product");
 
             entity.Property(e => e.CreatedDate)
-                .HasPrecision(2)
+                .HasPrecision(5)
                 .HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Description).HasMaxLength(250);
             entity.Property(e => e.ModelNo)
@@ -174,12 +185,13 @@ public partial class YogeshwarContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.UpdatedDate).HasPrecision(5);
             entity.Property(e => e.Video).HasMaxLength(50);
         });
 
         modelBuilder.Entity<ProductAccessory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductA__3214EC070B2CBEF9");
+            entity.HasKey(e => e.Id).HasName("PK__ProductA__3214EC07A80B1382");
 
             entity.HasOne(d => d.Accessories).WithMany(p => p.ProductAccessories)
                 .HasForeignKey(d => d.AccessoriesId)
@@ -192,9 +204,14 @@ public partial class YogeshwarContext : DbContext
                 .HasConstraintName("fk_productaccessories_product_id");
         });
 
+        modelBuilder.Entity<ProductCategory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_ProductCategory");
+        });
+
         modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC07BBD5C9FC");
+            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC079E82F591");
 
             entity.Property(e => e.Image)
                 .HasMaxLength(50)
@@ -208,7 +225,7 @@ public partial class YogeshwarContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC07518C9B2E");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC07244638E6");
 
             entity.ToTable("User");
 

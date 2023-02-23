@@ -16,5 +16,7 @@ public partial class CustomerService
 
     public DateTime? ServiceCompletedDate { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual Order Order { get; set; } = null!;
 }

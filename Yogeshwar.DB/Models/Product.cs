@@ -16,6 +16,12 @@ public partial class Product
 
     public DateTime CreatedDate { get; set; }
 
+    public int CreatedBy { get; set; }
+
+    public DateTime? UpdatedDate { get; set; }
+
+    public int? UpdatedBy { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductAccessory> ProductAccessories { get; set; } = new List<ProductAccessory>();

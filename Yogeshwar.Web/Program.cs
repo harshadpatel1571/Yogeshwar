@@ -22,7 +22,7 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
 #region Custom
 
 services.AddScoped<Yogeshwar.DB.Models.YogeshwarContext>();
-services.AddCustomServices(typeof(UserService));
+services.AddCustomServices(typeof(IUserService));
 services.AddHostedService<NotificationBackgroundService>();
 
 #endregion
