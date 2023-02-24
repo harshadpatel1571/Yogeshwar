@@ -34,7 +34,6 @@ internal class DropDownService : IDropDownService
         }).ToListAsync().ConfigureAwait(false);
     }
 
-
     async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCustomersAsync()
     {
         return await _context.Customers.Select(x => new DropDownDto<int>
