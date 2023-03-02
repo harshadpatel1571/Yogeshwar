@@ -173,10 +173,7 @@ internal class AccessoriesService : IAccessoriesService
 
         var path = $"{_savePath}/{dbModel.Image}";
 
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
+        DeleteImageIfExist(path);
 
         dbModel.Image = null;
 

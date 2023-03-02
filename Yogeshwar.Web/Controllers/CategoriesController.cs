@@ -95,4 +95,18 @@ public class CategoriesController : Controller
             return BadRequest();
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteImage(int id)
+    {
+        var isDeleted = await _categoryService.Value.DeleteImageAsync(id)
+            .ConfigureAwait(false);
+
+        if (isDeleted)
+        {
+            return NoContent();
+        }
+
+        return NotFound();
+    }
 }

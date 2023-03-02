@@ -9,4 +9,6 @@ public interface ICategoryService : IDisposable
     ValueTask<int> CreateOrUpdateAsync(CategoryDto category);
 
     ValueTask<Category?> DeleteAsync(int id);
+
+    ValueTask<bool> DeleteImageAsync(int id);
 }

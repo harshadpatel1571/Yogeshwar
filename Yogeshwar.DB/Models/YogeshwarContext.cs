@@ -1,4 +1,8 @@
-﻿namespace Yogeshwar.DB.Models;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace Yogeshwar.DB.Models;
 
 public partial class YogeshwarContext : DbContext
 {
@@ -60,6 +64,9 @@ public partial class YogeshwarContext : DbContext
         {
             entity.ToTable("Category");
 
+            entity.Property(e => e.Image)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 

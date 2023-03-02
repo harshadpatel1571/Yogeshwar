@@ -4,10 +4,15 @@
 public class CategoryService : ICategoryService
 {
     private readonly YogeshwarContext _context;
+    private static string _categoryImageReadPath;
+    private readonly string _imageSavePath;
 
-    public CategoryService(YogeshwarContext context)
+    public CategoryService(YogeshwarContext context, IConfiguration configuration,
+        IWebHostEnvironment hostEnvironment)
     {
         _context = context;
+        _imageSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Category";
+        _categoryImageReadPath = configuration["File:ReadPath"] + "/Category";
     }
 
     public void Dispose()
@@ -46,11 +51,12 @@ public class CategoryService : ICategoryService
         return model;
     }
 
-    private static CategoryDto DtoSelector(Category accessory) =>
+    private static CategoryDto DtoSelector(Category category) =>
         new()
         {
-            Id = accessory.Id,
-            Name = accessory.Name
+            Id = category.Id,
+            Name = category.Name,
+            Image = $"{_categoryImageReadPath}/{category.Image}"
         };
 
     public async Task<CategoryDto?> GetSingleAsync(int id)
@@ -72,9 +78,19 @@ public class CategoryService : ICategoryService
 
     private async ValueTask<int> CreateAsync(CategoryDto category)
     {
+        var image = (string?)null;
+
+        if (category.ImageFile is not null)
+        {
+            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                    Path.GetExtension(category.ImageFile.FileName);
+            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}").ConfigureAwait(false);
+        }
+
         var dbModel = new Category
         {
             Name = category.Name,
+            Image = image
         };
 
         await _context.Categories.AddAsync(dbModel).ConfigureAwait(false);
@@ -93,6 +109,19 @@ public class CategoryService : ICategoryService
         }
 
         dbModel.Name = category.Name;
+
+        if (category.ImageFile is not null)
+        {
+            var path = $"{_imageSavePath}/{dbModel.Image}";
+
+            DeleteFileIfExist(path);
+
+            var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                        Path.GetExtension(category.ImageFile.FileName);
+            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}").ConfigureAwait(false);
+
+            dbModel.Image = image;
+        }
 
         _context.Categories.Update(dbModel);
 
@@ -115,5 +144,37 @@ public class CategoryService : ICategoryService
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return dbModel;
+    }
+
+    private static void DeleteFileIfExist(string name)
+    {
+        if (File.Exists(name))
+        {
+            File.Delete(name);
+        }
+    }
+
+    public async ValueTask<bool> DeleteImageAsync(int id)
+    {
+        var dbModel = await _context.Categories
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync()
+            .ConfigureAwait(false);
+
+        if (dbModel is null)
+        {
+            return false;
+        }
+
+        var path = $"{_imageSavePath}/{dbModel.Image}";
+
+        DeleteFileIfExist(path);
+
+        dbModel.Image = null;
+
+        _context.Categories.Update(dbModel);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        return true;
     }
 }
