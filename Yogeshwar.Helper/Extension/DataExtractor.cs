@@ -8,13 +8,13 @@ internal static class DataExtractor
 
         return new DataTableFilterDto
         {
-            Draw = request.Form["draw"][0],
+            Draw = request.Form["draw"][0]!,
             Skip = Convert.ToInt32(request.Form["start"][0]),
             Take = Convert.ToInt32(request.Form["length"][0]),
-            SortColumn = sortColumn.Contains(' ')
+            SortColumn = sortColumn!.Contains(' ')
                 ? string.Join(null, sortColumn.Split(' '))
                 : sortColumn,
-            SortOrder = request.Form["order[0][dir]"][0],
+            SortOrder = request.Form["order[0][dir]"][0]!,
             SearchValue = request.Form["search[value]"][0]
         };
     }

@@ -5,11 +5,20 @@ public class ProductController : Controller
 {
     private readonly Lazy<IProductService> _productService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProductController"/> class.
+    /// </summary>
+    /// <param name="productService">The product service.</param>
     public ProductController(Lazy<IProductService> productService)
     {
         _productService = productService;
     }
 
+    /// <summary>
+    /// Releases all resources currently used by this <see cref="T:Microsoft.AspNetCore.Mvc.Controller" /> instance.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> if this method is being invoked by the <see cref="M:Microsoft.AspNetCore.Mvc.Controller.Dispose" /> method,
+    /// otherwise <c>false</c>.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing & _productService.IsValueCreated)
@@ -20,11 +29,19 @@ public class ProductController : Controller
         base.Dispose(disposing);
     }
 
+    /// <summary>
+    /// Index view.
+    /// </summary>
+    /// <returns></returns>
     public IActionResult Index()
     {
         return View();
     }
 
+    /// <summary>
+    /// Binds the data.
+    /// </summary>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> BindData()
     {
@@ -43,6 +60,11 @@ public class ProductController : Controller
         return Json(responseModel);
     }
 
+    /// <summary>
+    /// Binds the quantity.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> BindQuantity(int id)
     {
@@ -50,10 +72,17 @@ public class ProductController : Controller
         return Ok(data);
     }
 
+    /// <summary>
+    /// Add or edit.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="dropDownService">The drop down service.</param>
+    /// <returns></returns>
     public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService)
     {
         using var _ = dropDownService;
-        var dropDownData = await dropDownService.BindDropDownForAccessoriesAsync().ConfigureAwait(false);
+        var accessories = await dropDownService.BindDropDownForAccessoriesAsync().ConfigureAwait(false);
+        var categories = await dropDownService.BindDropDownForCategoriesAsync().ConfigureAwait(false);
 
         ProductDto model;
 
@@ -61,7 +90,8 @@ public class ProductController : Controller
         {
             model = new ProductDto
             {
-                SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text")
+                SelectListsForAccessories = new SelectList(accessories, "Key", "Text"),
+                SelectListsForCategories = new SelectList(categories, "Key", "Text")
             };
 
             return View(model);
@@ -74,11 +104,18 @@ public class ProductController : Controller
             return NotFound();
         }
 
-        model.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
+        model.SelectListsForAccessories = new SelectList(accessories, "Key", "Text");
+        model.SelectListsForCategories = new SelectList(categories, "Key", "Text");
 
         return View(model);
     }
 
+    /// <summary>
+    /// Add or edit.
+    /// </summary>
+    /// <param name="productDto">The product dto.</param>
+    /// <param name="dropDownService">The drop down service.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddEdit(ProductDto productDto, [FromServices] IDropDownService dropDownService)
     {
@@ -100,8 +137,11 @@ public class ProductController : Controller
         {
             ModelState.AddModelError();
 
-            var dropDownData = await dropDownService.BindDropDownForAccessoriesAsync().ConfigureAwait(false);
-            productDto.SelectListsForAccessories = new SelectList(dropDownData, "Key", "Text");
+            var accessories = await dropDownService.BindDropDownForAccessoriesAsync().ConfigureAwait(false);
+            var categories = await dropDownService.BindDropDownForCategoriesAsync().ConfigureAwait(false);
+
+            productDto.SelectListsForAccessories = new SelectList(accessories, "Key", "Text");
+            productDto.SelectListsForCategories = new SelectList(categories, "Key", "Text");
 
             return View(productDto);
         }
@@ -111,14 +151,19 @@ public class ProductController : Controller
         return RedirectToActionPermanent(nameof(Index));
     }
 
+    /// <summary>
+    /// Deletes the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async ValueTask<IActionResult> Delete(int id)
     {
         try
         {
-            var dbModel = await _productService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var count = await _productService.Value.DeleteAsync(id).ConfigureAwait(false);
 
-            if (dbModel is null)
+            if (count == 0)
             {
                 return NotFound();
             }
@@ -131,6 +176,12 @@ public class ProductController : Controller
         }
     }
 
+    /// <summary>
+    /// Details the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="dropDownService">The drop down service.</param>
+    /// <returns></returns>
     public async Task<IActionResult> Detail(int id, [FromServices] IDropDownService dropDownService)
     {
         var model = await _productService.Value.GetSingleAsync(id).ConfigureAwait(false);
@@ -146,6 +197,11 @@ public class ProductController : Controller
         return View(model);
     }
 
+    /// <summary>
+    /// Deletes the image.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id)
     {
@@ -160,6 +216,11 @@ public class ProductController : Controller
         return NotFound();
     }
 
+    /// <summary>
+    /// Deletes the video.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> DeleteVideo(int id)
     {

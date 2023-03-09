@@ -4,27 +4,44 @@
 internal class AccessoriesService : IAccessoriesService
 {
     private readonly YogeshwarContext _context;
-    private static string _readPath;
+    private readonly IConfiguration _configuration;
+    private readonly Lazy<ICurrentUserService> _currentUserService;
     private readonly string _savePath;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AccessoriesService"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="hostEnvironment">The host environment.</param>
+    /// <param name="currentUserService">The current user service.</param>
     public AccessoriesService(YogeshwarContext context, IConfiguration configuration,
-        IWebHostEnvironment hostEnvironment)
+        IWebHostEnvironment hostEnvironment, Lazy<ICurrentUserService> currentUserService)
     {
         _context = context;
-        _readPath = configuration["File:ReadPath"] + "/Accessories";
+        _configuration = configuration;
+        _currentUserService = currentUserService;
         _savePath = $"{hostEnvironment.WebRootPath}/DataImages/Accessories";
     }
 
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
     public void Dispose()
     {
         _context.Dispose();
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Gets by filter asynchronous.
+    /// </summary>
+    /// <param name="filterDto">The filter dto.</param>
+    /// <returns></returns>
     async Task<DataTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(
         DataTableFilterDto filterDto)
     {
-        var result = _context.Accessories.AsNoTracking();
+        var result = _context.Accessories.Where(x => !x.IsDeleted).AsNoTracking();
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
@@ -43,31 +60,55 @@ internal class AccessoriesService : IAccessoriesService
             result = result.Take(filterDto.Take);
         }
 
-        var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+        var data = await result
+            .OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
+            .Select(x => DtoSelector(x, _configuration))
+            .ToListAsync().ConfigureAwait(false);
 
         model.Data = data;
 
         return model;
     }
 
-    private static AccessoriesDto DtoSelector(Accessory accessory) =>
+    /// <summary>
+    /// Select the Dto.
+    /// </summary>
+    /// <param name="accessory">The accessory.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns></returns>
+    private static AccessoriesDto DtoSelector(Accessory accessory, IConfiguration configuration) =>
         new()
         {
             Id = accessory.Id,
             Name = accessory.Name,
             Description = accessory.Description,
-            Image = accessory.Image == null ? null : $"{_readPath}/{accessory.Image}",
-            Quantity = accessory.Quantity
+            Image = accessory.Image == null ? null : $"{configuration["File:ReadPath"]}/Accessories/{accessory.Image}",
+            Quantity = accessory.Quantity,
+            IsActive = accessory.IsActive,
+            CreatedDate = accessory.CreatedDate,
+            CreatedBy = accessory.CreatedBy,
+            ModifiedDate = accessory.ModifiedDate,
+            ModifiedBy = accessory.ModifiedBy
         };
 
+    /// <summary>
+    /// Gets the single asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async Task<AccessoriesDto?> GetSingleAsync(int id)
     {
         return await _context.Accessories.AsNoTracking()
-            .Where(x => x.Id == id).Select(x => DtoSelector(x))
+            .Where(x => x.Id == id)
+            .Select(x => DtoSelector(x, _configuration))
             .FirstOrDefaultAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates or update asynchronous.
+    /// </summary>
+    /// <param name="customer">The customer.</param>
+    /// <returns></returns>
     public async Task<int> CreateOrUpdateAsync(AccessoriesDto customer)
     {
         if (customer.Id < 1)
@@ -78,6 +119,11 @@ internal class AccessoriesService : IAccessoriesService
         return await UpdateAsync(customer).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates the asynchronous.
+    /// </summary>
+    /// <param name="accessory">The accessory.</param>
+    /// <returns></returns>
     private async ValueTask<int> CreateAsync(AccessoriesDto accessory)
     {
         var image = (string?)null;
@@ -95,7 +141,10 @@ internal class AccessoriesService : IAccessoriesService
             Name = accessory.Name,
             Description = accessory.Description,
             Image = image,
-            Quantity = accessory.Quantity
+            Quantity = accessory.Quantity,
+            IsActive = true,
+            CreatedDate = DateTime.Now,
+            CreatedBy = _currentUserService.Value.GetCurrentUserId(),
         };
 
         await _context.Accessories.AddAsync(dbModel).ConfigureAwait(false);
@@ -103,6 +152,11 @@ internal class AccessoriesService : IAccessoriesService
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Updates the asynchronous.
+    /// </summary>
+    /// <param name="accessory">The accessory.</param>
+    /// <returns></returns>
     private async ValueTask<int> UpdateAsync(AccessoriesDto accessory)
     {
         var dbModel = await _context.Accessories
@@ -119,7 +173,7 @@ internal class AccessoriesService : IAccessoriesService
                         Path.GetExtension(accessory.File.FileName);
             await accessory.File.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
 
-            DeleteImageIfExist($"{_savePath}/{dbModel.Image}");
+            DeleteFileIfExist($"{_savePath}/{dbModel.Image}");
 
             dbModel.Image = image;
         }
@@ -128,13 +182,20 @@ internal class AccessoriesService : IAccessoriesService
         dbModel.Name = accessory.Name;
         dbModel.Description = accessory.Description;
         dbModel.Quantity = accessory.Quantity;
+        dbModel.IsActive = accessory.IsActive;
+        dbModel.ModifiedDate = DateTime.Now;
+        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
 
         _context.Accessories.Update(dbModel);
 
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    private static void DeleteImageIfExist(string name)
+    /// <summary>
+    /// Deletes the file if exist.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    private static void DeleteFileIfExist(string name)
     {
         if (File.Exists(name))
         {
@@ -142,25 +203,32 @@ internal class AccessoriesService : IAccessoriesService
         }
     }
 
-    public async Task<Accessory?> DeleteAsync(int id)
+    /// <summary>
+    /// Deletes the asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public async Task<int> DeleteAsync(int id)
     {
         var dbModel = await _context.Accessories
             .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
 
         if (dbModel == null)
         {
-            return null;
+            return 0;
         }
 
-        _context.Accessories.Remove(dbModel);
+        dbModel.IsDeleted = true;
+        _context.Accessories.Update(dbModel);
 
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-
-        DeleteImageIfExist($"{_savePath}/{dbModel.Image}");
-
-        return dbModel;
+        return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Deletes the image asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<bool> DeleteImageAsync(int id)
     {
         var dbModel = await _context.Accessories
@@ -173,7 +241,7 @@ internal class AccessoriesService : IAccessoriesService
 
         var path = $"{_savePath}/{dbModel.Image}";
 
-        DeleteImageIfExist(path);
+        DeleteFileIfExist(path);
 
         dbModel.Image = null;
 

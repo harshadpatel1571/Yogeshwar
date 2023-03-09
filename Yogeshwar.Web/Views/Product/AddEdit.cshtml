@@ -46,17 +46,23 @@
             <div class="card-body">
                 <form class="row g-3 needs-validation" asp-action="AddEdit" enctype="multipart/form-data">
                     <input class="form-control" asp-for="Id" type="hidden" readonly>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label">Product Name</label>
                         <span class="text-danger">*</span>
                         <input class="form-control" asp-for="Name" maxlength="100" required>
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label">Model No</label>
                         <span class="text-danger">*</span>
                         <input class="form-control" asp-for="ModelNo" maxlength="50" required>
                         <span asp-validation-for="ModelNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Price</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="Price" onkeypress="return isNumberKey(event, this);" required>
+                        <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Select Accessories</label>
@@ -67,12 +73,13 @@
                         <span asp-validation-for="Accessories" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Price</label>
+                        <label class="form-label">Select Categories</label>
                         <span class="text-danger">*</span>
-                        <input class="form-control" asp-for="Price" onkeypress="return isNumberKey(event, this);" required>
-                        <span asp-validation-for="Price" class="text-danger"></span>
+                        <select class="js-example-basic-multiple" asp-for="Categories"
+                                asp-items="Model.SelectListsForCategories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
+                        </select>
+                        <span asp-validation-for="Categories" class="text-danger"></span>
                     </div>
-
                     @{
                         var display = isCreate ? "none" : "initial";
                     }

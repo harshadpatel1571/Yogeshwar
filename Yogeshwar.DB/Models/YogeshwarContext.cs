@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
-namespace Yogeshwar.DB.Models;
+﻿namespace Yogeshwar.DB.Models;
 
 public partial class YogeshwarContext : DbContext
 {
@@ -49,15 +45,12 @@ public partial class YogeshwarContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Accessor__3214EC0762AD5F61");
 
-            entity.Property(e => e.Description)
-                .HasMaxLength(250)
-                .IsUnicode(false);
+            entity.Property(e => e.CreatedDate).HasPrecision(0);
             entity.Property(e => e.Image)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate).HasPrecision(0);
+            entity.Property(e => e.Name).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -76,25 +69,19 @@ public partial class YogeshwarContext : DbContext
 
             entity.ToTable("Customer");
 
-            entity.Property(e => e.Address)
-                .HasMaxLength(250)
-                .IsUnicode(false);
+            entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.City)
                 .HasMaxLength(25)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedDate)
-                .HasPrecision(2)
+                .HasPrecision(0)
                 .HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Email)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.LastName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.ModifiedDate).HasPrecision(2);
+            entity.Property(e => e.FirstName).HasMaxLength(25);
+            entity.Property(e => e.LastName).HasMaxLength(25);
+            entity.Property(e => e.ModifiedDate).HasPrecision(0);
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(12)
                 .IsUnicode(false);
@@ -106,14 +93,9 @@ public partial class YogeshwarContext : DbContext
 
             entity.ToTable("CustomerService");
 
-            entity.Property(e => e.ComplainDate).HasPrecision(2);
-            entity.Property(e => e.Description)
-                .HasMaxLength(250)
-                .IsUnicode(false);
-            entity.Property(e => e.ServiceCompletedDate).HasPrecision(2);
-            entity.Property(e => e.WorkerName)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.ComplainDate).HasPrecision(0);
+            entity.Property(e => e.ServiceCompletionDate).HasPrecision(0);
+            entity.Property(e => e.WorkerName).HasMaxLength(50);
 
             entity.HasOne(d => d.Order).WithMany(p => p.CustomerServices)
                 .HasForeignKey(d => d.OrderId)
@@ -127,7 +109,7 @@ public partial class YogeshwarContext : DbContext
 
             entity.ToTable("Notification");
 
-            entity.Property(e => e.Date).HasPrecision(3);
+            entity.Property(e => e.Date).HasPrecision(0);
 
             entity.HasOne(d => d.Order).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.OrderId)
@@ -146,8 +128,10 @@ public partial class YogeshwarContext : DbContext
 
             entity.ToTable("Order");
 
+            entity.Property(e => e.CreatedDate).HasPrecision(0);
             entity.Property(e => e.Discount).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.OrderDate).HasPrecision(4);
+            entity.Property(e => e.ModifiedDate).HasPrecision(0);
+            entity.Property(e => e.OrderDate).HasPrecision(0);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CustomerId)
@@ -162,7 +146,7 @@ public partial class YogeshwarContext : DbContext
             entity.ToTable("OrderDetail");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.ReceiveDate).HasPrecision(4);
+            entity.Property(e => e.ReceiveDate).HasPrecision(0);
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
@@ -182,23 +166,20 @@ public partial class YogeshwarContext : DbContext
             entity.ToTable("Product");
 
             entity.Property(e => e.CreatedDate)
-                .HasPrecision(5)
+                .HasPrecision(0)
                 .HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.Description).HasMaxLength(250);
-            entity.Property(e => e.ModelNo)
+            entity.Property(e => e.ModelNo).HasMaxLength(50);
+            entity.Property(e => e.ModifiedDate).HasPrecision(0);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.Video)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.UpdatedDate).HasPrecision(5);
-            entity.Property(e => e.Video).HasMaxLength(50);
         });
 
         modelBuilder.Entity<ProductAccessory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductA__3214EC07A80B1382");
+            entity.HasKey(e => e.Id).HasName("PK__ProductA__3214EC0748A0BDF1");
 
             entity.HasOne(d => d.Accessories).WithMany(p => p.ProductAccessories)
                 .HasForeignKey(d => d.AccessoriesId)
@@ -214,11 +195,21 @@ public partial class YogeshwarContext : DbContext
         modelBuilder.Entity<ProductCategory>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_ProductCategory");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.ProductCategories)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductCategories_Category");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductCategories)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductCategories_Product");
         });
 
         modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC079E82F591");
+            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC07C1E1AE34");
 
             entity.Property(e => e.Image)
                 .HasMaxLength(50)
@@ -237,14 +228,13 @@ public partial class YogeshwarContext : DbContext
             entity.ToTable("User");
 
             entity.Property(e => e.CreatedDate)
-                .HasPrecision(2)
+                .HasPrecision(0)
                 .HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Email)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate).HasPrecision(0);
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Password)
                 .HasMaxLength(250)
                 .IsUnicode(false);

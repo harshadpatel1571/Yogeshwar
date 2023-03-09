@@ -1,6 +1,6 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
-public sealed class UserLoginDto
+public sealed class UserLoginDto : BaseDto
 {
     [Required(ErrorMessage = "User name is required.")]
     [StringLength(25, MinimumLength = 8, ErrorMessage = "User name must be 8 to 25 character long.")]

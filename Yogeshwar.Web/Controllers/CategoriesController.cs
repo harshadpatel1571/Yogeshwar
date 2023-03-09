@@ -4,11 +4,20 @@ public class CategoriesController : Controller
 {
     private readonly Lazy<ICategoryService> _categoryService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CategoriesController"/> class.
+    /// </summary>
+    /// <param name="categoryService">The category service.</param>
     public CategoriesController(Lazy<ICategoryService> categoryService)
     {
         _categoryService = categoryService;
     }
 
+    /// <summary>
+    /// Releases all resources currently used by this <see cref="T:Microsoft.AspNetCore.Mvc.Controller" /> instance.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> if this method is being invoked by the <see cref="M:Microsoft.AspNetCore.Mvc.Controller.Dispose" /> method,
+    /// otherwise <c>false</c>.</param>
     protected override void Dispose(bool disposing)
     {
         if (_categoryService.IsValueCreated & disposing)
@@ -19,11 +28,19 @@ public class CategoriesController : Controller
         base.Dispose(disposing);
     }
 
+    /// <summary>
+    /// Index view.
+    /// </summary>
+    /// <returns></returns>
     public IActionResult Index()
     {
         return View();
     }
 
+    /// <summary>
+    /// Binds the data.
+    /// </summary>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> BindData()
     {
@@ -42,6 +59,11 @@ public class CategoriesController : Controller
         return Json(responseModel);
     }
 
+    /// <summary>
+    /// Adds edit.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<IActionResult> AddEdit(int id)
     {
         if (id < 1)
@@ -60,6 +82,11 @@ public class CategoriesController : Controller
         return View(model);
     }
 
+    /// <summary>
+    /// Adds edit.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddEdit(CategoryDto category)
     {
@@ -76,6 +103,11 @@ public class CategoriesController : Controller
         return RedirectToActionPermanent(nameof(Index));
     }
 
+    /// <summary>
+    /// Deletes the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
@@ -96,6 +128,11 @@ public class CategoriesController : Controller
         }
     }
 
+    /// <summary>
+    /// Deletes the image.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id)
     {

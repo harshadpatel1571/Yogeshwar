@@ -2,7 +2,7 @@
 
 namespace Yogeshwar.Service.Dto;
 
-public class OrderDetailDto
+public class OrderDetailDto : BaseDto
 {
     public int Id { get; set; }
 

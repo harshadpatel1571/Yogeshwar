@@ -5,11 +5,20 @@ public sealed class CustomerController : Controller
 {
     private readonly Lazy<ICustomerService> _customerService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CustomerController"/> class.
+    /// </summary>
+    /// <param name="customerService">The customer service.</param>
     public CustomerController(Lazy<ICustomerService> customerService)
     {
         _customerService = customerService;
     }
 
+    /// <summary>
+    /// Releases all resources currently used by this <see cref="T:Microsoft.AspNetCore.Mvc.Controller" /> instance.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> if this method is being invoked by the <see cref="M:Microsoft.AspNetCore.Mvc.Controller.Dispose" /> method,
+    /// otherwise <c>false</c>.</param>
     protected override void Dispose(bool disposing)
     {
         if (_customerService.IsValueCreated & disposing)
@@ -20,11 +29,19 @@ public sealed class CustomerController : Controller
         base.Dispose(disposing);
     }
 
+    /// <summary>
+    /// Index view.
+    /// </summary>
+    /// <returns></returns>
     public IActionResult Index()
     {
         return View();
     }
 
+    /// <summary>
+    /// Binds the data.
+    /// </summary>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> BindData()
     {
@@ -43,6 +60,11 @@ public sealed class CustomerController : Controller
         return Json(responseModel);
     }
 
+    /// <summary>
+    /// Add or edit.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<IActionResult> AddEdit(int id)
     {
         if (id < 1)
@@ -61,6 +83,11 @@ public sealed class CustomerController : Controller
         return View(model);
     }
 
+    /// <summary>
+    /// Add or edit.
+    /// </summary>
+    /// <param name="customer">The customer.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddEdit(CustomerDto customer)
     {
@@ -77,14 +104,19 @@ public sealed class CustomerController : Controller
         return RedirectToActionPermanent(nameof(Index));
     }
 
+    /// <summary>
+    /// Deletes the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async ValueTask<IActionResult> Delete(int id)
     {
         try
         {
-            var dbModel = await _customerService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var count = await _customerService.Value.DeleteAsync(id).ConfigureAwait(false);
 
-            if (dbModel is null)
+            if (count == 0)
             {
                 return NotFound();
             }
@@ -97,6 +129,11 @@ public sealed class CustomerController : Controller
         }
     }
 
+    /// <summary>
+    /// Details the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async Task<IActionResult> Detail(int id)
     {
         var model = await _customerService.Value.GetSingleAsync(id).ConfigureAwait(false);

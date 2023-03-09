@@ -5,11 +5,20 @@ public class AccessoriesController : Controller
 {
     private readonly Lazy<IAccessoriesService> _accessoriesService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AccessoriesController"/> class.
+    /// </summary>
+    /// <param name="accessoriesService">The accessories service.</param>
     public AccessoriesController(Lazy<IAccessoriesService> accessoriesService)
     {
         _accessoriesService = accessoriesService;
     }
 
+    /// <summary>
+    /// Releases all resources currently used by this <see cref="T:Microsoft.AspNetCore.Mvc.Controller" /> instance.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> if this method is being invoked by the <see cref="M:Microsoft.AspNetCore.Mvc.Controller.Dispose" /> method,
+    /// otherwise <c>false</c>.</param>
     protected override void Dispose(bool disposing)
     {
         if (_accessoriesService.IsValueCreated & disposing)
@@ -20,11 +29,19 @@ public class AccessoriesController : Controller
         base.Dispose(disposing);
     }
 
+    /// <summary>
+    /// Index view.
+    /// </summary>
+    /// <returns></returns>
     public IActionResult Index()
     {
         return View();
     }
 
+    /// <summary>
+    /// Binds the data.
+    /// </summary>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> BindData()
     {
@@ -43,6 +60,11 @@ public class AccessoriesController : Controller
         return Json(responseModel);
     }
 
+    /// <summary>
+    /// Adds or edit.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<IActionResult> AddEdit(int id)
     {
         if (id < 1)
@@ -61,6 +83,11 @@ public class AccessoriesController : Controller
         return View(model);
     }
 
+    /// <summary>
+    /// Adds or edit.
+    /// </summary>
+    /// <param name="accessory">The accessory.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddEdit(AccessoriesDto accessory)
     {
@@ -77,14 +104,19 @@ public class AccessoriesController : Controller
         return RedirectToActionPermanent(nameof(Index));
     }
 
+    /// <summary>
+    /// Deletes the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            var dbModel = await _accessoriesService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var count = await _accessoriesService.Value.DeleteAsync(id).ConfigureAwait(false);
 
-            if (dbModel is null)
+            if (count == 0)
             {
                 return NotFound();
             }
@@ -97,6 +129,11 @@ public class AccessoriesController : Controller
         }
     }
 
+    /// <summary>
+    /// Deletes the image.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id)
     {
@@ -111,6 +148,11 @@ public class AccessoriesController : Controller
         return NotFound();
     }
 
+    /// <summary>
+    /// Details the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async Task<IActionResult> Detail(int id)
     {
         var model = await _accessoriesService.Value.GetSingleAsync(id).ConfigureAwait(false);

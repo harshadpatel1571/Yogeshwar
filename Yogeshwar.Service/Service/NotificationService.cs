@@ -5,17 +5,29 @@ internal class NotificationService : INotificationService
 {
     private readonly YogeshwarContext _context;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NotificationService"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public NotificationService(YogeshwarContext context)
     {
         _context = context;
     }
 
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
     public void Dispose()
     {
         _context.Dispose();
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Gets the by filter asynchronous.
+    /// </summary>
+    /// <param name="filterDto">The filter dto.</param>
+    /// <returns></returns>
     async Task<DataTableResponseCarrier<NotificationDto>> INotificationService.GetByFilterAsync(
         DataTableFilterDto filterDto)
     {
@@ -40,9 +52,12 @@ internal class NotificationService : INotificationService
             result = result.Take(filterDto.Take);
         }
 
-        IList<NotificationDto> data = await result.Include(x => x.ProductAccessories)
-            .ThenInclude(x => x.Product).Include(x => x.ProductAccessories.Accessories)
-            .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+        IList<NotificationDto> data = await result
+            .Include(x => x.ProductAccessories)
+            .ThenInclude(x => x.Product)
+            .Include(x => x.ProductAccessories.Accessories)
+            .Select(x => DtoSelector(x))
+            .ToListAsync().ConfigureAwait(false);
 
         data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
 
@@ -51,6 +66,11 @@ internal class NotificationService : INotificationService
         return model;
     }
 
+    /// <summary>
+    /// Select the Dto.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <returns></returns>
     private static NotificationDto DtoSelector(Notification service) => new()
     {
         Id = service.Id,

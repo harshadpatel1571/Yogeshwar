@@ -4,11 +4,20 @@ public sealed class AccountController : Controller
 {
     private readonly Lazy<IUserService> _userService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AccountController"/> class.
+    /// </summary>
+    /// <param name="userService">The user service.</param>
     public AccountController(Lazy<IUserService> userService)
     {
         _userService = userService;
     }
 
+    /// <summary>
+    /// Releases all resources currently used by this <see cref="T:Microsoft.AspNetCore.Mvc.Controller" /> instance.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> if this method is being invoked by the <see cref="M:Microsoft.AspNetCore.Mvc.Controller.Dispose" /> method,
+    /// otherwise <c>false</c>.</param>
     protected override void Dispose(bool disposing)
     {
         if (_userService.IsValueCreated & disposing)
@@ -19,11 +28,21 @@ public sealed class AccountController : Controller
         base.Dispose(disposing);
     }
 
+    /// <summary>
+    /// Signs in.
+    /// </summary>
+    /// <returns></returns>
     public IActionResult SignIn()
     {
         return View();
     }
 
+    /// <summary>
+    /// Signs in.
+    /// </summary>
+    /// <param name="userLoginDto">The user login dto.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> SignIn(UserLoginDto userLoginDto, [FromServices] IConfiguration configuration)
     {
@@ -32,7 +51,7 @@ public sealed class AccountController : Controller
             ModelState.AddModelError();
             return View(userLoginDto);
         }
-
+        
         var userService = _userService.Value;
 
         var user = await userService.GetUserByCredential(userLoginDto.UserName, userLoginDto.Password)
@@ -46,6 +65,7 @@ public sealed class AccountController : Controller
 
         var claims = new[]
         {
+            new Claim("Id", user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Email, user.Email ?? ""),
             new Claim("UserName", user.Username),
@@ -67,6 +87,10 @@ public sealed class AccountController : Controller
         return RedirectToActionPermanent("Index", "Home");
     }
 
+    /// <summary>
+    /// Represents an event that is raised when the sign-out operation is complete.
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     public new async ValueTask<IActionResult> SignOut()
     {

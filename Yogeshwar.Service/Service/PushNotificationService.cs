@@ -5,12 +5,21 @@ internal class PushNotificationService
 {
     private readonly IConfiguration _configuration;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PushNotificationService"/> class.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
     public PushNotificationService(IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
-    public async Task<string> SendPushAsync(PushNotificationDto dto)
+    /// <summary>
+    /// Sends the push asynchronous.
+    /// </summary>
+    /// <param name="dto">The dto.</param>
+    /// <returns></returns>
+    public async Task<string> SendPushNotificationAsync(PushNotificationDto dto)
     {
         var client = new OneSignalClient(_configuration["Notification:Token"]);
         var opt = new NotificationCreateOptions

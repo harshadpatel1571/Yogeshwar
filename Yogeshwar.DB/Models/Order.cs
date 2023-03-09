@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Yogeshwar.DB.Models;
+﻿namespace Yogeshwar.DB.Models;
 
 public partial class Order
 {
@@ -19,11 +16,11 @@ public partial class Order
 
     public DateTime CreatedDate { get; set; }
 
-    public int CreatedBy { get; set; }
+    public int? CreatedBy { get; set; }
 
-    public DateTime? UpdatedDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
-    public int? UpdatedBy { get; set; }
+    public int? ModifiedBy { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
 

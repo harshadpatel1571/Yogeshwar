@@ -4,23 +4,37 @@
 public class CategoryService : ICategoryService
 {
     private readonly YogeshwarContext _context;
-    private static string _categoryImageReadPath;
+    private readonly IConfiguration _configuration;
     private readonly string _imageSavePath;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CategoryService"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="hostEnvironment">The host environment.</param>
     public CategoryService(YogeshwarContext context, IConfiguration configuration,
         IWebHostEnvironment hostEnvironment)
     {
         _context = context;
+        _configuration = configuration;
         _imageSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Category";
-        _categoryImageReadPath = configuration["File:ReadPath"] + "/Category";
     }
 
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
     public void Dispose()
     {
         _context.Dispose();
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Gets the by filter asynchronous.
+    /// </summary>
+    /// <param name="filterDto">The filter dto.</param>
+    /// <returns></returns>
     async Task<DataTableResponseCarrier<CategoryDto>> ICategoryService.GetByFilterAsync(
         DataTableFilterDto filterDto)
     {
@@ -44,28 +58,44 @@ public class CategoryService : ICategoryService
         }
 
         var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+            .Select(x => DtoSelector(x, _configuration)).ToListAsync().ConfigureAwait(false);
 
         model.Data = data;
 
         return model;
     }
 
-    private static CategoryDto DtoSelector(Category category) =>
+    /// <summary>
+    /// Select the Dto.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns></returns>
+    private static CategoryDto DtoSelector(Category category, IConfiguration configuration) =>
         new()
         {
             Id = category.Id,
             Name = category.Name,
-            Image = $"{_categoryImageReadPath}/{category.Image}"
+            Image = $"{configuration["File:ReadPath"]}/Category/{category.Image}"
         };
 
+    /// <summary>
+    /// Gets the single asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async Task<CategoryDto?> GetSingleAsync(int id)
     {
         return await _context.Categories.AsNoTracking()
-            .Where(x => x.Id == id).Select(x => DtoSelector(x))
+            .Where(x => x.Id == id).Select(x => DtoSelector(x, _configuration))
             .FirstOrDefaultAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates or update asynchronous.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <returns></returns>
     public async ValueTask<int> CreateOrUpdateAsync(CategoryDto category)
     {
         if (category.Id < 1)
@@ -76,6 +106,11 @@ public class CategoryService : ICategoryService
         return await UpdateAsync(category).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates the asynchronous.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <returns></returns>
     private async ValueTask<int> CreateAsync(CategoryDto category)
     {
         var image = (string?)null;
@@ -90,7 +125,7 @@ public class CategoryService : ICategoryService
         var dbModel = new Category
         {
             Name = category.Name,
-            Image = image
+            Image = image,
         };
 
         await _context.Categories.AddAsync(dbModel).ConfigureAwait(false);
@@ -98,6 +133,11 @@ public class CategoryService : ICategoryService
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Updates the asynchronous.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <returns></returns>
     private async ValueTask<int> UpdateAsync(CategoryDto category)
     {
         var dbModel = await _context.Categories
@@ -128,6 +168,11 @@ public class CategoryService : ICategoryService
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Deletes the asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<Category?> DeleteAsync(int id)
     {
         var dbModel = await _context.Categories
@@ -146,6 +191,10 @@ public class CategoryService : ICategoryService
         return dbModel;
     }
 
+    /// <summary>
+    /// Deletes the file if exist.
+    /// </summary>
+    /// <param name="name">The name.</param>
     private static void DeleteFileIfExist(string name)
     {
         if (File.Exists(name))
@@ -154,6 +203,11 @@ public class CategoryService : ICategoryService
         }
     }
 
+    /// <summary>
+    /// Deletes the image asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<bool> DeleteImageAsync(int id)
     {
         var dbModel = await _context.Categories

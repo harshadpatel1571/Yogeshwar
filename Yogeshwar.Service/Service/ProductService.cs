@@ -4,32 +4,45 @@
 internal class ProductService : IProductService
 {
     private readonly YogeshwarContext _context;
-    private static string _productImageReadPath;
-    private static string _videoReadPath;
-    private static string _accessoriesImageReadPath;
+    private readonly IConfiguration _configuration;
     private readonly string _imageSavePath;
     private readonly string _videoSavePath;
+    private readonly Lazy<ICurrentUserService> _currentUserService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProductService"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="hostEnvironment">The host environment.</param>
+    /// <param name="currentUserService">The current user service.</param>
     public ProductService(YogeshwarContext context, IConfiguration configuration,
-        IWebHostEnvironment hostEnvironment)
+        IWebHostEnvironment hostEnvironment, Lazy<ICurrentUserService> currentUserService)
     {
         _context = context;
-        _productImageReadPath = configuration["File:ReadPath"] + "/Product";
-        _videoReadPath = configuration["File:ReadPath"] + "/Product/Video";
+        _configuration = configuration;
+        _currentUserService = currentUserService;
         _imageSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product";
         _videoSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product/Video";
-        _accessoriesImageReadPath = configuration["File:ReadPath"] + "/Accessories";
     }
 
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
     public void Dispose()
     {
         _context.Dispose();
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Gets the by filter asynchronous.
+    /// </summary>
+    /// <param name="filterDto">The filter dto.</param>
+    /// <returns></returns>
     async Task<DataTableResponseCarrier<ProductDto>> IProductService.GetByFilterAsync(DataTableFilterDto filterDto)
     {
-        var result = _context.Products.AsNoTracking();
+        var result = _context.Products.Where(x => !x.IsDeleted).AsNoTracking();
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
@@ -49,14 +62,21 @@ internal class ProductService : IProductService
             result = result.Take(filterDto.Take);
         }
 
-        var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Select(x => DtoSelector(x)).ToListAsync().ConfigureAwait(false);
+        var data = await result
+            .OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
+            .Select(x => DtoSelector(x, _configuration))
+            .ToListAsync().ConfigureAwait(false);
 
         model.Data = data;
 
         return model;
     }
 
+    /// <summary>
+    /// Gets the accessories quantity.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async Task<object> GetAccessoriesQuantity(int id)
     {
         return await _context.ProductAccessories.Where(x => x.ProductId == id)
@@ -64,7 +84,13 @@ internal class ProductService : IProductService
             .ToListAsync().ConfigureAwait(false);
     }
 
-    private static ProductDto DtoSelector(Product product) =>
+    /// <summary>
+    /// Select the Dto.
+    /// </summary>
+    /// <param name="product">The product.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns></returns>
+    private static ProductDto DtoSelector(Product product, IConfiguration configuration) =>
         new()
         {
             Id = product.Id,
@@ -72,33 +98,52 @@ internal class ProductService : IProductService
             ModelNo = product.ModelNo,
             Description = product.Description,
             Price = product.Price,
-            Video = product.Video != null ? $"{_videoReadPath}/{product.Video}" : null,
+            Video = product.Video != null ? $"{configuration["File:ReadPath"]}/Product/Video/{product.Video}" : null,
             AccessoriesQuantity = product.ProductAccessories.Select(x => new AccessoriesQuantity
             {
                 AccessoriesId = x.AccessoriesId,
                 Quantity = x.Quantity,
-                Image = x.Accessories.Image != null ? $"{_accessoriesImageReadPath}/{x.Accessories.Image}" : null
+                Image = x.Accessories.Image != null
+                    ? $"{configuration["File:ReadPath"]}/Accessories/{x.Accessories.Image}"
+                    : null
             }).ToArray(),
             Images = product.ProductImages
                 .Select(x => new ImageIds
                 {
-                    Image = $"{_productImageReadPath}/{x.Image}",
+                    Image = $"{configuration["File:ReadPath"]}/Product/{x.Image}",
                     Id = x.Id
                 }).ToArray(),
             Accessories = product.ProductAccessories.Select(x => x.AccessoriesId)
-                .ToArray()
+                .ToArray(),
+            Categories = product.ProductCategories.Select(x => x.CategoryId)
+                .ToArray(),
+            IsActive = product.IsActive,
+            CreatedBy = product.CreatedBy,
+            CreatedDate = product.CreatedDate,
+            ModifiedBy = product.ModifiedBy,
+            ModifiedDate = product.ModifiedDate
         };
 
+    /// <summary>
+    /// Gets the single asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async Task<ProductDto?> GetSingleAsync(int id)
     {
         return await _context.Products.AsNoTracking()
             .Where(x => x.Id == id).Include(x => x.ProductAccessories)
             .ThenInclude(x => x.Accessories)
             .Include(x => x.ProductImages)
-            .Select(x => DtoSelector(x))
+            .Select(x => DtoSelector(x, _configuration))
             .FirstOrDefaultAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates the or update asynchronous.
+    /// </summary>
+    /// <param name="productDto">The product dto.</param>
+    /// <returns></returns>
     public async Task<int> CreateOrUpdateAsync(ProductDto productDto)
     {
         if (productDto.Id < 1)
@@ -109,6 +154,11 @@ internal class ProductService : IProductService
         return await UpdateAsync(productDto).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates the asynchronous.
+    /// </summary>
+    /// <param name="productDto">The product dto.</param>
+    /// <returns></returns>
     private async ValueTask<int> CreateAsync(ProductDto productDto)
     {
         var video = (string?)null;
@@ -142,10 +192,17 @@ internal class ProductService : IProductService
             Video = video,
             ModelNo = productDto.ModelNo,
             Price = productDto.Price!.Value,
+            IsActive = true,
+            CreatedDate = DateTime.Now,
+            CreatedBy = _currentUserService.Value.GetCurrentUserId(),
             ProductAccessories = productDto.AccessoriesQuantity.Select(x => new ProductAccessory
             {
                 AccessoriesId = x.AccessoriesId,
                 Quantity = x.Quantity
+            }).ToArray(),
+            ProductCategories = productDto.Categories.Select(x => new ProductCategory
+            {
+                CategoryId = x,
             }).ToArray(),
             ProductImages = images.Select(x => new ProductImage
             {
@@ -158,10 +215,16 @@ internal class ProductService : IProductService
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Updates the asynchronous.
+    /// </summary>
+    /// <param name="productDto">The product dto.</param>
+    /// <returns></returns>
     private async ValueTask<int> UpdateAsync(ProductDto productDto)
     {
         var dbModel = await _context.Products
             .Include(x => x.ProductAccessories)
+            .Include(x => x.ProductCategories)
             .FirstOrDefaultAsync(x => x.Id == productDto.Id).ConfigureAwait(false);
 
         if (dbModel == null)
@@ -200,6 +263,9 @@ internal class ProductService : IProductService
         dbModel.Name = productDto.Name;
         dbModel.Description = productDto.Description;
         dbModel.ModelNo = productDto.ModelNo;
+        dbModel.IsActive = productDto.IsActive;
+        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedDate = DateTime.Now;
         dbModel.Price = productDto.Price!.Value;
 
         var newAccessories = productDto.AccessoriesQuantity
@@ -208,6 +274,13 @@ internal class ProductService : IProductService
                 ProductId = dbModel.Id,
                 AccessoriesId = x.AccessoriesId,
                 Quantity = x.Quantity
+            });
+
+        var newCategories = productDto.Categories
+            .Select(x => new ProductCategory
+            {
+                ProductId = dbModel.Id,
+                CategoryId = x
             });
 
         if (images.Length > 0)
@@ -223,11 +296,20 @@ internal class ProductService : IProductService
 
         _context.ProductAccessories.RemoveRange(dbModel.ProductAccessories);
         await _context.ProductAccessories.AddRangeAsync(newAccessories).ConfigureAwait(false);
+
+        _context.ProductCategories.RemoveRange(dbModel.ProductCategories);
+        await _context.ProductCategories.AddRangeAsync(newCategories).ConfigureAwait(false);
+
         _context.Products.Update(dbModel);
 
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Deletes the file if exist.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns></returns>
     private static void DeleteFileIfExist(string name)
     {
         if (File.Exists(name))
@@ -236,34 +318,33 @@ internal class ProductService : IProductService
         }
     }
 
-    public async Task<Product?> DeleteAsync(int id)
+    /// <summary>
+    /// Deletes the asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public async Task<int> DeleteAsync(int id)
     {
         var dbModel = await _context.Products
-            .Include(x => x.ProductAccessories)
-            .Include(x => x.ProductImages)
             .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
 
         if (dbModel == null)
         {
-            return null;
+            return 0;
         }
 
-        _context.ProductAccessories.RemoveRange(dbModel.ProductAccessories);
-        _context.ProductImages.RemoveRange(dbModel.ProductImages);
-        _context.Products.Remove(dbModel);
+        dbModel.IsDeleted = true;
 
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        _context.Products.Update(dbModel);
 
-        DeleteFileIfExist($"{_videoSavePath}/{dbModel.Video}");
-
-        foreach (var productImage in dbModel.ProductImages)
-        {
-            DeleteFileIfExist($"{_imageSavePath}/{productImage.Image}");
-        }
-
-        return dbModel;
+        return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Deletes the image asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<bool> DeleteImageAsync(int id)
     {
         var dbModel = await _context.ProductImages
@@ -287,6 +368,11 @@ internal class ProductService : IProductService
         return true;
     }
 
+    /// <summary>
+    /// Deletes the video asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
     public async ValueTask<bool> DeleteVideoAsync(int id)
     {
         var dbModel = await _context.Products

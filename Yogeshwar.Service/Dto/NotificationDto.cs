@@ -1,6 +1,6 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
-public class NotificationDto
+public class NotificationDto : BaseDto
 {
     public int Id { get; set; }
 

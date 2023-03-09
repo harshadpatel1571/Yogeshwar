@@ -1,10 +1,12 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
-public class CategoryDto
+public class CategoryDto : BaseDto
 {
     public int Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    [Required(ErrorMessage = "Name is required.")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be 3 to 50 character long.")]
+    public string Name { get; set; }
 
     public string? Image { get; set; }
 

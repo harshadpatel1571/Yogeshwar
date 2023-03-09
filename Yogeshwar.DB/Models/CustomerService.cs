@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Yogeshwar.DB.Models;
+﻿namespace Yogeshwar.DB.Models;
 
 public partial class CustomerService
 {
@@ -17,7 +14,7 @@ public partial class CustomerService
 
     public byte Status { get; set; }
 
-    public DateTime? ServiceCompletedDate { get; set; }
+    public DateTime? ServiceCompletionDate { get; set; }
 
     public bool IsDeleted { get; set; }
 

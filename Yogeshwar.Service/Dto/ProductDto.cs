@@ -1,26 +1,29 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
-public class ProductDto
+public class ProductDto : BaseDto
 {
     public int Id { get; set; }
 
     [Required(ErrorMessage = "Name is required.")]
-    [StringLength(100, ErrorMessage = "Name must be up to 100 character.")]
+    [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be 3 to 100 character long.")]
     public string Name { get; set; }
 
     [Required(ErrorMessage = "Description is required.")]
-    [StringLength(250, ErrorMessage = "Name must be up to 250 character.")]
+    [StringLength(int.MaxValue, MinimumLength = 5, ErrorMessage = "Description must be at least 5 character long.")]
     public string Description { get; set; }
 
     [Required(ErrorMessage = "Price is required.")]
     public decimal? Price { get; set; }
 
     [Required(ErrorMessage = "Model no is required.")]
-    [StringLength(50, ErrorMessage = "Name must be up to 50 character.")]
+    [StringLength(50, ErrorMessage = "Model no must be up to 50 character long.")]
     public string ModelNo { get; set; }
 
     [Required(ErrorMessage = "Accessories are required.")]
     public IList<int> Accessories { get; set; }
+
+    [Required(ErrorMessage = "Categories are required.")]
+    public IList<int> Categories { get; set; }
 
     [Required(ErrorMessage = "Accessories quantities are required.")]
     public IList<AccessoriesQuantity> AccessoriesQuantity { get; set; }
@@ -28,6 +31,8 @@ public class ProductDto
     internal IList<ImageIds>? Images { get; set; }
 
     public SelectList? SelectListsForAccessories { get; set; }
+
+    public SelectList? SelectListsForCategories { get; set; }
 
     public string? Video { get; set; }
 

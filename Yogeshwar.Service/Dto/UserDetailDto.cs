@@ -1,6 +1,6 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
-public sealed class UserDetailDto
+public sealed class UserDetailDto : BaseDto
 {
     public int Id { get; set; }
 
