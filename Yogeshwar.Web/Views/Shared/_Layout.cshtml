@@ -612,7 +612,7 @@
                         <div class="dropdown ms-sm-3 header-item topbar-user">
                             <button type="button" class="btn shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user" src="~/images/users/avatar-1.jpg" alt="Header Avatar">
+                                    <img class="rounded-circle header-profile-user" src="~/images/users/user-dummy-img.jpg" alt="Header Avatar">
                                     <span class="text-start ms-xl-2">
                                         <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@User.Identity?.Name</span>
                                         <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">Founder</span>
@@ -672,46 +672,6 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
-                                <i class="mdi mdi-layers-triple-outline"></i> <span data-key="t-advance-ui">Advance UI</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="advance-ui-sweetalerts.html" class="nav-link" data-key="t-sweet">Sweet Alerts</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-nestable.html" class="nav-link" data-key="t-nestable-list">Nestable List</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-scrollbar.html" class="nav-link" data-key="t-scrollbar">Scrollbar</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-animation.html" class="nav-link" data-key="t-animation">Animation</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-tour.html" class="nav-link" data-key="t-tour">Tour</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-swiper.html" class="nav-link" data-key="t-swiper-slider">Swiper Slider</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-ratings.html" class="nav-link" data-key="t-ratings">Ratings</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-highlight.html" class="nav-link" data-key="t-highlight">Highlight</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="advance-ui-scrollspy.html" class="nav-link" data-key="t-scrollSpy">ScrollSpy</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-controller="Categories" asp-action="Index" class="nav-link" data-key="t-Categories"> Categories </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li class="nav-item">
                             <a class="nav-link menu-link" asp-action="Index" asp-controller="Home">
                                 <i class="mdi mdi-speedometer"></i>
                                 <span data-key="t-dashboards">Dashboards</span>
@@ -730,7 +690,7 @@
                                 <ul class="nav nav-sm flex-column">
 
                                     <li class="nav-item">
-                                        <a asp-controller="Categories" asp-action="Index" class="nav-link" data-key="t-sweet-alerts"> Categories </a>
+                                        <a asp-controller="Categories" asp-action="Index" class="nav-link" data-key="t-categories"> Categories </a>
                                     </li>
 
                                     <li class="nav-item">
@@ -882,80 +842,6 @@
             toastr[type](message, title);
         }
 
-        function BindGrid(pURL, pColumns, pdfColumn, excelColumn, printColumn) {
-            $('#grid').DataTable({
-                paging: true,
-                lengthChange: true,
-                searching: true,
-                ordering: true,
-                lengthMenu: [[5, 10, 25, 50, 75, 100, -1], [5, 10, 25, 50, 75, 100, 'All']],
-                info: true,
-                autoWidth: true,
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                filter: true,
-                ajax: {
-                    url: pURL,
-                    type: "POST",
-                    datatype: "json"
-                },
-                columnDefs: [{
-                    targets: [0],
-                    visible: false,
-                    searchable: false
-                }],
-                columns: pColumns,
-                dom: 'Blfrtip',
-                buttons: [
-                    {
-                        extend: 'pdfHtml5',
-                        text: 'PDF',
-                        titleAttr: 'Generate PDF',
-                        exportOptions: {
-                            columns: pdfColumn
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        text: 'Excel',
-                        titleAttr: 'Generate Excel',
-                        exportOptions: {
-                            columns: excelColumn
-                        }
-                    },
-                    //{
-                    //    extend: 'csvHtml5',
-                    //    text: 'CSV',
-                    //    titleAttr: 'Generate CSV',
-                    //    exportOptions: {
-                    //        columns: [1, 2, 3]
-                    //    }
-                    //},
-                    //{
-                    //    extend: 'copyHtml5',
-                    //    text: 'Copy',
-                    //    titleAttr: 'Copy to clipboard',
-                    //    exportOptions: {
-                    //        columns: [1, 2, 3]
-                    //    }
-                    //},
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        titleAttr: 'Copy to clipboard',
-                        exportOptions: {
-                            columns: printColumn
-                        }
-                    },
-                    //{
-                    //    extend: 'colvis',
-                    //    text: 'Column Visibility',
-                    //},
-                ]
-            }).buttons().container().appendTo('#grid_wrapper .col-md-6:eq(0)');
-        }
-
     </script>
 
     <script src="~/js/bootstrap.bundle.min.js"></script>
@@ -987,6 +873,7 @@
     <script src="~/js/datatable/buttons.html5.js"></script>
     <script src="~/js/datatable/buttons.print.js"></script>
     <script src="~/js/datatable/buttons.colVis.js"></script>
+    <script src="~/js/custom/DatatableBinding.js"></script>
     <script src="~/js/app.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false).ConfigureAwait(false)
