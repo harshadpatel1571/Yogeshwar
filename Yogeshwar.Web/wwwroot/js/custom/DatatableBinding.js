@@ -71,9 +71,11 @@
             //},
         ]
     }).buttons().container().appendTo('#grid_wrapper .col-md-6:eq(0)');
+
+    restrictSearchFilter();
 }
 
-$(document).ready(function () {
+function restrictSearchFilter() {
     const table = $('#grid').DataTable();
     $('.dataTables_filter input')
         .unbind()
@@ -85,7 +87,7 @@ $(document).ready(function () {
                 table.search("").draw();
             }
         });
-});
+}
 
 function deleteRecord(pURL) {
     Swal.fire({

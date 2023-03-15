@@ -24,7 +24,7 @@ internal class NotificationService : INotificationService
     }
 
     /// <summary>
-    /// Gets the by filter asynchronous.
+    /// Gets by filter asynchronous.
     /// </summary>
     /// <param name="filterDto">The filter dto.</param>
     /// <returns></returns>

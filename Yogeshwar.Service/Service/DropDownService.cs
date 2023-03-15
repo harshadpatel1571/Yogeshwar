@@ -102,29 +102,41 @@ internal class DropDownService : IDropDownService
     /// Binds the drop down for status.
     /// </summary>
     /// <returns></returns>
-    IList<DropDownDto<byte>> IDropDownService.BindDropDownForStatus()
+    IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderStatus()
     {
-        return ((byte[])Enum.GetValuesAsUnderlyingType<OrderStatus>())
-            .Select(x => new DropDownDto<byte>
-            {
-                Key = x,
-                Text = ((OrderStatus)x).ToString()
-            }).ToArray();
+        return OrderStatus;
     }
+
+    /// <summary>
+    /// The order status
+    /// </summary>
+    private static readonly IList<DropDownDto<byte>> OrderStatus =
+        ((byte[])Enum.GetValuesAsUnderlyingType<OrderStatus>())
+        .Select(x => new DropDownDto<byte>
+        {
+            Key = x,
+            Text = ((OrderStatus)x).ToString()
+        }).ToArray();
 
     /// <summary>
     /// Binds the drop down for order status.
     /// </summary>
     /// <returns></returns>
-    IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderStatus()
+    IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderDetailStatus()
     {
-        return ((byte[])Enum.GetValuesAsUnderlyingType<OrderDetailStatus>())
-            .Select(x => new DropDownDto<byte>
-            {
-                Key = x,
-                Text = ((OrderDetailStatus)x).ToString()
-            }).ToArray();
+        return OrderDetailStatus;
     }
+
+    /// <summary>
+    /// The order detail status
+    /// </summary>
+    private static readonly IList<DropDownDto<byte>> OrderDetailStatus =
+        ((byte[])Enum.GetValuesAsUnderlyingType<OrderDetailStatus>())
+        .Select(x => new DropDownDto<byte>
+        {
+            Key = x,
+            Text = ((OrderDetailStatus)x).ToString()
+        }).ToArray();
 
     /// <summary>
     /// Binds the drop down for service.
@@ -132,11 +144,17 @@ internal class DropDownService : IDropDownService
     /// <returns></returns>
     IList<DropDownDto<byte>> IDropDownService.BindDropDownForService()
     {
-        return ((byte[])Enum.GetValuesAsUnderlyingType<ServiceStatus>())
-            .Select(x => new DropDownDto<byte>
-            {
-                Key = x,
-                Text = ((ServiceStatus)x).ToString()
-            }).ToArray();
+        return Services;
     }
+
+    /// <summary>
+    /// The services
+    /// </summary>
+    private static readonly IList<DropDownDto<byte>> Services =
+        ((byte[])Enum.GetValuesAsUnderlyingType<ServiceStatus>())
+        .Select(x => new DropDownDto<byte>
+        {
+            Key = x,
+            Text = ((ServiceStatus)x).ToString()
+        }).ToArray();
 }

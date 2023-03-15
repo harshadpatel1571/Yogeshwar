@@ -89,9 +89,9 @@ public class OrderController : Controller
 
         ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync().ConfigureAwait(false),
             "Key", "Text");
-        ViewBag.Status = new SelectList(dropDownService.BindDropDownForStatus(),
+        ViewBag.Status = new SelectList(dropDownService.BindDropDownForOrderStatus(),
             "Key", "Text");
-        ViewBag.OrderStatus = new SelectList(dropDownService.BindDropDownForOrderStatus(),
+        ViewBag.OrderStatus = new SelectList(dropDownService.BindDropDownForOrderDetailStatus(),
             "Key", "Text");
         ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync().ConfigureAwait(false),
             "Key", "Text");

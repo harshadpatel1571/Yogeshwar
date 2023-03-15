@@ -219,6 +219,9 @@ internal class AccessoriesService : IAccessoriesService
         }
 
         dbModel.IsDeleted = true;
+        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedDate = DateTime.Now;
+
         _context.Accessories.Update(dbModel);
 
         return await _context.SaveChangesAsync().ConfigureAwait(false);

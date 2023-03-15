@@ -36,13 +36,13 @@ public interface IDropDownService : IDisposable
     /// Binds the drop down for status.
     /// </summary>
     /// <returns></returns>
-    internal IList<DropDownDto<byte>> BindDropDownForStatus();
+    internal IList<DropDownDto<byte>> BindDropDownForOrderStatus();
 
     /// <summary>
     /// Binds the drop down for order status.
     /// </summary>
     /// <returns></returns>
-    internal IList<DropDownDto<byte>> BindDropDownForOrderStatus();
+    internal IList<DropDownDto<byte>> BindDropDownForOrderDetailStatus();
 
     /// <summary>
     /// Binds the drop down for service.

@@ -10,10 +10,10 @@ public class CurrentUserService : ICurrentUserService
     /// <summary>
     /// Initializes a new instance of the <see cref="CurrentUserService"/> class.
     /// </summary>
-    /// <param name="claimsPrincipal">The claims principal.</param>
-    public CurrentUserService(ClaimsPrincipal claimsPrincipal)
+    /// <param name="httpContext">The HTTP context.</param>
+    public CurrentUserService(IHttpContextAccessor httpContext)
     {
-        _claimsPrincipal = claimsPrincipal;
+        _claimsPrincipal = httpContext.HttpContext!.User;
     }
 
     /// <summary>

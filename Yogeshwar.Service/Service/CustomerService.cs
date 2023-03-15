@@ -163,7 +163,7 @@ internal class CustomerService : ICustomerService
         dbModel.Address = customer.Address;
         dbModel.City = customer.City;
         dbModel.Pincode = customer.PinCode;
-        dbModel.ModifiedBy = customer.ModifiedBy;
+        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
         dbModel.IsActive = customer.IsActive;
         dbModel.ModifiedDate = DateTime.Now;
 
@@ -188,6 +188,8 @@ internal class CustomerService : ICustomerService
         }
 
         dbModel.IsDeleted = true;
+        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedDate = DateTime.Now;
 
         _context.Customers.Update(dbModel);
 

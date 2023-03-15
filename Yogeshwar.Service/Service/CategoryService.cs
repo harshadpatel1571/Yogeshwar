@@ -76,7 +76,7 @@ public class CategoryService : ICategoryService
         {
             Id = category.Id,
             Name = category.Name,
-            Image = $"{configuration["File:ReadPath"]}/Category/{category.Image}"
+            Image = category.Image != null ? $"{configuration["File:ReadPath"]}/Category/{category.Image}" : null
         };
 
     /// <summary>
@@ -125,7 +125,7 @@ public class CategoryService : ICategoryService
         var dbModel = new Category
         {
             Name = category.Name,
-            Image = image,
+            Image = image
         };
 
         await _context.Categories.AddAsync(dbModel).ConfigureAwait(false);

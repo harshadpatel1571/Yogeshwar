@@ -334,6 +334,8 @@ internal class ProductService : IProductService
         }
 
         dbModel.IsDeleted = true;
+        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedDate = DateTime.Now;
 
         _context.Products.Update(dbModel);
 
