@@ -9,27 +9,29 @@ internal sealed class ValidateFileAttribute : ValidationAttribute
         if (value is null)
         {
             return IsRequired
-                ? new ValidationResult($"{validationContext.DisplayName} is required")
+                ? new ValidationResult($"{validationContext.DisplayName} is required.")
                 : ValidationResult.Success;
         }
 
-        if (value is not IFormFile file || value is not IEnumerable<IFormFile> files)
+        if (value is IFormFile file)
         {
-            return ValidationResult.Success;
+            return ValidateFiles(validationContext, file);
+        }
+        else if (value is IEnumerable<IFormFile> files)
+        {
+            return ValidateFiles(validationContext, files.ToArray());
         }
 
+        return ValidationResult.Success;
+    }
+
+    private static ValidationResult? ValidateFiles(ValidationContext validationContext, params IFormFile[] files)
+    {
         var fileValidationProperties = validationContext
             .GetService<IConfiguration>()
             .GetSection("Files")
             .Get<FileValidationModel>();
 
-        return file is null
-              ? ValidateFiles(fileValidationProperties, files.ToArray())
-              : ValidateFiles(fileValidationProperties, file);
-    }
-
-    private static ValidationResult? ValidateFiles(FileValidationModel fileValidationProperties, params IFormFile[] files)
-    {
         foreach (var file in files)
         {
             var fileExtension = Path.GetExtension(file.FileName);
@@ -55,20 +57,20 @@ internal sealed class ValidateFileAttribute : ValidationAttribute
             var maxSize = isImage ? fileValidationProperties.ImageSize : fileValidationProperties.VideoSize;
 
             if (fileSize > maxSize)
-                return new ValidationResult($"File up to size of {maxSize} MB is valid.");
+                return new ValidationResult($"File up to size of {maxSize} KB is valid.");
         }
 
         return ValidationResult.Success;
     }
+}
 
-    private class FileValidationModel
-    {
-        public int ImageSize { get; set; }
+file class FileValidationModel
+{
+    public int ImageSize { get; set; }
 
-        public int VideoSize { get; set; }
+    public int VideoSize { get; set; }
 
-        public string[] ImageExtensions { get; set; } = Array.Empty<string>();
+    public string[] ImageExtensions { get; set; } = Array.Empty<string>();
 
-        public string[] VideoExtensions { get; set; } = Array.Empty<string>();
-    }
+    public string[] VideoExtensions { get; set; } = Array.Empty<string>();
 }
