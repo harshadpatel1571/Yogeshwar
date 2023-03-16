@@ -6,3 +6,5 @@ global using Microsoft.Extensions.DependencyInjection;
 global using System.Reflection;
 global using Yogeshwar.Helper.Attribute;
 global using System.ComponentModel;
+global using System.ComponentModel.DataAnnotations;
+global using Microsoft.Extensions.Configuration;

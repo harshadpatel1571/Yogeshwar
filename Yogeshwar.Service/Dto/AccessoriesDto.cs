@@ -16,5 +16,6 @@ public class AccessoriesDto : BaseDto
     [Required(ErrorMessage = "Quantity is required.")]
     public int Quantity { get; set; }
 
+    [ValidateFile]
     public IFormFile? File { get; set; }
 }

@@ -36,8 +36,10 @@ public class ProductDto : BaseDto
 
     public string? Video { get; set; }
 
+    [ValidateFile]
     public IList<IFormFile>? ImageFiles { get; set; }
 
+    [ValidateFile]
     public IFormFile? VideoFile { get; set; }
 }
 

@@ -10,5 +10,6 @@ public class CategoryDto : BaseDto
 
     public string? Image { get; set; }
 
+    [ValidateFile]
     public IFormFile? ImageFile { get; set; }
 }
