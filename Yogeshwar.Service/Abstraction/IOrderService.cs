@@ -4,11 +4,11 @@ public interface IOrderService : IDisposable
 {
     internal Task<DataTableResponseCarrier<OrderDto>> GetByFilterAsync(DataTableFilterDto filterDto);
 
-    internal Task<ProductAccessoriesDetailDto?> GetAccessoriesAsync(int productId);
-    
-    Task<int> CreateOrUpdateAsync(OrderDto orderDto);
+    Task<OneOf<int, NotFound, string[]>> CreateOrUpdateAsync(OrderDto orderDto);
 
     Task<OrderDetailViewModel?> GetDetailsAsync(int id);
+
+    internal Task<ProductAccessoriesDetailDto?> GetAccessoriesAsync(int productId);
 
     Task<Order?> DeleteAsync(int id);
 }

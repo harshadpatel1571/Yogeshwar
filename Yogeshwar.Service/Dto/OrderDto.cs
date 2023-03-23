@@ -21,6 +21,8 @@ public class OrderDto : BaseDto
 
     public bool IsCompleted { get; set; }
 
+    public bool ForceCreate { get; set; }
+
     public int OrderCount { get; set; }
 
     [Required(ErrorMessage = "Order details are required.")]

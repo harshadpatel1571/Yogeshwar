@@ -6,23 +6,15 @@ internal sealed class ValidateFileAttribute : ValidationAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value is null)
+        return value switch
         {
-            return IsRequired
+            null => IsRequired
                 ? new ValidationResult($"{validationContext.DisplayName} is required.")
-                : ValidationResult.Success;
-        }
-
-        if (value is IFormFile file)
-        {
-            return ValidateFiles(validationContext, file);
-        }
-        else if (value is IEnumerable<IFormFile> files)
-        {
-            return ValidateFiles(validationContext, files.ToArray());
-        }
-
-        return ValidationResult.Success;
+                : ValidationResult.Success,
+            IFormFile file => ValidateFiles(validationContext, file),
+            IEnumerable<IFormFile> files => ValidateFiles(validationContext, files.ToArray()),
+            _ => ValidationResult.Success
+        };
     }
 
     private static ValidationResult? ValidateFiles(ValidationContext validationContext, params IFormFile[] files)

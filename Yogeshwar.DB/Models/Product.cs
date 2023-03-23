@@ -12,6 +12,8 @@ public partial class Product
 
     public string ModelNo { get; set; } = null!;
 
+    public int Quantity { get; set; }
+
     public string? Video { get; set; }
 
     public DateTime CreatedDate { get; set; }

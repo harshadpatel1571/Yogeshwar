@@ -4,7 +4,7 @@
 internal class CustomerService : ICustomerService
 {
     private readonly YogeshwarContext _context;
-    private readonly Lazy<ICurrentUserService> _currentUserService;
+    private readonly ICurrentUserService _currentUserService;
 
 
     /// <summary>
@@ -12,7 +12,7 @@ internal class CustomerService : ICustomerService
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="currentUserService">The current user service.</param>
-    public CustomerService(YogeshwarContext context, Lazy<ICurrentUserService> currentUserService)
+    public CustomerService(YogeshwarContext context, ICurrentUserService currentUserService)
     {
         _currentUserService = currentUserService;
         _context = context;
@@ -132,7 +132,7 @@ internal class CustomerService : ICustomerService
             IsActive = true,
             City = customer.City,
             Pincode = customer.PinCode,
-            CreatedBy = _currentUserService.Value.GetCurrentUserId(),
+            CreatedBy = _currentUserService.GetCurrentUserId(),
             CreatedDate = DateTime.Now
         };
 
@@ -163,7 +163,7 @@ internal class CustomerService : ICustomerService
         dbModel.Address = customer.Address;
         dbModel.City = customer.City;
         dbModel.Pincode = customer.PinCode;
-        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.IsActive = customer.IsActive;
         dbModel.ModifiedDate = DateTime.Now;
 
@@ -188,7 +188,7 @@ internal class CustomerService : ICustomerService
         }
 
         dbModel.IsDeleted = true;
-        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
 
         _context.Customers.Update(dbModel);

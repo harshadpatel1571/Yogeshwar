@@ -77,6 +77,8 @@ public class OrderController : Controller
 
         return Json(detail);
     }
+    
+
 
     /// <summary>
     /// Add or edit.

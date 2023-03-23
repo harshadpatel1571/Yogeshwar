@@ -7,7 +7,7 @@ internal class ProductService : IProductService
     private readonly IConfiguration _configuration;
     private readonly string _imageSavePath;
     private readonly string _videoSavePath;
-    private readonly Lazy<ICurrentUserService> _currentUserService;
+    private readonly ICurrentUserService _currentUserService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProductService"/> class.
@@ -17,7 +17,7 @@ internal class ProductService : IProductService
     /// <param name="hostEnvironment">The host environment.</param>
     /// <param name="currentUserService">The current user service.</param>
     public ProductService(YogeshwarContext context, IConfiguration configuration,
-        IWebHostEnvironment hostEnvironment, Lazy<ICurrentUserService> currentUserService)
+        IWebHostEnvironment hostEnvironment, ICurrentUserService currentUserService)
     {
         _context = context;
         _configuration = configuration;
@@ -194,7 +194,7 @@ internal class ProductService : IProductService
             Price = productDto.Price!.Value,
             IsActive = true,
             CreatedDate = DateTime.Now,
-            CreatedBy = _currentUserService.Value.GetCurrentUserId(),
+            CreatedBy = _currentUserService.GetCurrentUserId(),
             ProductAccessories = productDto.AccessoriesQuantity.Select(x => new ProductAccessory
             {
                 AccessoriesId = x.AccessoriesId,
@@ -264,7 +264,7 @@ internal class ProductService : IProductService
         dbModel.Description = productDto.Description;
         dbModel.ModelNo = productDto.ModelNo;
         dbModel.IsActive = productDto.IsActive;
-        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
         dbModel.Price = productDto.Price!.Value;
 
@@ -334,7 +334,7 @@ internal class ProductService : IProductService
         }
 
         dbModel.IsDeleted = true;
-        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
 
         _context.Products.Update(dbModel);

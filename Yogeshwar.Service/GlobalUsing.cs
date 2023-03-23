@@ -16,3 +16,5 @@ global using OneSignal.RestAPIv3.Client.Resources;
 global using OneSignal.RestAPIv3.Client.Resources.Notifications;
 global using Microsoft.Extensions.DependencyInjection;
 global using Yogeshwar.Helper.Attribute;
+global using OneOf;
+global using OneOf.Types;

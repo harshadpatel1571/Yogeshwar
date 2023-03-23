@@ -5,7 +5,7 @@ internal class AccessoriesService : IAccessoriesService
 {
     private readonly YogeshwarContext _context;
     private readonly IConfiguration _configuration;
-    private readonly Lazy<ICurrentUserService> _currentUserService;
+    private readonly ICurrentUserService _currentUserService;
     private readonly string _savePath;
 
     /// <summary>
@@ -16,7 +16,7 @@ internal class AccessoriesService : IAccessoriesService
     /// <param name="hostEnvironment">The host environment.</param>
     /// <param name="currentUserService">The current user service.</param>
     public AccessoriesService(YogeshwarContext context, IConfiguration configuration,
-        IWebHostEnvironment hostEnvironment, Lazy<ICurrentUserService> currentUserService)
+        IWebHostEnvironment hostEnvironment, ICurrentUserService currentUserService)
     {
         _context = context;
         _configuration = configuration;
@@ -144,7 +144,7 @@ internal class AccessoriesService : IAccessoriesService
             Quantity = accessory.Quantity,
             IsActive = true,
             CreatedDate = DateTime.Now,
-            CreatedBy = _currentUserService.Value.GetCurrentUserId(),
+            CreatedBy = _currentUserService.GetCurrentUserId(),
         };
 
         await _context.Accessories.AddAsync(dbModel).ConfigureAwait(false);
@@ -184,7 +184,7 @@ internal class AccessoriesService : IAccessoriesService
         dbModel.Quantity = accessory.Quantity;
         dbModel.IsActive = accessory.IsActive;
         dbModel.ModifiedDate = DateTime.Now;
-        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
 
         _context.Accessories.Update(dbModel);
 
@@ -219,7 +219,7 @@ internal class AccessoriesService : IAccessoriesService
         }
 
         dbModel.IsDeleted = true;
-        dbModel.ModifiedBy = _currentUserService.Value.GetCurrentUserId();
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
 
         _context.Accessories.Update(dbModel);
