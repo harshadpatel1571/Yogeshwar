@@ -28,7 +28,7 @@
                     // "                                        <i class=\"ri-edit-2-line\"></i>\n" +
                     // "                                    </a>\n" +
                     "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Order/Delete/" + row.id + "')\">\n" +
-                    "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
+                    "                                        <i class=\"ri-delete-bin-line\" Title=\"Delete Record.\"Title=\"Delete Record.\"s></i>\n" +
                     "                                    </a>\n" +
                     "                                </div>";
             }

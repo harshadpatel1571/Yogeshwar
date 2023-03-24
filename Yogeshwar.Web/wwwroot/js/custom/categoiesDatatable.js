@@ -34,11 +34,14 @@
             render: function (data, type, row) {
                 return "<div class=\"hstack gap-3 flex-wrap\">\n" +
                     "                                    <a href='/Categories/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
-                    "                                        <i class=\"ri-edit-2-line\"></i>\n" +
+                    "                                        <i class=\"ri-edit-2-line\" Title=\"Edit Record.\"></i>\n" +
                     "                                    </a>\n" +
-                    "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Categories/Delete/" + row.id + "')\">\n" +
-                    "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
+                    "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Categories/Delete/" + row.id + "')\">\n" +
+                    "                                        <i class=\"ri-delete-bin-line\" Title=\"Delete Record.\"></i>\n" +
                     "                                    </a>\n" +
+                    "                                   <div class=\"form-check form-switch form-switch-custom form-switch-success\">" +
+                    "                                       <input type =\"checkbox\" class=\"form-check-input\" Title=\"Active And Inactive Record.\"> " +
+                    "                                   </div>" +
                     "                                </div>";
             }
         },

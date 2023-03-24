@@ -28,10 +28,10 @@
             render: function (data, type, row) {
                 return "<div class=\"hstack gap-3 flex-wrap\">\n" +
                     "                                    <a href='/Customer/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
-                    "                                        <i class=\"ri-edit-2-line\"></i>\n" +
+                    "                                        <i class=\"ri-edit-2-line\" Title=\"Edit Record.\"></i>\n" +
                     "                                    </a>\n" +
                     "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Customer/Delete/" + row.id + "')\">\n" +
-                    "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
+                    "                                        <i class=\"ri-delete-bin-line\" Title=\"Delete Record.\"></i>\n" +
                     "                                    </a>\n" +
                     "                                </div>";
             }
