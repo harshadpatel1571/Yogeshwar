@@ -5,7 +5,12 @@
             name: "image", "autoWidth": true,
             sDefaultContent: "--",
             render: function (data, type, row) {
-                return "<img src='https://localhost:44320/DataImages/Accessories/0fd2d2e151554ce09af62071c0ff5714.webp' height='50' width='50'/>";
+                if (row.image != undefined) {
+                    return "<img src='" + row.image + "' height='50' width='50'/>";
+                }
+                else {
+                    return "<img src='https://localhost:44320/DataImages/Category/d5305eda5d1a44ccb6076986dda7c8a2.png' height='50' width='50'/>"
+                }
             }
         },
         {
