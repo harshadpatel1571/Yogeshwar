@@ -5,124 +5,128 @@
 }
 
 <div class="row">
-<div class="col-xl-9">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex align-items-center">
-                <h5 class="card-title flex-grow-1 mb-0">@Model.OrderId</h5>
-                <div class="flex-shrink-0">
+    <div class="col-xl-9">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title flex-grow-1 mb-0">@Model.OrderId</h5>
+                    <div class="flex-shrink-0">
+                        <a href="#" class="btn btn-success btn-sm">
+                            <i class="ri-download-2-fill align-middle me-1"></i> Invoice
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive table-card">
-                <table class="table table-nowrap align-middle table-borderless mb-0">
-                    <thead class="table-light text-muted">
-                    <tr>
-                        <th scope="col">Product Details</th>
-                        <th scope="col">Item Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col" class="text-end">Total Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @{
-                        @foreach (var detail in Model.OrderDetails)
-                        {
+            <div class="card-body">
+                <div class="table-responsive table-card">
+                    <table class="table table-nowrap align-middle table-borderless mb-0">
+                        <thead class="table-light text-muted">
                             <tr>
-                                <td>
-                                    <div class="d-flex">
-                                        <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                            @if (detail.Image is not null)
-                                            {
-                                                <img src="@detail.Image" alt="" class="img-fluid d-block">
-                                            }
-                                        </div>
-                                        <div class="flex-grow-1 ms-3">
-                                            <h5 class="fs-15">
-                                                <a href="#" class="link-primary">@detail.ProductName</a>
-                                            </h5>
-                                            <p class="text-muted mb-0">Status: <span class="fw-medium">@detail.Status</span></p>
-                                            <p class="text-muted mb-0">Deliverd Date: <span class="fw-medium">@detail.DeliveredDate</span></p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>@detail.Price</td>
-                                <td>02</td>
-                                <td class="fw-medium text-end">
-                                    @detail.TotalAmount
+                                <th scope="col">Product Details</th>
+                                <th scope="col">Item Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col" class="text-end">Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                @foreach (var detail in Model.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
+                                                    @if (detail.Image is not null)
+                                                    {
+                                                        <img src="@detail.Image" alt="" class="img-fluid d-block">
+                                                    }
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h5 class="fs-15">
+                                                        <a href="#" class="link-primary">@detail.ProductName</a>
+                                                    </h5>
+                                                    <p class="text-muted mb-0">Status: <span class="fw-medium">@detail.Status</span></p>
+                                                    <p class="text-muted mb-0">Deliverd Date: <span class="fw-medium">@detail.DeliveredDate</span></p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@detail.Price</td>
+                                        <td>02</td>
+                                        <td class="fw-medium text-end">
+                                            @detail.TotalAmount
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            <tr class="border-top border-top-dashed">
+                                <td colspan="3"></td>
+                                <td colspan="2" class="fw-medium p-0">
+                                    <table class="table table-borderless mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <td>Sub Total :</td>
+                                                <td class="text-end">@Model.SubTotal</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Discount :</td>
+                                                <td class="text-end">- @Model.Discount</td>
+                                            </tr>
+                                            <tr class="border-top border-top-dashed">
+                                                <th scope="row">Total :</th>
+                                                <th class="text-end">@Model.Total</th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </td>
                             </tr>
-                        }
-                    }
-                    <tr class="border-top border-top-dashed">
-                        <td colspan="3"></td>
-                        <td colspan="2" class="fw-medium p-0">
-                            <table class="table table-borderless mb-0">
-                                <tbody>
-                                <tr>
-                                    <td>Sub Total :</td>
-                                    <td class="text-end">@Model.SubTotal</td>
-                                </tr>
-                                <tr>
-                                    <td>Discount :</td>
-                                    <td class="text-end">- @Model.Discount</td>
-                                </tr>
-                                <tr class="border-top border-top-dashed">
-                                    <th scope="row">Total :</th>
-                                    <th class="text-end">@Model.Total</th>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-xl-3">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex">
-                <h5 class="card-title flex-grow-1 mb-0">Customer Details</h5>
-                <div class="flex-shrink-0">
-                    <a asp-action="Detail" asp-controller="Customer" asp-route-id="@Model.Customer.Id" class="link-secondary">View Profile</a>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <ul class="list-unstyled mb-0 vstack gap-3">
-                <li>
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="fs-14 mb-1">@Model.Customer.Name</h6>
-                            <p class="text-muted mb-0">Customer</p>
-                        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex">
+                    <h5 class="card-title flex-grow-1 mb-0">Customer Details</h5>
+                    <div class="flex-shrink-0">
+                        <a asp-action="Detail" asp-controller="Customer" asp-route-id="@Model.Customer.Id" class="link-secondary">View Profile</a>
                     </div>
-                </li>
-                <li>
-                    <i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>@Model.Customer.Email
-                </li>
-                <li>
-                    <i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>@Model.Customer.PhoneNo
-                </li>
-            </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0 vstack gap-3">
+                    <li>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-sm rounded shadow">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="fs-14 mb-1">@Model.Customer.Name</h6>
+                                <p class="text-muted mb-0">Customer</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>@Model.Customer.Email
+                    </li>
+                    <li>
+                        <i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>@Model.Customer.PhoneNo
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i> Billing Address</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
+                    <li class="fw-medium fs-14">@Model.Customer.Name</li>
+                    <li>@Model.Customer.Address</li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i> Billing Address</h5>
-        </div>
-        <div class="card-body">
-            <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
-                <li class="fw-medium fs-14">@Model.Customer.Name</li>
-                <li>@Model.Customer.Address</li>
-            </ul>
-        </div>
-    </div>
-</div>
 </div>

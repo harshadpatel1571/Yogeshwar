@@ -25,24 +25,24 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Customer</h5>
-                <div>
-                    <a asp-action="Index" class="btn btn-primary btn-label waves-effect waves-light">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0">
-                                <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+        <form class="needs-validation" asp-action="AddEdit">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">Customer</h5>
+                    <div>
+                        <a asp-action="Index" class="btn btn-primary btn-label waves-effect waves-light">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    Go to List
+                                </div>
                             </div>
-                            <div class="flex-grow-1">
-                                Go to List
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <form class="row g-3 needs-validation" asp-action="AddEdit">
+                <div class="card-body row g-3">
                     <input class="form-control" asp-for="Id" type="hidden" readonly>
                     <div class="col-md-6">
                         <label class="form-label">First Name</label>
@@ -74,7 +74,7 @@
                     <div class="col-md-12">
                         <label class="form-label">Address</label>
                         <span class="text-danger">*</span>
-                        <textarea class="form-control" rows="2" asp-for="Address" maxlength="250" required></textarea>
+                        <textarea class="form-control" rows="4" asp-for="Address" maxlength="250" required></textarea>
                         <span asp-validation-for="Address" class="text-danger"></span>
                     </div>
 
@@ -92,15 +92,66 @@
                         <span asp-validation-for="PinCode" class="text-danger"></span>
                     </div>
 
+                    <div class="col-md-6">
+                        <label class="form-label">GST Number</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="PinCode" required>
+                        <span asp-validation-for="PinCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Upload Profile Image <span class="text-info">(Only images are allowed.)</span></label>
+                        <input class="form-control md-2" type="file" accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">Customer Bank Details</h5>
+                </div>
+                <div class="card-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Bank Holder Name</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="FirstName" maxlength="50" required>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Bank Name</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="FirstName" maxlength="50" required>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Account Number</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="FirstName" maxlength="50" required>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">IFSC Code</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="FirstName" maxlength="50" required>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Branch Name</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="FirstName" maxlength="50" required>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    
                     <div class="col-12">
                         <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">
                             <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
                             Save
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
+
     </div>
 </div>
 @section Scripts {

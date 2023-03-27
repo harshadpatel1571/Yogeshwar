@@ -67,6 +67,7 @@
                     <div class="col-md-6">
                         <label class="form-label">Select Accessories</label>
                         <span class="text-danger">*</span>
+                        <span class="text-info">(Allow Multiple Selection)</span>
                         <select class="js-example-basic-multiple" asp-for="Accessories"
                                 asp-items="Model.SelectListsForAccessories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
                         </select>
@@ -75,6 +76,7 @@
                     <div class="col-md-6">
                         <label class="form-label">Select Categories</label>
                         <span class="text-danger">*</span>
+                        <span class="text-info">(Allow Multiple Selection)</span>
                         <select class="js-example-basic-multiple" asp-for="Categories"
                                 asp-items="Model.SelectListsForCategories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
                         </select>
@@ -85,7 +87,10 @@
                     }
 
                     <div class="col-md-12" style="display:@display" id="PAdiv">
-                        <label class="form-label">Product Accessories</label> <br />
+                        <label class="form-label">Product Accessories</label>
+                        <span class="text-danger">*</span>
+                        <span class="text-info">(Fill Accessories quantity for stock management purpose.)</span>
+                        <br />
                         <ul class="list-group" id="PAList">
                         </ul>
                     </div>

@@ -663,7 +663,6 @@
 
             <div id="scrollbar">
                 <div class="container-fluid">
-
                     <div id="two-column-menu">
                     </div>
                     <ul class="navbar-nav" id="navbar-nav">
@@ -672,7 +671,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link active" asp-action="Index" asp-controller="Home">
+                            <a class="nav-link menu-link" asp-action="Index" asp-controller="Home">
                                 <i class="mdi mdi-speedometer"></i>
                                 <span data-key="t-dashboards">Dashboards</span>
                             </a>
@@ -714,8 +713,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" asp-controller="Order" asp-action="Index">
-                                <i class="mdi mdi-notebook-edit-outline"></i> <span data-key="t-order">Order</span>
+                            <a class="nav-link menu-link" asp-action="Index" asp-controller="Order">
+                                <i class="mdi mdi-notebook-edit-outline"></i> <span data-key="t-service">Order</span>
                             </a>
                         </li>
 
@@ -776,74 +775,6 @@
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-
-        $(document).ready(function () {
-            const mod = $.cookie("mod");
-
-            if (mod !== undefined) {
-                $('#theme').attr('data-layout-mode', mod);
-            }
-
-            const view = $.cookie("view");
-
-            if (view !== undefined && view !== '') {
-                $('body').addClass(view);
-            }
-        })
-
-        function changeMode() {
-            const mod = $.cookie("mod");
-
-            if (mod === undefined || mod === '') {
-                $.cookie("mod", 'dark', { expires: 1000, path: '/' });
-                return;
-            }
-
-            if (mod === 'dark') {
-                $.cookie("mod", 'light', { expires: 1000, path: '/' });
-            } else {
-                $.cookie("mod", 'dark', { expires: 1000, path: '/' });
-            }
-        }
-
-        function changeView() {
-            const view = $.cookie("view");
-
-            if (view === undefined || view === '') {
-                $.cookie("view", 'fullscreen-enable', { path: '/' });
-                return;
-            }
-
-            if (view === 'fullscreen-enable') {
-                $.cookie("view", '', { path: '/' });
-            }
-        }
-
-        function showToaster(type, title, message) {
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": true,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
-
-            toastr[type](message, title);
-        }
-
-    </script>
-
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/simplebar.min.js"></script>
     <script src="~/js/waves.min.js"></script>
@@ -853,15 +784,12 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/sweetalert2.min.js"></script>
     <script src="~/js/select2.min.js"></script>
-    <script src="~/js/select2.init.js"></script>
     <script src="~/js/choices.min.js"></script>
     <script src="~/js/flatpickr.min.js"></script>
     <script src="~/js/pickr.min.js"></script>
-    <script src="~/js/form-pickers.init.js"></script>
     <script src="~/js/plugins.js"></script>
     <script src="~/js/toastr.js"></script>
     <script src="~/js/ckeditor.js"></script>
-    <script src="~/js/form-editor.init.js"></script>
 
     <script src="~/js/datatable/jquery.dataTables.js"></script>
     <script src="~/js/datatable/dataTables.bootstrap5.min.js"></script>
@@ -875,8 +803,21 @@
     <script src="~/js/datatable/buttons.html5.js"></script>
     <script src="~/js/datatable/buttons.print.js"></script>
     <script src="~/js/datatable/buttons.colVis.js"></script>
-    <script src="~/js/custom/DatatableBinding.js"></script>
     <script src="~/js/app.js"></script>
+    <script src="~/js/custom/appSetting.js"></script>
+    @*<script>
+        var mybutton = document.getElementById("back-to-top");
+        function scrollFunction() {
+            100 < document.body.scrollTop || 100 < document.documentElement.scrollTop ? (mybutton.style.display = "block") : (mybutton.style.display = "none");
+        }
+        function topFunction() {
+            (document.body.scrollTop = 0), (document.documentElement.scrollTop = 0);
+        }
+        mybutton &&
+            (window.onscroll = function () {
+                scrollFunction();
+            });
+    </script>*@
 
     @await RenderSectionAsync("Scripts", required: false).ConfigureAwait(false)
 </body>

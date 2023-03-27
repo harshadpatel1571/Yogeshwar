@@ -307,25 +307,55 @@
                 : document.body.classList.add("twocolumn-panel"));
     }
     function B() {
-        var e = "/" == location.pathname ? "index.html" : location.pathname.substring(1);
-        (e = e.substring(e.lastIndexOf("/") + 1)) &&
-            (e = document.getElementById("navbar-nav").querySelector('[href="' + e + '"]')) &&
-            (e.classList.add("active"),
+
+        var url = "/" == location.pathname ? "/" : location.pathname.substring(1);
+        var menuHref;
+        if (url == "/") {
+            menuHref = "/";
+        }
+        else {
+            menuHref = "/" + url.split("/")[0];
+        }
+
+        var e = document.getElementById("navbar-nav").querySelector('[href="' + menuHref + '"]');
+        e.classList.add("active"),
             (e = e.closest(".collapse.menu-dropdown")) &&
-                (e.classList.add("show"),
+            (e.classList.add("show"),
                 e.parentElement.children[0].classList.add("active"),
                 e.parentElement.children[0].setAttribute("aria-expanded", "true"),
                 e.parentElement.closest(".collapse.menu-dropdown") &&
-                    (e.parentElement.closest(".collapse").classList.add("show"),
+                (e.parentElement.closest(".collapse").classList.add("show"),
                     e.parentElement.closest(".collapse").previousElementSibling && e.parentElement.closest(".collapse").previousElementSibling.classList.add("active"),
                     e.parentElement.parentElement.parentElement.parentElement.closest(".collapse.menu-dropdown") &&
-                        (e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").classList.add("show"),
-                        e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling &&
-                            (console.log("parentCollapseDiv", e),
+                    (e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").classList.add("show"),
+                        e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling && (
                             e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling.classList.add("active"),
                             "horizontal" == document.documentElement.getAttribute("data-layout") &&
-                                e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse") &&
-                                e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling.classList.add("active"))))));
+                            e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse") &&
+                            e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling.classList.add("active")
+                        )
+                    )
+                )
+            );
+        //var e = "/" == location.pathname ? "index.html" : location.pathname.substring(1);
+        //(e = e.substring(e.lastIndexOf("/") + 1)) &&
+        //    (e = document.getElementById("navbar-nav").querySelector('[href="' + e + '"]')) &&
+        //    (e.classList.add("active"),
+        //    (e = e.closest(".collapse.menu-dropdown")) &&
+        //        (e.classList.add("show"),
+        //        e.parentElement.children[0].classList.add("active"),
+        //        e.parentElement.children[0].setAttribute("aria-expanded", "true"),
+        //        e.parentElement.closest(".collapse.menu-dropdown") &&
+        //            (e.parentElement.closest(".collapse").classList.add("show"),
+        //            e.parentElement.closest(".collapse").previousElementSibling && e.parentElement.closest(".collapse").previousElementSibling.classList.add("active"),
+        //            e.parentElement.parentElement.parentElement.parentElement.closest(".collapse.menu-dropdown") &&
+        //                (e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").classList.add("show"),
+        //                e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling &&
+        //                    (console.log("parentCollapseDiv", e),
+        //                    e.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling.classList.add("active"),
+        //                    "horizontal" == document.documentElement.getAttribute("data-layout") &&
+        //                        e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse") &&
+        //                        e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling.classList.add("active"))))));
     }
     function h(e) {
         if (e) {

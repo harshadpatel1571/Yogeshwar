@@ -1,4 +1,89 @@
-﻿function BindGrid(pURL, pColumns, pdfColumn, excelColumn, printColumn) {
+﻿$(document).ready(function () {
+
+    select2Init();
+
+    const mod = $.cookie("mod");
+
+    if (mod !== undefined) {
+        $('#theme').attr('data-layout-mode', mod);
+    }
+
+    const view = $.cookie("view");
+
+    if (view !== undefined && view !== '') {
+        $('body').addClass(view);
+    }
+});
+
+var ckClassicEditor = document.querySelectorAll(".ckeditor-classic"),
+    snowEditor = (ckClassicEditor &&
+        Array.from(ckClassicEditor).forEach(function () {
+            ClassicEditor.create(document.querySelector(".ckeditor-classic"), {
+                removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image',
+                    'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed']
+            })
+                .then(function (e) {
+                    console.log(e.plugins._availablePlugins);
+                    e.ui.view.editable.element.style.height = "200px";
+                })
+                .catch(function (e) {
+                    console.error(e);
+                });
+        })
+    );
+
+
+function changeMode() {
+    const mod = $.cookie("mod");
+
+    if (mod === undefined || mod === '') {
+        $.cookie("mod", 'dark', { expires: 1000, path: '/' });
+        return;
+    }
+
+    if (mod === 'dark') {
+        $.cookie("mod", 'light', { expires: 1000, path: '/' });
+    } else {
+        $.cookie("mod", 'dark', { expires: 1000, path: '/' });
+    }
+}
+
+function changeView() {
+    const view = $.cookie("view");
+
+    if (view === undefined || view === '') {
+        $.cookie("view", 'fullscreen-enable', { path: '/' });
+        return;
+    }
+
+    if (view === 'fullscreen-enable') {
+        $.cookie("view", '', { path: '/' });
+    }
+}
+
+function showToaster(type, title, message) {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    toastr[type](message, title);
+}
+
+function BindGrid(pURL, pColumns, pdfColumn, excelColumn, printColumn) {
     $('#grid').DataTable().destroy();
     $('#grid').DataTable({
         paging: true,
@@ -120,4 +205,21 @@ function deleteRecord(pURL) {
             }
         });
     });
+}
+
+function select2Init() {
+
+    $(".js-example-basic-single").select2(),
+        $(".js-example-basic-multiple").select2();
+
+    $(".js-example-disabled").select2(),
+        $(".js-example-disabled-multi").select2(),
+        $(".js-programmatic-enable").on("click", function () {
+            $(".js-example-disabled").prop("disabled", !1),
+                $(".js-example-disabled-multi").prop("disabled", !1);
+        }),
+        $(".js-programmatic-disable").on("click", function () {
+            $(".js-example-disabled").prop("disabled", !0),
+                $(".js-example-disabled-multi").prop("disabled", !0);
+        });
 }

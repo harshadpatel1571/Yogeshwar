@@ -36,7 +36,6 @@
                     </a>
                 </div>
             </div>
-            </>
             <div class="card-body row g-3">
                 <div class="col-md-6">
                     <label class="form-label">First Name</label>
@@ -72,6 +71,51 @@
                     <label class="form-label">Pincode</label>
                     <label class="form-control">@Model.PinCode</label>
                 </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">GST Number</label>
+                    <label class="form-control">@Model.PinCode</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Profile Image</label><br />
+                    <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                        <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Customer Bank Details</h5>
+            </div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Bank Holder Name</label>
+                    <label class="form-control">@Model.FirstName</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Bank Name</label>
+                    <label class="form-control">@Model.LastName</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Account Number</label>
+                    <label class="form-control">@Model.Email</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">IFSC Code</label>
+                    <label class="form-control">@Model.PhoneNo</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Branch Name</label>
+                    <label class="form-control">@Model.Address</label>
+                </div>
+                
             </div>
         </div>
     </div>
