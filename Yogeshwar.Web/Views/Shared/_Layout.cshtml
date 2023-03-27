@@ -803,21 +803,8 @@
     <script src="~/js/datatable/buttons.html5.js"></script>
     <script src="~/js/datatable/buttons.print.js"></script>
     <script src="~/js/datatable/buttons.colVis.js"></script>
-    <script src="~/js/app.js"></script>
     <script src="~/js/custom/appSetting.js"></script>
-    @*<script>
-        var mybutton = document.getElementById("back-to-top");
-        function scrollFunction() {
-            100 < document.body.scrollTop || 100 < document.documentElement.scrollTop ? (mybutton.style.display = "block") : (mybutton.style.display = "none");
-        }
-        function topFunction() {
-            (document.body.scrollTop = 0), (document.documentElement.scrollTop = 0);
-        }
-        mybutton &&
-            (window.onscroll = function () {
-                scrollFunction();
-            });
-    </script>*@
+    <script src="~/js/app.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false).ConfigureAwait(false)
 </body>

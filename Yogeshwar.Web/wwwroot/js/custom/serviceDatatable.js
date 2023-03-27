@@ -39,6 +39,9 @@
                     "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Service/Delete/" + row.id + "')\">\n" +
                     "                                        <i class=\"ri-delete-bin-line\" Title=\"Delete Record.\"></i>\n" +
                     "                                    </a>\n" +
+                    "                                   <div class=\"form-check form-switch form-switch-custom form-switch-success\">" +
+                    "                                       <input type =\"checkbox\" class=\"form-check-input\" Title=\"Active And Inactive Record.\"> " +
+                    "                                   </div>" +
                     "                                </div>";
             }
         },

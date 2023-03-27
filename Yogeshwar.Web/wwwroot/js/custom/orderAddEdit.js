@@ -19,11 +19,11 @@ $(document).ready(function () {
     deliveredDateDivHtml = $('#deliveredDateDiv_0').html();
     orderStatusDivHtml = $('#orderStatusDiv_0').html();
 
-    const accessoryImage = $('#accessories_0_accessoriesId_Image');
-    accessoriesImageHtml = accessoryImage[0].outerHTML;
-    accessoryImage.remove();
+    //const accessoryImage = $('#accessories_0_accessoriesId_Image');
+    //accessoriesImageHtml = accessoryImage[0].outerHTML;
+    //accessoryImage.remove();
 
-    accessoriesHtml = $('#accessoriesStock_0_0')[0].outerHTML;
+    //accessoriesHtml = $('#accessoriesStock_0_0')[0].outerHTML;
 
     removeAssociatedElement(0);
     hideAccessoriesStockLabel(0);
@@ -159,15 +159,15 @@ function reBindProduct(obj) {
                 // showAccessoriesStockLabel(id);
                 // showAccessoriesStock(id);
                 //
-                // displayProductImage(id, data.image);
+                displayProductImage(id, data.image);
                 displayQuantityDiv(id);
 
                 displayDeliveredDate(id);
                 displayOrderStatus(id);
 
-                data.accessories.forEach(function (value) {
-                    displayAccessories(id, value);
-                });
+                //data.accessories.forEach(function (value) {
+                //    displayAccessories(id, value);
+                //});
 
                 updatePrice(id, data.amount + " RS")
 
@@ -209,32 +209,33 @@ function displayQuantityDiv(id) {
 
 function displayDeliveredDate(id) {
     $('#deliveredDateDiv_' + id).append(deliveredDateDivHtml.replace('deliverDate_0', 'deliverDate_' + id));
+    flatInit();
 }
 
 function displayOrderStatus(id) {
     $('#orderStatusDiv_' + id).append(orderStatusDivHtml.replace('orderStatus_0', 'orderStatus_' + id));
 }
 
-function displayAccessories(id, obj) {
+//function displayAccessories(id, obj) {
 
-    accessoriesKeyValuePair.push({ id: id, accessoryId: obj.id, value: 'accessories_' + id + '_' + obj.id + '_Chk' });
+//    accessoriesKeyValuePair.push({ id: id, accessoryId: obj.id, value: 'accessories_' + id + '_' + obj.id + '_Chk' });
 
-    const newHtml = accessoriesHtml
-        .replace('accessoriesStock_0_0', 'accessoriesStock_' + id + '_' + obj.id)
-        .replace('accessoriesValueAppender_0_0', 'accessoriesValueAppender_' + id + '_' + obj.id)
-        .replaceAll('accessories_0_accessoriesId_Chk', 'accessories_' + id + '_' + obj.id + '_Chk')
-        .replace('accessories_0_accessoriesId_ImageAppender', 'accessories_' + id + '_' + obj.id + '_ImageAppender')
-        .replace('accessories_0_accessoriesId_Label', 'accessories_' + id + '_' + obj.id + '_Label')
-        .replace('Accessories_Name', obj.name);
+//    const newHtml = accessoriesHtml
+//        .replace('accessoriesStock_0_0', 'accessoriesStock_' + id + '_' + obj.id)
+//        .replace('accessoriesValueAppender_0_0', 'accessoriesValueAppender_' + id + '_' + obj.id)
+//        .replaceAll('accessories_0_accessoriesId_Chk', 'accessories_' + id + '_' + obj.id + '_Chk')
+//        .replace('accessories_0_accessoriesId_ImageAppender', 'accessories_' + id + '_' + obj.id + '_ImageAppender')
+//        .replace('accessories_0_accessoriesId_Label', 'accessories_' + id + '_' + obj.id + '_Label')
+//        .replace('Accessories_Name', obj.name);
 
-    $('#accessoriesStockAppender_' + id).append(newHtml);
+//    $('#accessoriesStockAppender_' + id).append(newHtml);
 
-    if (obj.image !== undefined) {
-        $('#accessories_' + id + '_' + obj.id + '_ImageAppender').append(accessoriesImageHtml
-            .replace('Image_source', obj.image)
-            .replace('accessories_0_accessoriesId_Image', 'accessories_' + id + '_' + obj.id + '_Image'))
-    }
-}
+//    if (obj.image !== undefined) {
+//        $('#accessories_' + id + '_' + obj.id + '_ImageAppender').append(accessoriesImageHtml
+//            .replace('Image_source', obj.image)
+//            .replace('accessories_0_accessoriesId_Image', 'accessories_' + id + '_' + obj.id + '_Image'))
+//    }
+//}
 
 $('#addButton').click(function () {
     const newHtml = mainHtml.replace('productDiv_0', 'productDiv_' + times)
@@ -244,9 +245,9 @@ $('#addButton').click(function () {
         .replace('deliveredDateDiv_0', 'deliveredDateDiv_' + times)
         .replace('orderStatusDiv_0', 'orderStatusDiv_' + times)
         .replace('quantityDiv_0', 'quantityDiv_' + times)
-        .replace('accessoriesStockLabel_0', 'accessoriesStockLabel_' + times)
-        .replace('accessoriesStockLI_0', 'accessoriesStockLI_' + times)
-        .replace('accessoriesStockAppender_0', 'accessoriesStockAppender_' + times)
+        //.replace('accessoriesStockLabel_0', 'accessoriesStockLabel_' + times)
+        //.replace('accessoriesStockLI_0', 'accessoriesStockLI_' + times)
+        //.replace('accessoriesStockAppender_0', 'accessoriesStockAppender_' + times)
         .replace('productPrice_0', 'productPrice_' + times)
         .replace('removeButton_0', 'removeButton_' + times);
 

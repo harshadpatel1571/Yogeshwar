@@ -753,6 +753,7 @@
             document.getElementsByClassName("twocolumn-iconview")[0] && (e = new SimpleBar(document.getElementsByClassName("twocolumn-iconview")[0])) && e.getContentElement(),
             clearTimeout(c));
     }
+    
     sessionStorage.getItem("defaultAttribute")
         ? (((a = {})["data-layout"] = sessionStorage.getItem("data-layout")),
           (a["data-sidebar-size"] = sessionStorage.getItem("data-sidebar-size")),
@@ -934,33 +935,7 @@
                 a["data-choices-text-disabled-true"] && (t.addItems = !1),
                 a["data-choices-text-disabled-true"] ? new Choices(e, t).disable() : new Choices(e, t);
         }),
-        (m = document.querySelectorAll("[data-provider]")),
-        Array.from(m).forEach(function (e) {
-            var t, a, o;
-            "flatpickr" == e.getAttribute("data-provider")
-                ? ((t = {}),
-                  (o = e.attributes)["data-date-format"] && (t.dateFormat = o["data-date-format"].value.toString()),
-                  o["data-enable-time"] && ((t.enableTime = !0), (t.dateFormat = o["data-date-format"].value.toString() + " H:i")),
-                  o["data-altFormat"] && ((t.altInput = !0), (t.altFormat = o["data-altFormat"].value.toString())),
-                  o["data-minDate"] && ((t.minDate = o["data-minDate"].value.toString()), (t.dateFormat = o["data-date-format"].value.toString())),
-                  o["data-maxDate"] && ((t.maxDate = o["data-maxDate"].value.toString()), (t.dateFormat = o["data-date-format"].value.toString())),
-                  o["data-deafult-date"] && ((t.defaultDate = o["data-deafult-date"].value.toString()), (t.dateFormat = o["data-date-format"].value.toString())),
-                  o["data-multiple-date"] && ((t.mode = "multiple"), (t.dateFormat = o["data-date-format"].value.toString())),
-                  o["data-range-date"] && ((t.mode = "range"), (t.dateFormat = o["data-date-format"].value.toString())),
-                  o["data-inline-date"] && ((t.inline = !0), (t.defaultDate = o["data-deafult-date"].value.toString()), (t.dateFormat = o["data-date-format"].value.toString())),
-                  o["data-disable-date"] && ((a = []).push(o["data-disable-date"].value), (t.disable = a.toString().split(","))),
-                  o["data-week-number"] && ((a = []).push(o["data-week-number"].value), (t.weekNumbers = !0)),
-                  flatpickr(e, t))
-                : "timepickr" == e.getAttribute("data-provider") &&
-                  ((a = {}),
-                  (o = e.attributes)["data-time-basic"] && ((a.enableTime = !0), (a.noCalendar = !0), (a.dateFormat = "H:i")),
-                  o["data-time-hrs"] && ((a.enableTime = !0), (a.noCalendar = !0), (a.dateFormat = "H:i"), (a.time_24hr = !0)),
-                  o["data-min-time"] && ((a.enableTime = !0), (a.noCalendar = !0), (a.dateFormat = "H:i"), (a.minTime = o["data-min-time"].value.toString())),
-                  o["data-max-time"] && ((a.enableTime = !0), (a.noCalendar = !0), (a.dateFormat = "H:i"), (a.minTime = o["data-max-time"].value.toString())),
-                  o["data-default-time"] && ((a.enableTime = !0), (a.noCalendar = !0), (a.dateFormat = "H:i"), (a.defaultDate = o["data-default-time"].value.toString())),
-                  o["data-time-inline"] && ((a.enableTime = !0), (a.noCalendar = !0), (a.defaultDate = o["data-time-inline"].value.toString()), (a.inline = !0)),
-                  flatpickr(e, a));
-        }),
+        flatInit(),
         Array.from(document.querySelectorAll('.dropdown-menu a[data-bs-toggle="tab"]')).forEach(function (e) {
             e.addEventListener("click", function (e) {
                 e.stopPropagation(), bootstrap.Tab.getInstance(e.target).show();
