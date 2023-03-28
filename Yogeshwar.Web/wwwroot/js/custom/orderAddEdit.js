@@ -263,6 +263,8 @@ $('#addButton').click(function () {
 
 function submit() {
 
+    debugger;
+
     const validations = [];
 
     const customer = $('#customer').val();
@@ -289,11 +291,11 @@ function submit() {
 
     const discount = $('#discount').val();
 
-    const status = $('#status').val();
+    //const status = $('#status').val();
 
-    if (status === '') {
-        validations.push({ id: "orderStatusValidation", message: "Status is required." });
-    }
+    //if (status === '') {
+    //    validations.push({ id: "orderStatusValidation", message: "Status is required." });
+    //}
 
     const orderDetails = [];
 

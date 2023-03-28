@@ -13,8 +13,8 @@ public class OrderDto : BaseDto
 
     public string? CustomerName { get; set; }
 
-    [Required(ErrorMessage = "Order status is required.")]
-    public OrderStatus? Status { get; set; }
+    //[Required(ErrorMessage = "Order status is required.")]
+    //public OrderStatus? Status { get; set; }
 
     [Required(ErrorMessage = "Order date is required.")]
     public string OrderDate { get; set; }
