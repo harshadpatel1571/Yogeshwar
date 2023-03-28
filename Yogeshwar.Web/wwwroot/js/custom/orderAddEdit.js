@@ -343,7 +343,13 @@ function submit() {
 
     if (validations.length > 0) {
         for (let i = 0; i < validations.length; i++) {
-            $('#' + validations[i].id).text(validations[i].message);
+            if ('#' + validations[i].id == '#orderDetailValidation') {
+                $("#orderDetailValidation").text(validations[i].message).addClass("alert alert-danger col-sm-6 text-center");
+                $("#divProdError").removeClass("d-none");
+            }
+            else {
+                $('#' + validations[i].id).text(validations[i].message);
+            }
         }
 
         return;
