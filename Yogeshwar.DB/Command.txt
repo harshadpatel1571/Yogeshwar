@@ -2,6 +2,8 @@
 
 -- Server
 
+Scaffold-DbContext "Data Source=65.108.57.75;Database=Yogeshwar;MultipleActiveResultSets=true;TrustServerCertificate=True;User Id=sa;Password=Harshad@@1234;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context "YogeshwarContext" -Force
+
 Scaffold-DbContext "Data Source=5.161.187.26;Database=Yogeshwar;MultipleActiveResultSets=true;TrustServerCertificate=True;User Id=sa;Password=Harshad@@1234;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context "YogeshwarContext" -Force
 
 == Harshad DB ==

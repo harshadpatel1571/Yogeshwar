@@ -125,7 +125,8 @@ public class CategoryService : ICategoryService
         var dbModel = new Category
         {
             Name = category.Name,
-            Image = image
+            Image = image,
+            IsActive = true
         };
 
         await _context.Categories.AddAsync(dbModel).ConfigureAwait(false);

@@ -1,4 +1,8 @@
-﻿namespace Yogeshwar.DB.Models;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace Yogeshwar.DB.Models;
 
 public partial class YogeshwarContext : DbContext
 {
@@ -69,7 +73,16 @@ public partial class YogeshwarContext : DbContext
 
             entity.ToTable("Customer");
 
+            entity.Property(e => e.AccountHolderName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Address).HasMaxLength(250);
+            entity.Property(e => e.BankName)
+                .HasMaxLength(25)
+                .IsUnicode(false);
+            entity.Property(e => e.BranchName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.City)
                 .HasMaxLength(25)
                 .IsUnicode(false);
@@ -80,6 +93,17 @@ public partial class YogeshwarContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.FirstName).HasMaxLength(25);
+            entity.Property(e => e.Gstnumber)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("GSTNumber");
+            entity.Property(e => e.Ifsccode)
+                .HasMaxLength(11)
+                .IsUnicode(false)
+                .HasColumnName("IFSCCode");
+            entity.Property(e => e.Image)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.LastName).HasMaxLength(25);
             entity.Property(e => e.ModifiedDate).HasPrecision(0);
             entity.Property(e => e.PhoneNo)

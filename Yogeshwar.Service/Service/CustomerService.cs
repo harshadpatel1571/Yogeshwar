@@ -1,21 +1,29 @@
-﻿namespace Yogeshwar.Service.Service;
+﻿using Microsoft.Extensions.Hosting;
+using Yogeshwar.DB.Models;
+
+namespace Yogeshwar.Service.Service;
 
 [RegisterService(ServiceLifetime.Scoped, typeof(ICustomerService))]
 internal class CustomerService : ICustomerService
 {
     private readonly YogeshwarContext _context;
+    private readonly IConfiguration _configuration;
     private readonly ICurrentUserService _currentUserService;
-
+    private readonly string _savePath;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CustomerService"/> class.
+    /// Initializes a new instance of the <see cref="CustomerService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="currentUserService">The current user service.</param>
-    public CustomerService(YogeshwarContext context, ICurrentUserService currentUserService)
+    /// <param name="configuration">The configuration.</param>
+    public CustomerService(YogeshwarContext context, ICurrentUserService currentUserService,
+        IConfiguration configuration, IWebHostEnvironment hostEnvironment)
     {
         _currentUserService = currentUserService;
         _context = context;
+        _configuration = configuration;
+        _savePath = $"{hostEnvironment.WebRootPath}/DataImages/Customer";
     }
 
     /// <summary>
@@ -38,9 +46,9 @@ internal class CustomerService : ICustomerService
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
-            result = result.Where(x => x.Email.Contains(filterDto.SearchValue) ||
-                                       x.FirstName.Contains(filterDto.SearchValue) ||
-                                       x.LastName.Contains(filterDto.SearchValue));
+            result = result.Where(x => x.FirstName.Contains(filterDto.SearchValue) ||
+                                       x.LastName.Contains(filterDto.SearchValue) ||
+                                       x.Gstnumber.Contains(filterDto.SearchValue));
         }
 
         var model = new DataTableResponseCarrier<CustomerDto>
@@ -57,7 +65,7 @@ internal class CustomerService : ICustomerService
 
         var data = await result
             .OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Select(x => DtoSelector(x))
+            .Select(x => DtoSelector(x, _configuration))
             .ToListAsync().ConfigureAwait(false);
 
         model.Data = data;
@@ -70,7 +78,7 @@ internal class CustomerService : ICustomerService
     /// </summary>
     /// <param name="customer">The customer.</param>
     /// <returns></returns>
-    private static CustomerDto DtoSelector(Customer customer) =>
+    private static CustomerDto DtoSelector(Customer customer, IConfiguration configuration) =>
         new()
         {
             Id = customer.Id,
@@ -80,7 +88,14 @@ internal class CustomerService : ICustomerService
             Address = customer.Address,
             City = customer.City,
             PhoneNo = customer.PhoneNo,
-            PinCode = customer.Pincode,
+            PinCode = customer.PinCode,
+            AccountHolderName = customer.AccountHolderName,
+            AccountNumber = customer.AccountNumber,
+            BankName = customer.BankName,
+            BranchName = customer.BranchName,
+            GstNumber = customer.Gstnumber,
+            IFSCCode = customer.Ifsccode,
+            Image = customer.Image == null ? null : $"{configuration["File:ReadPath"]}/Customer/{customer.Image}",
             IsActive = customer.IsActive,
             CreatedBy = customer.CreatedBy,
             CreatedDate = customer.CreatedDate,
@@ -96,7 +111,7 @@ internal class CustomerService : ICustomerService
     public async Task<CustomerDto?> GetSingleAsync(int id)
     {
         return await _context.Customers.AsNoTracking()
-            .Where(x => x.Id == id).Select(x => DtoSelector(x))
+            .Where(x => x.Id == id).Select(x => DtoSelector(x, _configuration))
             .FirstOrDefaultAsync().ConfigureAwait(false);
     }
 
@@ -122,16 +137,32 @@ internal class CustomerService : ICustomerService
     /// <returns></returns>
     private async ValueTask<int> CreateAsync(CustomerDto customer)
     {
+        var image = (string?)null;
+
+        if (customer.ImageFile is not null)
+        {
+            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                    Path.GetExtension(customer.ImageFile.FileName);
+            await customer.ImageFile.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
+        }
+
         var dbModel = new Customer
         {
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Email = customer.Email,
             PhoneNo = customer.PhoneNo,
+            AccountHolderName = customer.AccountHolderName,
+            AccountNumber = customer.AccountNumber,
+            BankName = customer.BankName,
+            BranchName = customer.BranchName,
+            Gstnumber = customer.GstNumber,
+            Ifsccode = customer.IFSCCode,
             Address = customer.Address,
+            Image = image,
             IsActive = true,
             City = customer.City,
-            Pincode = customer.PinCode,
+            PinCode = customer.PinCode,
             CreatedBy = _currentUserService.GetCurrentUserId(),
             CreatedDate = DateTime.Now
         };
@@ -156,13 +187,30 @@ internal class CustomerService : ICustomerService
             return 0;
         }
 
+        if (customer.ImageFile is not null)
+        {
+            var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                        Path.GetExtension(customer.ImageFile.FileName);
+            await customer.ImageFile.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
+
+            DeleteFileIfExist($"{_savePath}/{dbModel.Image}");
+
+            dbModel.Image = image;
+        }
+
         dbModel.FirstName = customer.FirstName;
         dbModel.LastName = customer.LastName;
         dbModel.Email = customer.Email;
         dbModel.PhoneNo = customer.PhoneNo;
         dbModel.Address = customer.Address;
+        dbModel.AccountHolderName = customer.AccountHolderName;
+        dbModel.AccountNumber = customer.AccountNumber;
+        dbModel.BankName = customer.BankName;
+        dbModel.BranchName = customer.BranchName;
+        dbModel.Gstnumber = customer.GstNumber;
+        dbModel.Ifsccode = customer.IFSCCode;
         dbModel.City = customer.City;
-        dbModel.Pincode = customer.PinCode;
+        dbModel.PinCode = customer.PinCode;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.IsActive = customer.IsActive;
         dbModel.ModifiedDate = DateTime.Now;
@@ -170,6 +218,18 @@ internal class CustomerService : ICustomerService
         _context.Customers.Update(dbModel);
 
         return await _context.SaveChangesAsync().ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Deletes the file if exist.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    private static void DeleteFileIfExist(string name)
+    {
+        if (File.Exists(name))
+        {
+            File.Delete(name);
+        }
     }
 
     /// <summary>

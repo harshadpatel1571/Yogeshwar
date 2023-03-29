@@ -74,15 +74,18 @@
 
                 <div class="col-md-6">
                     <label class="form-label">GST Number</label>
-                    <label class="form-control">@Model.PinCode</label>
+                    <label class="form-control">@Model.GstNumber</label>
                 </div>
 
-                <div class="col-md-6">
-                    <label class="form-label">Profile Image</label><br />
-                    <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                        <img src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                @if (Model.Image is not null)
+                {
+                    <div class="col-md-6">
+                        <label class="form-label">Profile Image</label><br />
+                        <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                            <img src="@Model.Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
 
@@ -93,29 +96,28 @@
             <div class="card-body row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Bank Holder Name</label>
-                    <label class="form-control">@Model.FirstName</label>
+                    <label class="form-control">@Model.AccountHolderName</label>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Bank Name</label>
-                    <label class="form-control">@Model.LastName</label>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Account Number</label>
-                    <label class="form-control">@Model.Email</label>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">IFSC Code</label>
-                    <label class="form-control">@Model.PhoneNo</label>
+                    <label class="form-control">@Model.BankName</label>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Branch Name</label>
-                    <label class="form-control">@Model.Address</label>
+                    <label class="form-control">@Model.BranchName</label>
                 </div>
-                
+
+                <div class="col-md-6">
+                    <label class="form-label">Account Number</label>
+                    <label class="form-control">@Model.AccountNumber</label>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">IFSC Code</label>
+                    <label class="form-control">@Model.IFSCCode</label>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 ﻿using OneOf;
 using OneOf.Types;
+using Yogeshwar.DB.Models;
 
 namespace Yogeshwar.Service.Service;
 
@@ -8,8 +9,9 @@ internal class OrderService : IOrderService
 {
     private readonly YogeshwarContext _context;
     private readonly ICurrentUserService _currentUserService;
-    private static string? _productImageReadPath;
-    private static string? _accessoriesImageReadPath;
+    private readonly string _productImageReadPath;
+    private readonly string _accessoriesImageReadPath;
+    private readonly string _customerImageReadPath;
 
     public OrderService(YogeshwarContext context, IConfiguration configuration,
         ICurrentUserService currentUserService)
@@ -18,6 +20,7 @@ internal class OrderService : IOrderService
         _currentUserService = currentUserService;
         _productImageReadPath = configuration["File:ReadPath"] + "/Product";
         _accessoriesImageReadPath = configuration["File:ReadPath"] + "/Accessories";
+        _customerImageReadPath = configuration["File:ReadPath"] + "/Customer";
     }
 
     public void Dispose()
@@ -252,7 +255,8 @@ internal class OrderService : IOrderService
                     Name = x.Customer.FirstName + " " + x.Customer.LastName,
                     Email = x.Customer.Email,
                     PhoneNo = x.Customer.PhoneNo,
-                    Address = x.Customer.Address + ", " + x.Customer.City + " - " + x.Customer.Pincode + "."
+                    Address = x.Customer.Address + ", " + x.Customer.City + " - " + x.Customer.PinCode + ".",
+                    Image = x.Customer.Image == null ? null : $"{_customerImageReadPath}/{x.Customer.Image}",
                 },
                 OrderDetails = x.OrderDetails.Select(c => new OrderDetailsViewDto
                 {

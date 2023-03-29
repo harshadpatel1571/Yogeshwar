@@ -30,4 +30,31 @@ public class CustomerDto : BaseDto
 
     [Required(ErrorMessage = "Pin code is required.")]
     public int PinCode { get; set; }
+
+    [StringLength(15, MinimumLength = 15, ErrorMessage = "GST number must be 15 character long.")]
+    public string? GstNumber { get; set; }
+
+    [Required(ErrorMessage = "Account number is required.")]
+    public long AccountNumber { get; set; }
+
+    [Required(ErrorMessage = "Account holder name is required.")]
+    [StringLength(50, MinimumLength = 5, ErrorMessage = "Account holder name must be 5 to 50 character long.")]
+    public string AccountHolderName { get; set; }
+
+    [Required(ErrorMessage = "Bank name is required.")]
+    [StringLength(25, MinimumLength = 3, ErrorMessage = "Bank name must be 3 to 25 character long.")]
+    public string BankName { get; set; }
+
+    [Required(ErrorMessage = "IFSCCode is required.")]
+    [StringLength(11, MinimumLength = 11, ErrorMessage = "IFSCCode must be 11 character long.")]
+    public string IFSCCode { get; set; }
+
+    [Required(ErrorMessage = "Branch name is required.")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Branch name must be 3 to 50 character long.")]
+    public string BranchName { get; set; }
+
+    public string? Image { get; set; }
+
+    [ValidateFile]
+    public IFormFile? ImageFile { get; set; }
 }

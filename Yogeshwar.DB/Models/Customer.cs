@@ -1,4 +1,7 @@
-﻿namespace Yogeshwar.DB.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Yogeshwar.DB.Models;
 
 public partial class Customer
 {
@@ -16,7 +19,21 @@ public partial class Customer
 
     public string City { get; set; } = null!;
 
-    public int Pincode { get; set; }
+    public string? Gstnumber { get; set; }
+
+    public string Ifsccode { get; set; } = null!;
+
+    public string AccountHolderName { get; set; } = null!;
+
+    public string BankName { get; set; } = null!;
+
+    public string BranchName { get; set; } = null!;
+
+    public long AccountNumber { get; set; }
+
+    public int PinCode { get; set; }
+
+    public string? Image { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
