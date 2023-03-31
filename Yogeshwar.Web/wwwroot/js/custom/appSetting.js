@@ -174,6 +174,41 @@ function restrictSearchFilter() {
         });
 }
 
+function getActiveInActiveHTML(flag, id, url) {
+    if (flag) {
+        return "                                   <div class='form-check form-switch form-switch-custom form-switch-success'>" +
+            `                                       <input type ='checkbox' class='form-check-input' Title='Active And Inactive Record.' onclick='changeRecordStatus(\"btnActive_${id}\", \"${url}\")' active='${flag}' checked id='btnActive_${id}'>` +
+            "                                   </div>"
+    }
+
+    return "                                   <div class='form-check form-switch form-switch-custom form-switch-success'>" +
+        `                                       <input type ='checkbox' class='form-check-input' Title='Active And Inactive Record.' onclick='changeRecordStatus(\"btnActive_${id}\", \"${url}\")' active='${flag}' id='btnActive_${id}'>` +
+        "                                   </div>"
+}
+
+function changeRecordStatus(id, url) {
+    const field = $(`#${id}`);
+    console.log(url)
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        success: function (flag) {
+            if (flag) {
+                field.attr('Checked', 'Checked');
+                showToaster("success", "Active", "Record has been Activated.");
+            }
+            else {
+                field.removeAttr('Checked');
+                showToaster("success", "InActive", "Record has been InActivated.");
+            }
+        },
+        error: function () {
+            showToaster("error", "Error !!", "Error while performing operation.");
+        }
+    });
+}
+
 function deleteRecord(pURL) {
     Swal.fire({
         title: "Are you sure?",

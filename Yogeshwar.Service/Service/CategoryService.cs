@@ -76,6 +76,7 @@ public class CategoryService : ICategoryService
         {
             Id = category.Id,
             Name = category.Name,
+            IsActive = category.IsActive,
             Image = category.Image != null ? $"{configuration["File:ReadPath"]}/Category/{category.Image}" : null
         };
 
@@ -231,5 +232,29 @@ public class CategoryService : ICategoryService
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return true;
+    }
+
+    /// <summary>
+    /// Actives and in active record asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id)
+    {
+        var dbModel = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id)
+            .ConfigureAwait(false);
+
+        if (dbModel is null)
+        {
+            return new NotFound();
+        }
+
+        dbModel.IsActive = !dbModel.IsActive;
+
+        _context.Categories.Update(dbModel);
+
+        await _context.SaveChangesAsync();
+
+        return dbModel.IsActive;
     }
 }

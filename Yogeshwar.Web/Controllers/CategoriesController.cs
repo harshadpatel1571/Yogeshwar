@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Web.Controllers;
+﻿using OneOf.Types;
+
+namespace Yogeshwar.Web.Controllers;
 
 public class CategoriesController : Controller
 {
@@ -145,5 +147,24 @@ public class CategoriesController : Controller
         }
 
         return NotFound();
+    }
+
+    /// <summary>
+    /// Actives and in active record.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<IActionResult> ActiveInActiveRecord(int id)
+    {
+        var result = await _categoryService.Value.ActiveInActiveRecordAsync(id)
+            .ConfigureAwait(false);
+
+        if (result.Value is NotFound)
+        {
+            return NotFound();
+        }
+
+        return Ok(result.Value);
     }
 }
