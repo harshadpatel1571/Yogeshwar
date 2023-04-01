@@ -45,7 +45,7 @@ internal class DropDownService : IDropDownService
     async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCategoriesAsync()
     {
         return await _context.Categories
-            .Where(x => !x.IsDeleted)
+            .Where(x => !x.IsDeleted && x.IsActive)
             .Select(x => new DropDownDto<int>
             {
                 Key = x.Id,

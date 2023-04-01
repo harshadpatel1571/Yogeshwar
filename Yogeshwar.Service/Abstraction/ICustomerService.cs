@@ -29,4 +29,11 @@ public interface ICustomerService : IDisposable
     /// <param name="id">The identifier.</param>
     /// <returns></returns>
     Task<int> DeleteAsync(int id);
+    
+    /// <summary>
+    /// Actives and in active record asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id);
 }

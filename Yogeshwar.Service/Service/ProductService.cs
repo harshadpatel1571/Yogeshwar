@@ -397,4 +397,28 @@ internal class ProductService : IProductService
 
         return true;
     }
+    
+    /// <summary>
+    /// Actives and in active record asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id)
+    {
+        var dbModel = await _context.Products.FirstOrDefaultAsync(x => x.Id == id)
+            .ConfigureAwait(false);
+
+        if (dbModel is null)
+        {
+            return new NotFound();
+        }
+
+        dbModel.IsActive = !dbModel.IsActive;
+
+        _context.Products.Update(dbModel);
+
+        await _context.SaveChangesAsync();
+
+        return dbModel.IsActive;
+    }
 }

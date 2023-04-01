@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using Yogeshwar.DB.Models;
-
-namespace Yogeshwar.Service.Service;
+﻿namespace Yogeshwar.Service.Service;
 
 [RegisterService(ServiceLifetime.Scoped, typeof(ICustomerService))]
 internal class CustomerService : ICustomerService
@@ -254,5 +251,29 @@ internal class CustomerService : ICustomerService
         _context.Customers.Update(dbModel);
 
         return await _context.SaveChangesAsync().ConfigureAwait(false);
+    }
+    
+    /// <summary>
+    /// Actives and in active record asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id)
+    {
+        var dbModel = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id)
+            .ConfigureAwait(false);
+
+        if (dbModel is null)
+        {
+            return new NotFound();
+        }
+
+        dbModel.IsActive = !dbModel.IsActive;
+
+        _context.Customers.Update(dbModel);
+
+        await _context.SaveChangesAsync();
+
+        return dbModel.IsActive;
     }
 }

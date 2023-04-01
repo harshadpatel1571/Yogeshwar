@@ -145,4 +145,23 @@ public sealed class CustomerController : Controller
 
         return View(model);
     }
+    
+    /// <summary>
+    /// Actives and in active record.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<IActionResult> ActiveInActiveRecord(int id)
+    {
+        var result = await _customerService.Value.ActiveInActiveRecordAsync(id)
+            .ConfigureAwait(false);
+
+        if (result.Value is NotFound)
+        {
+            return NotFound();
+        }
+
+        return Ok(result.Value);
+    }
 }

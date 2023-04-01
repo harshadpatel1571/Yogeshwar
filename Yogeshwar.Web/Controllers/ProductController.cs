@@ -234,4 +234,23 @@ public class ProductController : Controller
 
         return NotFound();
     }
+
+    /// <summary>
+    /// Actives and in active record.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<IActionResult> ActiveInActiveRecord(int id)
+    {
+        var result = await _productService.Value.ActiveInActiveRecordAsync(id)
+            .ConfigureAwait(false);
+
+        if (result.Value is NotFound)
+        {
+            return NotFound();
+        }
+
+        return Ok(result.Value);
+    }
 }

@@ -50,4 +50,11 @@ public interface IProductService : IDisposable
     /// <param name="id">The identifier.</param>
     /// <returns></returns>
     ValueTask<bool> DeleteVideoAsync(int id);
+    
+    /// <summary>
+    /// Actives and in active record asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id);
 }

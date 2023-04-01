@@ -1,6 +1,4 @@
-﻿using OneOf.Types;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 public class CategoriesController : Controller
 {

@@ -188,7 +188,6 @@ function getActiveInActiveHTML(flag, id, url) {
 
 function changeRecordStatus(id, url) {
     const field = $(`#${id}`);
-    console.log(url)
 
     $.ajax({
         type: "POST",

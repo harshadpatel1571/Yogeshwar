@@ -252,4 +252,28 @@ internal class AccessoriesService : IAccessoriesService
 
         return true;
     }
+    
+    /// <summary>
+    /// Actives and in active record asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id)
+    {
+        var dbModel = await _context.Accessories.FirstOrDefaultAsync(x => x.Id == id)
+            .ConfigureAwait(false);
+
+        if (dbModel is null)
+        {
+            return new NotFound();
+        }
+
+        dbModel.IsActive = !dbModel.IsActive;
+
+        _context.Accessories.Update(dbModel);
+
+        await _context.SaveChangesAsync();
+
+        return dbModel.IsActive;
+    }
 }

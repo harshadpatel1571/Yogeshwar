@@ -13,3 +13,4 @@ global using Yogeshwar.Web;
 global using System.Data;
 global using Dapper;
 global using Microsoft.Data.SqlClient;
+global using OneOf.Types;
