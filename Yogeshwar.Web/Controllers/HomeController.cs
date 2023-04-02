@@ -1,12 +1,17 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class HomeController. This class cannot be inherited.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 [Authorize]
 public sealed class HomeController : Controller
 {
     /// <summary>
     /// Index view.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Index()
     {
         return View();
@@ -16,7 +21,7 @@ public sealed class HomeController : Controller
     /// Handle the status code.
     /// </summary>
     /// <param name="statusCode">The status code.</param>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     [Route("/Error/{statusCode:int}")]
     public IActionResult StatusCodeHandle(int statusCode)
     {
@@ -32,7 +37,7 @@ public sealed class HomeController : Controller
     /// <summary>
     /// Handles error.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Error()
     {
         //var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();

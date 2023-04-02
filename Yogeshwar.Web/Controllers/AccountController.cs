@@ -1,11 +1,19 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class AccountController. This class cannot be inherited.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 public sealed class AccountController : Controller
 {
+    /// <summary>
+    /// The user service
+    /// </summary>
     private readonly Lazy<IUserService> _userService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AccountController"/> class.
+    /// Initializes a new instance of the <see cref="AccountController" /> class.
     /// </summary>
     /// <param name="userService">The user service.</param>
     public AccountController(Lazy<IUserService> userService)
@@ -31,7 +39,7 @@ public sealed class AccountController : Controller
     /// <summary>
     /// Signs in.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult SignIn()
     {
         return View();
@@ -42,19 +50,22 @@ public sealed class AccountController : Controller
     /// </summary>
     /// <param name="userLoginDto">The user login dto.</param>
     /// <param name="configuration">The configuration.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> SignIn(UserLoginDto userLoginDto, [FromServices] IConfiguration configuration)
+    public async Task<IActionResult> SignIn(UserLoginDto userLoginDto, [FromServices] IConfiguration configuration,
+        CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
         {
             ModelState.AddModelError();
             return View(userLoginDto);
         }
-        
+
         var userService = _userService.Value;
 
-        var user = await userService.GetUserByCredential(userLoginDto.UserName, userLoginDto.Password)
+        var user = await userService
+            .GetUserByCredentialAsync(userLoginDto.UserName, userLoginDto.Password, cancellationToken)
             .ConfigureAwait(false);
 
         if (user is null)
@@ -90,11 +101,12 @@ public sealed class AccountController : Controller
     /// <summary>
     /// Represents an event that is raised when the sign-out operation is complete.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     [Authorize]
     public new async ValueTask<IActionResult> SignOut()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme)
+            .ConfigureAwait(false);
 
         return RedirectToActionPermanent("SignIn");
     }

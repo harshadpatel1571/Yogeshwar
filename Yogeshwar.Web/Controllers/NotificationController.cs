@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class NotificationController.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 [Authorize]
 public class NotificationController : Controller
 {
+    /// <summary>
+    /// The notification
+    /// </summary>
     private readonly Lazy<INotificationService> _notification;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotificationController"/> class.
+    /// Initializes a new instance of the <see cref="NotificationController" /> class.
     /// </summary>
     /// <param name="notification">The notification.</param>
     public NotificationController(Lazy<INotificationService> notification)
@@ -32,7 +40,7 @@ public class NotificationController : Controller
     /// <summary>
     /// Index view.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Index()
     {
         return View();
@@ -41,7 +49,7 @@ public class NotificationController : Controller
     /// <summary>
     /// Binds the data.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
     public async Task<IActionResult> BindData()
     {

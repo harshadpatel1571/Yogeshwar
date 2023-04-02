@@ -18,3 +18,5 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Yogeshwar.Helper.Attribute;
 global using OneOf;
 global using OneOf.Types;
+global using System.Text.Json.Serialization;
+global using System.Security.Claims;

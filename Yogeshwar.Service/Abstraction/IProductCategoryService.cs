@@ -1,25 +1,33 @@
 ﻿namespace Yogeshwar.Service.Abstraction;
 
+/// <summary>
+/// Interface IProductCategoryService
+/// Extends the <see cref="IDisposable" />
+/// </summary>
+/// <seealso cref="IDisposable" />
 public interface IProductCategoryService : IDisposable
 {
     /// <summary>
     /// Gets the single asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    Task<ProductCategoryDto?> GetSingleAsync(int id);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>Task&lt;System.Nullable&lt;ProductCategoryDto&gt;&gt;.</returns>
+    Task<ProductCategoryDto?> GetSingleAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates the asynchronous.
     /// </summary>
     /// <param name="category">The category.</param>
-    /// <returns></returns>
-    ValueTask<int> CreateAsync(ProductCategoryDto category);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>ValueTask&lt;System.Int32&gt;.</returns>
+    ValueTask<int> CreateAsync(ProductCategoryDto category, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    ValueTask<ProductCategory?> DeleteAsync(int id);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>ValueTask&lt;System.Nullable&lt;ProductCategory&gt;&gt;.</returns>
+    ValueTask<ProductCategory?> DeleteAsync(int id, CancellationToken cancellationToken);
 }

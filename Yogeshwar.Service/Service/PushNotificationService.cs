@@ -1,12 +1,18 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+/// <summary>
+/// Class PushNotificationService.
+/// </summary>
 [RegisterService(ServiceLifetime.Singleton, enableLazyLoading: false)]
 internal class PushNotificationService
 {
+    /// <summary>
+    /// The configuration
+    /// </summary>
     private readonly IConfiguration _configuration;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PushNotificationService"/> class.
+    /// Initializes a new instance of the <see cref="PushNotificationService" /> class.
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     public PushNotificationService(IConfiguration configuration)
@@ -18,7 +24,7 @@ internal class PushNotificationService
     /// Sends the push asynchronous.
     /// </summary>
     /// <param name="dto">The dto.</param>
-    /// <returns></returns>
+    /// <returns>A Task&lt;System.String&gt; representing the asynchronous operation.</returns>
     public async Task<string> SendPushNotificationAsync(PushNotificationDto dto)
     {
         var client = new OneSignalClient(_configuration["Notification:Token"]);

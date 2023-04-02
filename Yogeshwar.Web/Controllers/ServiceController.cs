@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class ServiceController. This class cannot be inherited.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 [Authorize]
 public sealed class ServiceController : Controller
 {
+    /// <summary>
+    /// The service service
+    /// </summary>
     private readonly Lazy<IServiceService> _serviceService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceController"/> class.
+    /// Initializes a new instance of the <see cref="ServiceController" /> class.
     /// </summary>
     /// <param name="serviceService">The service service.</param>
     public ServiceController(Lazy<IServiceService> serviceService)
@@ -32,7 +40,7 @@ public sealed class ServiceController : Controller
     /// <summary>
     /// Index view.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Index()
     {
         return View();
@@ -41,13 +49,14 @@ public sealed class ServiceController : Controller
     /// <summary>
     /// Binds the data.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> BindData()
+    public async Task<IActionResult> BindData(CancellationToken cancellationToken)
     {
         var filters = DataExtractor.Extract(Request);
 
-        var data = await _serviceService.Value.GetByFilterAsync(filters).ConfigureAwait(false);
+        var data = await _serviceService.Value.GetByFilterAsync(filters, cancellationToken).ConfigureAwait(false);
 
         var responseModel = new DataTableResponseDto<ServiceDto>
         {
@@ -65,13 +74,18 @@ public sealed class ServiceController : Controller
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="dropDownService">The drop down service.</param>
-    /// <returns></returns>
-    public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService,
+        CancellationToken cancellationToken)
     {
         using var _ = dropDownService;
 
-        ViewBag.Orders = new SelectList(await dropDownService.BindDropDownForOrdersAsync().ConfigureAwait(false), "Key",
-            "Text");
+        ViewBag.Orders = new SelectList(await dropDownService
+                .BindDropDownForOrdersAsync(cancellationToken)
+                .ConfigureAwait(false),
+            "Key", "Text");
+
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForService(), "Key", "Text");
 
         if (id < 1)
@@ -80,7 +94,7 @@ public sealed class ServiceController : Controller
             return await Task.FromResult(view).ConfigureAwait(false);
         }
 
-        var model = await _serviceService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        var model = await _serviceService.Value.GetSingleAsync(id, cancellationToken).ConfigureAwait(false);
 
         if (model is null)
         {
@@ -95,9 +109,11 @@ public sealed class ServiceController : Controller
     /// </summary>
     /// <param name="service">The service.</param>
     /// <param name="dropDownService">The drop down service.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> AddEdit(ServiceDto service, [FromServices] IDropDownService dropDownService)
+    public async Task<IActionResult> AddEdit(ServiceDto service, [FromServices] IDropDownService dropDownService,
+        CancellationToken cancellationToken)
     {
         ModelState.Remove("Id");
 
@@ -105,7 +121,8 @@ public sealed class ServiceController : Controller
 
         if (!ModelState.IsValid)
         {
-            ViewBag.Orders = new SelectList(await dropDownService.BindDropDownForOrdersAsync().ConfigureAwait(false),
+            ViewBag.Orders = new SelectList(
+                await dropDownService.BindDropDownForOrdersAsync(cancellationToken).ConfigureAwait(false),
                 "Key", "Text");
             ViewBag.Status = new SelectList(dropDownService.BindDropDownForService(), "Key", "Text");
 
@@ -113,7 +130,7 @@ public sealed class ServiceController : Controller
             return View();
         }
 
-        await _serviceService.Value.CreateOrUpdateAsync(service).ConfigureAwait(false);
+        await _serviceService.Value.CreateOrUpdateAsync(service, cancellationToken).ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index));
     }
@@ -122,13 +139,14 @@ public sealed class ServiceController : Controller
     /// Deletes the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async ValueTask<IActionResult> Delete(int id)
+    public async ValueTask<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         try
         {
-            var count = await _serviceService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var count = await _serviceService.Value.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
 
             if (count == 0)
             {
@@ -147,10 +165,11 @@ public sealed class ServiceController : Controller
     /// Details the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<IActionResult> Detail(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async Task<IActionResult> Detail(int id, CancellationToken cancellationToken)
     {
-        var model = await _serviceService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        var model = await _serviceService.Value.GetSingleAsync(id, cancellationToken).ConfigureAwait(false);
 
         if (model is null)
         {

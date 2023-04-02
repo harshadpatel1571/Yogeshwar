@@ -1,15 +1,29 @@
 ﻿namespace Yogeshwar.Web;
 
+/// <summary>
+/// Class NotificationBackgroundService.
+/// Implements the <see cref="BackgroundService" />
+/// </summary>
+/// <seealso cref="BackgroundService" />
 internal class NotificationBackgroundService : BackgroundService
 {
+    /// <summary>
+    /// The query
+    /// </summary>
     private const string Query =
         "SELECT (AC.Name + ' is pending from [Order #' + CAST(NF.OrderId as varchar) +' - ' + CS.FirstName + ' ' + CS.LastName + '] since ' + FORMAT(OD.OrderDate, 'dd-MMMM-yyyy')) AS [Message] FROM [Notification] NF JOIN ProductAccessories PA ON PA.Id = NF.ProductAccessoriesId JOIN Accessories AC ON AC.Id = PA.AccessoriesId JOIN [Order] OD ON OD.Id = NF.OrderId JOIN Customer CS ON CS.Id = OD.CustomerId WHERE NF.IsCompleted = 0";
 
+    /// <summary>
+    /// The configuration
+    /// </summary>
     private readonly IConfiguration _configuration;
+    /// <summary>
+    /// The push notification service
+    /// </summary>
     private readonly PushNotificationService _pushNotificationService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotificationBackgroundService"/> class.
+    /// Initializes a new instance of the <see cref="NotificationBackgroundService" /> class.
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <param name="pushNotificationService">The push notification service.</param>
@@ -24,9 +38,8 @@ internal class NotificationBackgroundService : BackgroundService
     /// the lifetime of the long running operation(s) being performed.
     /// </summary>
     /// <param name="stoppingToken">Triggered when <see cref="M:Microsoft.Extensions.Hosting.IHostedService.StopAsync(System.Threading.CancellationToken)" /> is called.</param>
-    /// <remarks>
-    /// See <see href="https://docs.microsoft.com/dotnet/core/extensions/workers">Worker Services in .NET</see> for implementation guidelines.
-    /// </remarks>
+    /// <returns>A Task representing the asynchronous operation.</returns>
+    /// <remarks>See <see href="https://docs.microsoft.com/dotnet/core/extensions/workers">Worker Services in .NET</see> for implementation guidelines.</remarks>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var sqlConnection = new SqlConnection(_configuration["ConnectionStrings:Default"]);

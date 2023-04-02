@@ -1,11 +1,19 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class CategoriesController.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 public class CategoriesController : Controller
 {
+    /// <summary>
+    /// The category service
+    /// </summary>
     private readonly Lazy<ICategoryService> _categoryService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CategoriesController"/> class.
+    /// Initializes a new instance of the <see cref="CategoriesController" /> class.
     /// </summary>
     /// <param name="categoryService">The category service.</param>
     public CategoriesController(Lazy<ICategoryService> categoryService)
@@ -31,7 +39,7 @@ public class CategoriesController : Controller
     /// <summary>
     /// Index view.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Index()
     {
         return View();
@@ -40,13 +48,15 @@ public class CategoriesController : Controller
     /// <summary>
     /// Binds the data.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> BindData()
+    public async Task<IActionResult> BindData(CancellationToken cancellationToken)
     {
         var filters = DataExtractor.Extract(Request);
 
-        var data = await _categoryService.Value.GetByFilterAsync(filters).ConfigureAwait(false);
+        var data = await _categoryService.Value.GetByFilterAsync(filters, cancellationToken)
+            .ConfigureAwait(false);
 
         var responseModel = new DataTableResponseDto<CategoryDto>
         {
@@ -63,8 +73,9 @@ public class CategoriesController : Controller
     /// Adds edit.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async ValueTask<IActionResult> AddEdit(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async ValueTask<IActionResult> AddEdit(int id, CancellationToken cancellationToken)
     {
         if (id < 1)
         {
@@ -72,7 +83,7 @@ public class CategoriesController : Controller
             return await Task.FromResult(view).ConfigureAwait(false);
         }
 
-        var model = await _categoryService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        var model = await _categoryService.Value.GetSingleAsync(id, cancellationToken).ConfigureAwait(false);
 
         if (model is null)
         {
@@ -86,9 +97,10 @@ public class CategoriesController : Controller
     /// Adds edit.
     /// </summary>
     /// <param name="category">The category.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> AddEdit(CategoryDto category)
+    public async Task<IActionResult> AddEdit(CategoryDto category, CancellationToken cancellationToken)
     {
         ModelState.Remove("Id");
 
@@ -98,7 +110,7 @@ public class CategoriesController : Controller
             return View();
         }
 
-        await _categoryService.Value.CreateOrUpdateAsync(category).ConfigureAwait(false);
+        await _categoryService.Value.CreateOrUpdateAsync(category, cancellationToken).ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index));
     }
@@ -107,13 +119,15 @@ public class CategoriesController : Controller
     /// Deletes the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         try
         {
-            var dbModel = await _categoryService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var dbModel = await _categoryService.Value
+                .DeleteAsync(id, cancellationToken).ConfigureAwait(false);
 
             if (dbModel is null)
             {
@@ -132,11 +146,13 @@ public class CategoriesController : Controller
     /// Deletes the image.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> DeleteImage(int id)
+    public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
-        var isDeleted = await _categoryService.Value.DeleteImageAsync(id)
+        var isDeleted = await _categoryService.Value
+            .DeleteImageAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (isDeleted)
@@ -151,11 +167,13 @@ public class CategoriesController : Controller
     /// Actives and in active record.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> ActiveInActiveRecord(int id)
+    public async Task<IActionResult> ActiveInActiveRecord(int id, CancellationToken cancellationToken)
     {
-        var result = await _categoryService.Value.ActiveInActiveRecordAsync(id)
+        var result = await _categoryService.Value
+            .ActiveInActiveRecordAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (result.Value is NotFound)

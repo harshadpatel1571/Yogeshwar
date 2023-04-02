@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class CustomerController. This class cannot be inherited.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 [Authorize]
 public sealed class CustomerController : Controller
 {
+    /// <summary>
+    /// The customer service
+    /// </summary>
     private readonly Lazy<ICustomerService> _customerService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CustomerController"/> class.
+    /// Initializes a new instance of the <see cref="CustomerController" /> class.
     /// </summary>
     /// <param name="customerService">The customer service.</param>
     public CustomerController(Lazy<ICustomerService> customerService)
@@ -32,7 +40,7 @@ public sealed class CustomerController : Controller
     /// <summary>
     /// Index view.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Index()
     {
         return View();
@@ -41,13 +49,15 @@ public sealed class CustomerController : Controller
     /// <summary>
     /// Binds the data.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> BindData()
+    public async Task<IActionResult> BindData(CancellationToken cancellationToken)
     {
         var filters = DataExtractor.Extract(Request);
 
-        var data = await _customerService.Value.GetByFilterAsync(filters).ConfigureAwait(false);
+        var data = await _customerService.Value.GetByFilterAsync(filters, cancellationToken)
+            .ConfigureAwait(false);
 
         var responseModel = new DataTableResponseDto<CustomerDto>
         {
@@ -64,8 +74,9 @@ public sealed class CustomerController : Controller
     /// Add or edit.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async ValueTask<IActionResult> AddEdit(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async ValueTask<IActionResult> AddEdit(int id, CancellationToken cancellationToken)
     {
         if (id < 1)
         {
@@ -73,7 +84,9 @@ public sealed class CustomerController : Controller
             return await Task.FromResult(view).ConfigureAwait(false);
         }
 
-        var model = await _customerService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        var model = await _customerService.Value
+            .GetSingleAsync(id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (model is null)
         {
@@ -87,9 +100,10 @@ public sealed class CustomerController : Controller
     /// Add or edit.
     /// </summary>
     /// <param name="customer">The customer.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> AddEdit(CustomerDto customer)
+    public async Task<IActionResult> AddEdit(CustomerDto customer, CancellationToken cancellationToken)
     {
         ModelState.Remove("Id");
 
@@ -99,7 +113,9 @@ public sealed class CustomerController : Controller
             return View();
         }
 
-        await _customerService.Value.CreateOrUpdateAsync(customer).ConfigureAwait(false);
+        await _customerService.Value
+            .CreateOrUpdateAsync(customer, cancellationToken)
+            .ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index));
     }
@@ -108,13 +124,16 @@ public sealed class CustomerController : Controller
     /// Deletes the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async ValueTask<IActionResult> Delete(int id)
+    public async ValueTask<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         try
         {
-            var count = await _customerService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var count = await _customerService.Value
+                .DeleteAsync(id, cancellationToken)
+                .ConfigureAwait(false);
 
             if (count == 0)
             {
@@ -133,10 +152,13 @@ public sealed class CustomerController : Controller
     /// Details the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<IActionResult> Detail(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async Task<IActionResult> Detail(int id, CancellationToken cancellationToken)
     {
-        var model = await _customerService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        var model = await _customerService.Value
+            .GetSingleAsync(id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (model is null)
         {
@@ -145,16 +167,18 @@ public sealed class CustomerController : Controller
 
         return View(model);
     }
-    
+
     /// <summary>
     /// Actives and in active record.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> ActiveInActiveRecord(int id)
+    public async Task<IActionResult> ActiveInActiveRecord(int id, CancellationToken cancellationToken)
     {
-        var result = await _customerService.Value.ActiveInActiveRecordAsync(id)
+        var result = await _customerService.Value
+            .ActiveInActiveRecordAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (result.Value is NotFound)

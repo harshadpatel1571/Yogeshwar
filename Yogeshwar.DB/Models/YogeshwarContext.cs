@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
-namespace Yogeshwar.DB.Models;
+﻿namespace Yogeshwar.DB.Models;
 
 public partial class YogeshwarContext : DbContext
 {
@@ -40,7 +36,6 @@ public partial class YogeshwarContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=65.108.57.75;Database=Yogeshwar;MultipleActiveResultSets=true;TrustServerCertificate=True;User Id=sa;Password=Harshad@@1234;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -61,9 +56,11 @@ public partial class YogeshwarContext : DbContext
         {
             entity.ToTable("Category");
 
+            entity.Property(e => e.CreatedDate).HasPrecision(0);
             entity.Property(e => e.Image)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate).HasPrecision(0);
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
@@ -170,6 +167,8 @@ public partial class YogeshwarContext : DbContext
             entity.ToTable("OrderDetail");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.CreatedDate).HasPrecision(0);
+            entity.Property(e => e.ModifiedDate).HasPrecision(0);
             entity.Property(e => e.ReceiveDate).HasPrecision(0);
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)

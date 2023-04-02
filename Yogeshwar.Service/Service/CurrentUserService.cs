@@ -1,14 +1,20 @@
-﻿using System.Security.Claims;
+﻿namespace Yogeshwar.Service.Service;
 
-namespace Yogeshwar.Service.Service;
-
+/// <summary>
+/// Class CurrentUserService.
+/// Implements the <see cref="ICurrentUserService" />
+/// </summary>
+/// <seealso cref="ICurrentUserService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(ICurrentUserService))]
 public class CurrentUserService : ICurrentUserService
 {
+    /// <summary>
+    /// The claims principal
+    /// </summary>
     private readonly ClaimsPrincipal _claimsPrincipal;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CurrentUserService"/> class.
+    /// Initializes a new instance of the <see cref="CurrentUserService" /> class.
     /// </summary>
     /// <param name="httpContext">The HTTP context.</param>
     public CurrentUserService(IHttpContextAccessor httpContext)
@@ -19,30 +25,30 @@ public class CurrentUserService : ICurrentUserService
     /// <summary>
     /// Gets the current user identifier.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>System.Int32.</returns>
     public int GetCurrentUserId() => int.Parse(_claimsPrincipal.FindFirst("Id")!.Value);
 
     /// <summary>
     /// Gets the name of the current user.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>System.String.</returns>
     public string GetCurrentUserName() => _claimsPrincipal.FindFirst(ClaimTypes.Name)!.Value;
 
     /// <summary>
     /// Gets the username of the current user.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>System.String.</returns>
     public string GetCurrentUserUserName() => _claimsPrincipal.FindFirst("UserName")!.Value;
 
     /// <summary>
     /// Gets the type of the current user.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>System.String.</returns>
     public string GetCurrentUserType() => _claimsPrincipal.FindFirst("UserType")!.Value;
 
     /// <summary>
     /// Gets the current user email.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>System.String.</returns>
     public string GetCurrentUserEmail() => _claimsPrincipal.FindFirst(ClaimTypes.Email)!.Value;
 }

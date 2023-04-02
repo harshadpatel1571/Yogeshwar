@@ -90,7 +90,7 @@ function BindGrid(pURL, pColumns, pdfColumn, excelColumn, printColumn) {
         lengthChange: true,
         searching: true,
         ordering: true,
-        lengthMenu: [[5, 10, 25, 50, 75, 100, -1], [5, 10, 25, 50, 75, 100, 'All']],
+        lengthMenu: [[10, 25, 50, 75, 100, 250], [10, 25, 50, 75, 100, 250]],
         info: true,
         autoWidth: true,
         responsive: true,

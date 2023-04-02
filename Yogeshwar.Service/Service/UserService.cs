@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+/// <summary>
+/// Class UserService.
+/// Implements the <see cref="IUserService" />
+/// </summary>
+/// <seealso cref="IUserService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IUserService))]
 internal class UserService : IUserService
 {
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserService"/> class.
+    /// Initializes a new instance of the <see cref="UserService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
     public UserService(YogeshwarContext context)
@@ -28,8 +36,9 @@ internal class UserService : IUserService
     /// </summary>
     /// <param name="username">The username.</param>
     /// <param name="password">The password.</param>
-    /// <returns></returns>
-    public async Task<UserDetailDto?> GetUserByCredential(string username, string password)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;UserDetailDto&gt; representing the asynchronous operation.</returns>
+    public async Task<UserDetailDto?> GetUserByCredentialAsync(string username, string password, CancellationToken cancellationToken)
     {
         var encryptedPassword = ServiceExtension.Encrypt(password);
 
@@ -44,6 +53,6 @@ internal class UserService : IUserService
                 Email = x.Email,
                 PhoneNo = x.PhoneNo,
                 UserType = x.UserType
-            }).FirstOrDefaultAsync().ConfigureAwait(false);
+            }).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 }

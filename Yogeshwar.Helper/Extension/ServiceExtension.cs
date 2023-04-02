@@ -1,7 +1,15 @@
 ﻿namespace Yogeshwar.Helper.Extension;
 
+/// <summary>
+/// Class ExtensionHelper.
+/// </summary>
 public static class ExtensionHelper
 {
+    /// <summary>
+    /// Adds the custom services.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="assemblyType">Type of the assembly.</param>
     public static void AddCustomServices(this IServiceCollection services, Type assemblyType)
     {
         var types = assemblyType.Assembly.GetTypes()
@@ -49,6 +57,12 @@ public static class ExtensionHelper
         }
     }
 
+    /// <summary>
+    /// Enables the lazy loading.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="services">The services.</param>
+    /// <param name="serviceLifetime">The service lifetime.</param>
     private static void EnableLazyLoading<T>(IServiceCollection services, ServiceLifetime serviceLifetime)
     {
         _ = serviceLifetime switch
@@ -60,6 +74,12 @@ public static class ExtensionHelper
         };
     }
 
+    /// <summary>
+    /// Lazies the loader.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <returns>Lazy&lt;T&gt;.</returns>
     private static Lazy<T> LazyLoader<T>(IServiceProvider serviceProvider)
     {
         return new Lazy<T>(() => serviceProvider.GetService<T>()!);

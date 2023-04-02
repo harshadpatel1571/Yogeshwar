@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+/// <summary>
+/// Class NotificationService.
+/// Implements the <see cref="INotificationService" />
+/// </summary>
+/// <seealso cref="INotificationService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(INotificationService))]
 internal class NotificationService : INotificationService
 {
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotificationService"/> class.
+    /// Initializes a new instance of the <see cref="NotificationService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
     public NotificationService(YogeshwarContext context)
@@ -27,7 +35,7 @@ internal class NotificationService : INotificationService
     /// Gets by filter asynchronous.
     /// </summary>
     /// <param name="filterDto">The filter dto.</param>
-    /// <returns></returns>
+    /// <returns>Task&lt;DataTableResponseCarrier&lt;NotificationDto&gt;&gt;.</returns>
     async Task<DataTableResponseCarrier<NotificationDto>> INotificationService.GetByFilterAsync(
         DataTableFilterDto filterDto)
     {
@@ -70,7 +78,7 @@ internal class NotificationService : INotificationService
     /// Select the Dto.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <returns></returns>
+    /// <returns>NotificationDto.</returns>
     private static NotificationDto DtoSelector(Notification service) => new()
     {
         Id = service.Id,

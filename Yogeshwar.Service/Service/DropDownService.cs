@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+/// <summary>
+/// Class DropDownService.
+/// Implements the <see cref="IDropDownService" />
+/// </summary>
+/// <seealso cref="IDropDownService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IDropDownService))]
 internal class DropDownService : IDropDownService
 {
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DropDownService"/> class.
+    /// Initializes a new instance of the <see cref="DropDownService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
     public DropDownService(YogeshwarContext context)
@@ -26,8 +34,10 @@ internal class DropDownService : IDropDownService
     /// <summary>
     /// Binds the drop down for accessories asynchronous.
     /// </summary>
-    /// <returns></returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForAccessoriesAsync()
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
+    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForAccessoriesAsync(
+        CancellationToken cancellationToken)
     {
         return await _context.Accessories
             .Where(x => x.IsActive && !x.IsDeleted)
@@ -35,14 +45,16 @@ internal class DropDownService : IDropDownService
             {
                 Key = x.Id,
                 Text = x.Name
-            }).ToListAsync().ConfigureAwait(false);
+            }).ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Binds the drop down for categories asynchronous.
     /// </summary>
-    /// <returns></returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCategoriesAsync()
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
+    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCategoriesAsync(
+        CancellationToken cancellationToken)
     {
         return await _context.Categories
             .Where(x => !x.IsDeleted && x.IsActive)
@@ -50,14 +62,15 @@ internal class DropDownService : IDropDownService
             {
                 Key = x.Id,
                 Text = x.Name
-            }).ToListAsync().ConfigureAwait(false);
+            }).ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Binds the drop down for orders asynchronous.
     /// </summary>
-    /// <returns></returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForOrdersAsync()
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
+    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForOrdersAsync(CancellationToken cancellationToken)
     {
         return await _context.Orders
             .Where(x => !x.IsDeleted)
@@ -65,29 +78,34 @@ internal class DropDownService : IDropDownService
             {
                 Key = x.Id,
                 Text = "Order #" + x.Id + " - " + x.Customer.FirstName + " " + x.Customer.LastName
-            }).ToListAsync().ConfigureAwait(false);
+            }).ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Binds the drop down for customers asynchronous.
     /// </summary>
-    /// <returns></returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCustomersAsync()
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="ids">The ids.</param>
+    /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
+    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCustomersAsync(
+        CancellationToken cancellationToken, params int[] ids)
     {
         return await _context.Customers
-            .Where(x => x.IsActive && !x.IsDeleted)
+            .Where(x => x.IsActive && !x.IsDeleted && ids.Contains(x.Id))
             .Select(x => new DropDownDto<int>
             {
                 Key = x.Id,
                 Text = x.FirstName + " " + x.LastName
-            }).ToListAsync().ConfigureAwait(false);
+            }).ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Binds the drop down for products asynchronous.
     /// </summary>
-    /// <returns></returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForProductsAsync()
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
+    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForProductsAsync(
+        CancellationToken cancellationToken)
     {
         return await _context.Products
             .Where(x => x.IsActive && !x.IsDeleted)
@@ -95,13 +113,13 @@ internal class DropDownService : IDropDownService
             {
                 Key = x.Id,
                 Text = x.Name + " - " + x.ModelNo
-            }).ToListAsync().ConfigureAwait(false);
+            }).ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Binds the drop down for status.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IList&lt;DropDownDto&lt;System.Byte&gt;&gt;.</returns>
     IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderStatus()
     {
         return OrderStatus;
@@ -121,7 +139,7 @@ internal class DropDownService : IDropDownService
     /// <summary>
     /// Binds the drop down for order status.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IList&lt;DropDownDto&lt;System.Byte&gt;&gt;.</returns>
     IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderDetailStatus()
     {
         return OrderDetailStatus;
@@ -141,7 +159,7 @@ internal class DropDownService : IDropDownService
     /// <summary>
     /// Binds the drop down for service.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IList&lt;DropDownDto&lt;System.Byte&gt;&gt;.</returns>
     IList<DropDownDto<byte>> IDropDownService.BindDropDownForService()
     {
         return Services;

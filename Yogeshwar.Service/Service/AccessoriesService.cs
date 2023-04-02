@@ -1,15 +1,32 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+/// <summary>
+/// Class AccessoriesService.
+/// Implements the <see cref="IAccessoriesService" />
+/// </summary>
+/// <seealso cref="IAccessoriesService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IAccessoriesService))]
 internal class AccessoriesService : IAccessoriesService
 {
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly YogeshwarContext _context;
+    /// <summary>
+    /// The configuration
+    /// </summary>
     private readonly IConfiguration _configuration;
+    /// <summary>
+    /// The current user service
+    /// </summary>
     private readonly ICurrentUserService _currentUserService;
+    /// <summary>
+    /// The save path
+    /// </summary>
     private readonly string _savePath;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AccessoriesService"/> class.
+    /// Initializes a new instance of the <see cref="AccessoriesService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="configuration">The configuration.</param>
@@ -37,9 +54,10 @@ internal class AccessoriesService : IAccessoriesService
     /// Gets by filter asynchronous.
     /// </summary>
     /// <param name="filterDto">The filter dto.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>Task&lt;DataTableResponseCarrier&lt;AccessoriesDto&gt;&gt;.</returns>
     async Task<DataTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(
-        DataTableFilterDto filterDto)
+        DataTableFilterDto filterDto, CancellationToken cancellationToken)
     {
         var result = _context.Accessories.Where(x => !x.IsDeleted).AsNoTracking();
 
@@ -63,7 +81,7 @@ internal class AccessoriesService : IAccessoriesService
         var data = await result
             .OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
             .Select(x => DtoSelector(x, _configuration))
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         model.Data = data;
 
@@ -75,7 +93,7 @@ internal class AccessoriesService : IAccessoriesService
     /// </summary>
     /// <param name="accessory">The accessory.</param>
     /// <param name="configuration">The configuration.</param>
-    /// <returns></returns>
+    /// <returns>AccessoriesDto.</returns>
     private static AccessoriesDto DtoSelector(Accessory accessory, IConfiguration configuration) =>
         new()
         {
@@ -86,45 +104,46 @@ internal class AccessoriesService : IAccessoriesService
             Quantity = accessory.Quantity,
             IsActive = accessory.IsActive,
             CreatedDate = accessory.CreatedDate,
-            CreatedBy = accessory.CreatedBy,
             ModifiedDate = accessory.ModifiedDate,
-            ModifiedBy = accessory.ModifiedBy
         };
 
     /// <summary>
     /// Gets the single asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<AccessoriesDto?> GetSingleAsync(int id)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
+    public async Task<AccessoriesDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
     {
         return await _context.Accessories.AsNoTracking()
             .Where(x => x.Id == id)
             .Select(x => DtoSelector(x, _configuration))
-            .FirstOrDefaultAsync().ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Creates or update asynchronous.
     /// </summary>
     /// <param name="customer">The customer.</param>
-    /// <returns></returns>
-    public async Task<int> CreateOrUpdateAsync(AccessoriesDto customer)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    public async Task<int> CreateOrUpdateAsync(AccessoriesDto customer, CancellationToken cancellationToken)
     {
         if (customer.Id < 1)
         {
-            return await CreateAsync(customer).ConfigureAwait(false);
+            return await CreateAsync(customer, cancellationToken).ConfigureAwait(false);
         }
 
-        return await UpdateAsync(customer).ConfigureAwait(false);
+        return await UpdateAsync(customer, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Creates the asynchronous.
     /// </summary>
     /// <param name="accessory">The accessory.</param>
-    /// <returns></returns>
-    private async ValueTask<int> CreateAsync(AccessoriesDto accessory)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    private async ValueTask<int> CreateAsync(AccessoriesDto accessory, CancellationToken cancellationToken)
     {
         var image = (string?)null;
 
@@ -132,7 +151,7 @@ internal class AccessoriesService : IAccessoriesService
         {
             image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                     Path.GetExtension(accessory.File.FileName);
-            await accessory.File.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
+            await accessory.File.SaveAsync($"{_savePath}/{image}", cancellationToken).ConfigureAwait(false);
         }
 
         var dbModel = new Accessory
@@ -147,20 +166,21 @@ internal class AccessoriesService : IAccessoriesService
             CreatedBy = _currentUserService.GetCurrentUserId(),
         };
 
-        await _context.Accessories.AddAsync(dbModel).ConfigureAwait(false);
+        await _context.Accessories.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync().ConfigureAwait(false);
+        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Updates the asynchronous.
     /// </summary>
     /// <param name="accessory">The accessory.</param>
-    /// <returns></returns>
-    private async ValueTask<int> UpdateAsync(AccessoriesDto accessory)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    private async ValueTask<int> UpdateAsync(AccessoriesDto accessory, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == accessory.Id).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == accessory.Id, cancellationToken).ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -171,7 +191,7 @@ internal class AccessoriesService : IAccessoriesService
         {
             var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                         Path.GetExtension(accessory.File.FileName);
-            await accessory.File.SaveAsync($"{_savePath}/{image}").ConfigureAwait(false);
+            await accessory.File.SaveAsync($"{_savePath}/{image}", cancellationToken).ConfigureAwait(false);
 
             DeleteFileIfExist($"{_savePath}/{dbModel.Image}");
 
@@ -182,13 +202,12 @@ internal class AccessoriesService : IAccessoriesService
         dbModel.Name = accessory.Name;
         dbModel.Description = accessory.Description;
         dbModel.Quantity = accessory.Quantity;
-        dbModel.IsActive = accessory.IsActive;
         dbModel.ModifiedDate = DateTime.Now;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
 
         _context.Accessories.Update(dbModel);
 
-        return await _context.SaveChangesAsync().ConfigureAwait(false);
+        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -207,11 +226,12 @@ internal class AccessoriesService : IAccessoriesService
     /// Deletes the asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<int> DeleteAsync(int id)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    public async Task<int> DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -224,18 +244,19 @@ internal class AccessoriesService : IAccessoriesService
 
         _context.Accessories.Update(dbModel);
 
-        return await _context.SaveChangesAsync().ConfigureAwait(false);
+        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Deletes the image asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async ValueTask<bool> DeleteImageAsync(int id)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;System.Boolean&gt; representing the asynchronous operation.</returns>
+    public async ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -247,20 +268,23 @@ internal class AccessoriesService : IAccessoriesService
         DeleteFileIfExist(path);
 
         dbModel.Image = null;
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
+        dbModel.ModifiedDate = DateTime.Now;
 
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return true;
     }
-    
+
     /// <summary>
     /// Actives and in active record asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;OneOf`2&gt; representing the asynchronous operation.</returns>
+    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
-        var dbModel = await _context.Accessories.FirstOrDefaultAsync(x => x.Id == id)
+        var dbModel = await _context.Accessories.FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
@@ -269,10 +293,12 @@ internal class AccessoriesService : IAccessoriesService
         }
 
         dbModel.IsActive = !dbModel.IsActive;
+        dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
+        dbModel.ModifiedDate = DateTime.Now;
 
         _context.Accessories.Update(dbModel);
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return dbModel.IsActive;
     }

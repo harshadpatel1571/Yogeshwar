@@ -1,7 +1,14 @@
 ﻿namespace Yogeshwar.Helper.Extension;
 
+/// <summary>
+/// Class MvcHelper.
+/// </summary>
 internal static class MvcHelper
 {
+    /// <summary>
+    /// Adds the model error.
+    /// </summary>
+    /// <param name="modelState">State of the model.</param>
     public static void AddModelError(this ModelStateDictionary modelState)
     {
         var keyError = modelState
@@ -19,6 +26,11 @@ internal static class MvcHelper
         }
     }
 
+    /// <summary>
+    /// Gets the key errors.
+    /// </summary>
+    /// <param name="modelState">State of the model.</param>
+    /// <returns>System.Object.</returns>
     public static object GetKeyErrors(this ModelStateDictionary modelState)
     {
         var keyError = modelState

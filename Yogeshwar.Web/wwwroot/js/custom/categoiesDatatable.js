@@ -1,5 +1,5 @@
 ﻿$(function () {
-    var columns = [
+    const columns = [
         { data: "id", name: "Id", "autoWidth": true },
         {
             name: "image", "autoWidth": true,

@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Service.Service;
 
+/// <summary>
+/// Class ServiceService.
+/// Implements the <see cref="IServiceService" />
+/// </summary>
+/// <seealso cref="IServiceService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IServiceService))]
 internal class ServiceService : IServiceService
 {
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceService"/> class.
+    /// Initializes a new instance of the <see cref="ServiceService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
     public ServiceService(YogeshwarContext context)
@@ -27,8 +35,10 @@ internal class ServiceService : IServiceService
     /// Gets the by filter asynchronous.
     /// </summary>
     /// <param name="filterDto">The filter dto.</param>
-    /// <returns></returns>
-    async Task<DataTableResponseCarrier<ServiceDto>> IServiceService.GetByFilterAsync(DataTableFilterDto filterDto)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>Task&lt;DataTableResponseCarrier&lt;ServiceDto&gt;&gt;.</returns>
+    async Task<DataTableResponseCarrier<ServiceDto>> IServiceService.GetByFilterAsync(DataTableFilterDto filterDto,
+        CancellationToken cancellationToken)
     {
         var result = _context.CustomerServices.Where(x => !x.IsDeleted).AsNoTracking();
 
@@ -55,7 +65,7 @@ internal class ServiceService : IServiceService
             .Include(x => x.Order)
             .ThenInclude(x => x.Customer)
             .Select(x => DtoSelector(x))
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
 
@@ -68,7 +78,7 @@ internal class ServiceService : IServiceService
     /// Select the Dto.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <returns></returns>
+    /// <returns>ServiceDto.</returns>
     private static ServiceDto DtoSelector(DB.Models.CustomerService service) => new()
     {
         Id = service.Id,
@@ -87,25 +97,27 @@ internal class ServiceService : IServiceService
     /// Creates or update asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <returns></returns>
-    public async Task<int> CreateOrUpdateAsync(ServiceDto service)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    public async Task<int> CreateOrUpdateAsync(ServiceDto service,CancellationToken cancellationToken)
     {
         if (service.Id < 1)
         {
-            return await CreateAsync(service).ConfigureAwait(false);
+            return await CreateAsync(service,cancellationToken).ConfigureAwait(false);
         }
 
-        return await UpdateAsync(service).ConfigureAwait(false);
+        return await UpdateAsync(service,cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Creates the asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <returns></returns>
-    private async ValueTask<int> CreateAsync(ServiceDto service)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    private async ValueTask<int> CreateAsync(ServiceDto service,CancellationToken cancellationToken)
     {
-        var dbModel = new Yogeshwar.DB.Models.CustomerService
+        var dbModel = new DB.Models.CustomerService
         {
             WorkerName = service.WorkerName,
             ComplainDate = DateTime.Now,
@@ -115,20 +127,22 @@ internal class ServiceService : IServiceService
             Status = service.ServiceStatus
         };
 
-        await _context.CustomerServices.AddAsync(dbModel).ConfigureAwait(false);
+        await _context.CustomerServices.AddAsync(dbModel,cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync().ConfigureAwait(false);
+        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Updates the asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
-    /// <returns></returns>
-    private async ValueTask<int> UpdateAsync(ServiceDto service)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    private async ValueTask<int> UpdateAsync(ServiceDto service,CancellationToken cancellationToken)
     {
         var dbModel = await _context.CustomerServices
-            .FirstOrDefaultAsync(x => x.Id == service.Id).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == service.Id,cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -143,31 +157,36 @@ internal class ServiceService : IServiceService
 
         _context.CustomerServices.Update(dbModel);
 
-        return await _context.SaveChangesAsync().ConfigureAwait(false);
+        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Gets the single asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<ServiceDto?> GetSingleAsync(int id)
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A Task&lt;ServiceDto&gt; representing the asynchronous operation.</returns>
+    public async Task<ServiceDto?> GetSingleAsync(int id,CancellationToken cancellationToken)
     {
         return await _context.CustomerServices.AsNoTracking()
-            .Where(x => x.Id == id).Include(x => x.Order)
-            .ThenInclude(x => x.Customer).Select(x => DtoSelector(x))
-            .FirstOrDefaultAsync().ConfigureAwait(false);
+            .Where(x => x.Id == id)
+            .Include(x => x.Order)
+            .ThenInclude(x => x.Customer)
+            .Select(x => DtoSelector(x))
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Deletes the asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<int> DeleteAsync(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
+    public async Task<int> DeleteAsync(int id,CancellationToken cancellationToken)
     {
         var dbModel = await _context.CustomerServices
-            .FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == id,cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -176,6 +195,6 @@ internal class ServiceService : IServiceService
 
         _context.CustomerServices.Remove(dbModel);
 
-        return await _context.SaveChangesAsync().ConfigureAwait(false);
+        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

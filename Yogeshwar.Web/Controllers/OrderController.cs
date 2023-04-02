@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class OrderController.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 [Authorize]
 public class OrderController : Controller
 {
+    /// <summary>
+    /// The order service
+    /// </summary>
     private readonly Lazy<IOrderService> _orderService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="OrderController"/> class.
+    /// Initializes a new instance of the <see cref="OrderController" /> class.
     /// </summary>
     /// <param name="orderService">The order service.</param>
     public OrderController(Lazy<IOrderService> orderService)
@@ -32,7 +40,7 @@ public class OrderController : Controller
     /// <summary>
     /// Index view.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Index()
     {
         return View();
@@ -41,13 +49,14 @@ public class OrderController : Controller
     /// <summary>
     /// Binds the data.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> BindData()
+    public async Task<IActionResult> BindData(CancellationToken cancellationToken)
     {
         var filters = DataExtractor.Extract(Request);
 
-        var data = await _orderService.Value.GetByFilterAsync(filters).ConfigureAwait(false);
+        var data = await _orderService.Value.GetByFilterAsync(filters, cancellationToken).ConfigureAwait(false);
 
         var responseModel = new DataTableResponseDto<OrderDto>
         {
@@ -64,11 +73,13 @@ public class OrderController : Controller
     /// Gets the accessories detail.
     /// </summary>
     /// <param name="productId">The product identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> GetAccessoriesDetail([FromQuery] int productId)
+    public async Task<IActionResult> GetAccessoriesDetail([FromQuery] int productId,
+        CancellationToken cancellationToken)
     {
-        var detail = await _orderService.Value.GetAccessoriesAsync(productId).ConfigureAwait(false);
+        var detail = await _orderService.Value.GetAccessoriesAsync(productId, cancellationToken).ConfigureAwait(false);
 
         if (detail is null)
         {
@@ -77,25 +88,28 @@ public class OrderController : Controller
 
         return Json(detail);
     }
-    
 
 
     /// <summary>
     /// Add or edit.
     /// </summary>
     /// <param name="dropDownService">The drop down service.</param>
-    /// <returns></returns>
-    public async Task<IActionResult> AddEdit([FromServices] IDropDownService dropDownService)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async Task<IActionResult> AddEdit([FromServices] IDropDownService dropDownService,
+        CancellationToken cancellationToken)
     {
         using var _ = dropDownService;
 
-        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync().ConfigureAwait(false),
+        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync(cancellationToken)
+                .ConfigureAwait(false),
             "Key", "Text");
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForOrderStatus(),
             "Key", "Text");
         ViewBag.OrderStatus = new SelectList(dropDownService.BindDropDownForOrderDetailStatus(),
             "Key", "Text");
-        ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync().ConfigureAwait(false),
+        ViewBag.Products = new SelectList(await dropDownService.BindDropDownForProductsAsync(cancellationToken)
+                .ConfigureAwait(false),
             "Key", "Text");
 
         return View();
@@ -105,9 +119,10 @@ public class OrderController : Controller
     /// Add or edit.
     /// </summary>
     /// <param name="orderDto">The order dto.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> AddEdit(OrderDto orderDto)
+    public async Task<IActionResult> AddEdit(OrderDto orderDto, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
         {
@@ -115,7 +130,7 @@ public class OrderController : Controller
             return BadRequest(errors);
         }
 
-        await _orderService.Value.CreateOrUpdateAsync(orderDto).ConfigureAwait(false);
+        await _orderService.Value.CreateOrUpdateAsync(orderDto, cancellationToken).ConfigureAwait(false);
 
         return Ok();
     }
@@ -124,10 +139,13 @@ public class OrderController : Controller
     /// Details the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<IActionResult> Detail(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async Task<IActionResult> Detail(int id, CancellationToken cancellationToken)
     {
-        var model = await _orderService.Value.GetDetailsAsync(id).ConfigureAwait(false);
+        var model = await _orderService.Value
+            .GetDetailsAsync(id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (model is null)
         {
@@ -141,13 +159,16 @@ public class OrderController : Controller
     /// Deletes the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async ValueTask<IActionResult> Delete(int id)
+    public async ValueTask<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         try
         {
-            var dbModel = await _orderService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var dbModel = await _orderService.Value
+                .DeleteAsync(id, cancellationToken)
+                .ConfigureAwait(false);
 
             if (dbModel is null)
             {

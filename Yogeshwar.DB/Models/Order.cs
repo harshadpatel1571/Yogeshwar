@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Yogeshwar.DB.Models;
+﻿namespace Yogeshwar.DB.Models;
 
 public partial class Order
 {
@@ -14,6 +11,8 @@ public partial class Order
     public DateTime OrderDate { get; set; }
 
     public bool IsCompleted { get; set; }
+
+    public bool IsActive { get; set; }
 
     public bool IsDeleted { get; set; }
 

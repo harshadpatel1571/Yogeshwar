@@ -86,7 +86,7 @@
                     {
                         <div class="col-md-6">
                             <label class="form-label">Product Image</label><br />
-                            @for (int i = 0; i < Model.Images.Count; i++)
+                            @for (var i = 0; i < Model.Images.Count; i++)
                             {
                                 <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
                                     <img src="@Model.Images[i].Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">

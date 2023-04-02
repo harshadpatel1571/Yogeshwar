@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Yogeshwar.DB.Models;
+﻿namespace Yogeshwar.DB.Models;
 
 public partial class Product
 {

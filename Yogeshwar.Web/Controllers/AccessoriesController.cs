@@ -1,12 +1,20 @@
 ﻿namespace Yogeshwar.Web.Controllers;
 
+/// <summary>
+/// Class AccessoriesController.
+/// Implements the <see cref="Controller" />
+/// </summary>
+/// <seealso cref="Controller" />
 [Authorize]
 public class AccessoriesController : Controller
 {
+    /// <summary>
+    /// The accessories service
+    /// </summary>
     private readonly Lazy<IAccessoriesService> _accessoriesService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AccessoriesController"/> class.
+    /// Initializes a new instance of the <see cref="AccessoriesController" /> class.
     /// </summary>
     /// <param name="accessoriesService">The accessories service.</param>
     public AccessoriesController(Lazy<IAccessoriesService> accessoriesService)
@@ -32,7 +40,7 @@ public class AccessoriesController : Controller
     /// <summary>
     /// Index view.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>IActionResult.</returns>
     public IActionResult Index()
     {
         return View();
@@ -41,13 +49,16 @@ public class AccessoriesController : Controller
     /// <summary>
     /// Binds the data.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> BindData()
+    public async Task<IActionResult> BindData(CancellationToken cancellationToken)
     {
         var filters = DataExtractor.Extract(Request);
 
-        var data = await _accessoriesService.Value.GetByFilterAsync(filters).ConfigureAwait(false);
+        var data = await _accessoriesService.Value
+            .GetByFilterAsync(filters,cancellationToken)
+            .ConfigureAwait(false);
 
         var responseModel = new DataTableResponseDto<AccessoriesDto>
         {
@@ -64,8 +75,9 @@ public class AccessoriesController : Controller
     /// Adds or edit.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async ValueTask<IActionResult> AddEdit(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async ValueTask<IActionResult> AddEdit(int id, CancellationToken cancellationToken)
     {
         if (id < 1)
         {
@@ -73,7 +85,9 @@ public class AccessoriesController : Controller
             return await Task.FromResult(view).ConfigureAwait(false);
         }
 
-        var model = await _accessoriesService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        var model = await _accessoriesService.Value
+            .GetSingleAsync(id,cancellationToken)
+            .ConfigureAwait(false);
 
         if (model is null)
         {
@@ -87,9 +101,10 @@ public class AccessoriesController : Controller
     /// Adds or edit.
     /// </summary>
     /// <param name="accessory">The accessory.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> AddEdit(AccessoriesDto accessory)
+    public async Task<IActionResult> AddEdit(AccessoriesDto accessory, CancellationToken cancellationToken)
     {
         ModelState.Remove("Id");
 
@@ -99,7 +114,7 @@ public class AccessoriesController : Controller
             return View();
         }
 
-        await _accessoriesService.Value.CreateOrUpdateAsync(accessory).ConfigureAwait(false);
+        await _accessoriesService.Value.CreateOrUpdateAsync(accessory,cancellationToken).ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index));
     }
@@ -108,13 +123,16 @@ public class AccessoriesController : Controller
     /// Deletes the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         try
         {
-            var count = await _accessoriesService.Value.DeleteAsync(id).ConfigureAwait(false);
+            var count = await _accessoriesService.Value
+                .DeleteAsync(id,cancellationToken)
+                .ConfigureAwait(false);
 
             if (count == 0)
             {
@@ -133,11 +151,13 @@ public class AccessoriesController : Controller
     /// Deletes the image.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> DeleteImage(int id)
+    public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
-        var isDeleted = await _accessoriesService.Value.DeleteImageAsync(id)
+        var isDeleted = await _accessoriesService.Value
+            .DeleteImageAsync(id,cancellationToken)
             .ConfigureAwait(false);
 
         if (isDeleted)
@@ -152,10 +172,13 @@ public class AccessoriesController : Controller
     /// Details the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
-    public async Task<IActionResult> Detail(int id)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    public async Task<IActionResult> Detail(int id, CancellationToken cancellationToken)
     {
-        var model = await _accessoriesService.Value.GetSingleAsync(id).ConfigureAwait(false);
+        var model = await _accessoriesService.Value
+            .GetSingleAsync(id,cancellationToken)
+            .ConfigureAwait(false);
 
         if (model is null)
         {
@@ -164,16 +187,18 @@ public class AccessoriesController : Controller
 
         return View(model);
     }
-    
+
     /// <summary>
     /// Actives and in active record.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
-    public async Task<IActionResult> ActiveInActiveRecord(int id)
+    public async Task<IActionResult> ActiveInActiveRecord(int id, CancellationToken cancellationToken)
     {
-        var result = await _accessoriesService.Value.ActiveInActiveRecordAsync(id)
+        var result = await _accessoriesService.Value
+            .ActiveInActiveRecordAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (result.Value is NotFound)
