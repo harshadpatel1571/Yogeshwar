@@ -96,12 +96,13 @@ public class OrderController : Controller
     /// <param name="dropDownService">The drop down service.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>IActionResult.</returns>
-    public async Task<IActionResult> AddEdit([FromServices] IDropDownService dropDownService,
+    [HttpGet("[controller]/[action]/{customerId:int}")]
+    public async Task<IActionResult> AddEdit(int customerId, [FromServices] IDropDownService dropDownService,
         CancellationToken cancellationToken)
     {
         using var _ = dropDownService;
 
-        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync(cancellationToken)
+        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync(cancellationToken, customerId)
                 .ConfigureAwait(false),
             "Key", "Text");
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForOrderStatus(),

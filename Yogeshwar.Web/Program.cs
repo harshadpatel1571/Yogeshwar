@@ -10,6 +10,8 @@ services.AddControllersWithViews().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
 });
 
+services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.LoginPath = new PathString("/Account/SignIn");
