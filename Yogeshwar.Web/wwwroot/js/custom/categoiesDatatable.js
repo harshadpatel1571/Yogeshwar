@@ -33,15 +33,15 @@
                 "                                </div>",
             render: function (data, type, row) {
                 return "<div class=\"hstack gap-3 flex-wrap\">\n" +
-                    "                                    <a href='/Categories/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
+                    "                                    <a href='/categories/addedit/" + row.id + "' class=\"link-success fs-20\">\n" +
                     "                                        <i class=\"ri-edit-2-line\" Title=\"Edit Record.\"></i>\n" +
                     "                                    </a>\n" +
-                    "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Categories/Delete/" + row.id + "')\">\n" +
+                    "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/categories/delete/" + row.id + "')\">\n" +
                     "                                        <i class=\"ri-delete-bin-line\" Title=\"Delete Record.\"></i>\n" +
                     "                                    </a>\n" + getActiveInActiveHTML(row.isActive, row.id, '/Categories/ActiveInActiveRecord/' + row.id) +
                     "                                </div>";
             }
         },
     ];
-    BindGrid("/Categories/BindData/", columns, [1], [1], [1]);
+    BindGrid("/categories/bindData/", columns, [1], [1], [1]);
 });

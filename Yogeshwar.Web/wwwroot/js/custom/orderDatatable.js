@@ -5,7 +5,7 @@
             name: "Customer Name", "autoWidth": true,
             sDefaultContent: "--",
             render: function (data, type, row) {
-                return "<a href='/Order/Detail/" + row.id + "' style='color:hotpink'>" + row.customerName + "</a>";
+                return "<a href='/order/detail/" + row.id + "' style='color:hotpink'>" + row.customerName + "</a>";
             }
         },
         {data: "amount", name: "Amount", "autoWidth": true},
@@ -27,7 +27,7 @@
                     // "                                    <a href='/Order/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
                     // "                                        <i class=\"ri-edit-2-line\"></i>\n" +
                     // "                                    </a>\n" +
-                    "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Order/Delete/" + row.id + "')\">\n" +
+                    "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/order/delete/" + row.id + "')\">\n" +
                     "                                        <i class=\"ri-delete-bin-line\" Title=\"Delete Record.\"Title=\"Delete Record.\"s></i>\n" +
                     "                                    </a>\n" +
                     "                                </div>";
@@ -35,5 +35,5 @@
         },
     ];
 
-    BindGrid("/Order/BindData/", columns, [1], [1], [1]);
+    BindGrid("/order/bindData/", columns, [1], [1], [1]);
 });

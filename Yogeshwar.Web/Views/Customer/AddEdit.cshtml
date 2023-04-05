@@ -44,6 +44,7 @@
                 </div>
                 <div class="card-body row g-3">
                     <input class="form-control" asp-for="Id" type="hidden" readonly>
+                    <input asp-for="Image" type="hidden">
                     <div class="col-md-6">
                         <label class="form-label">First Name</label>
                         <span class="text-danger">*</span>
@@ -99,9 +100,25 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Upload Profile Image <span class="text-info">(Only images are allowed.)</span></label>
+                        <label class="form-label">Upload Image <span class="text-info">(Only images are allowed.)</span></label>
                         <input class="form-control md-2" asp-for="ImageFile" accept="image/*">
-                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="ImageDiv">
+                            @if (Model?.Image is null)
+                            {
+                                @*<img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">*@
+                            }
+                            else
+                            {
+                                <img id="imageContainer" src="@Model.Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage()'>
+                                        <span class="avatar-title rounded-circle bg-light text-body shadow">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,12 +172,5 @@
     </div>
 </div>
 @section Scripts {
-    <script>
-        $('#PinCode').keypress(function (e) {
-            return $(this).val().length < 6;
-        });
-        $('#PhoneNo').keypress(function (e) {
-            return $(this).val().length < 10;
-        });
-    </script>
+    <script src="~/js/custom/customerAddEdit.js"></script>
 }

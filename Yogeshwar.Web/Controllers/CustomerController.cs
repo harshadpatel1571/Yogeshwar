@@ -188,4 +188,19 @@ public sealed class CustomerController : Controller
 
         return Ok(result.Value);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
+    {
+        //var isDeleted = await _accessoriesService.Value
+        //    .DeleteImageAsync(id, cancellationToken)
+        //    .ConfigureAwait(false);
+
+        //if (isDeleted)
+        //{
+        //    return NoContent();
+        //}
+
+        return NotFound();
+    }
 }

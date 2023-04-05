@@ -5,7 +5,7 @@
             name: "name", "autoWidth": true,
             sDefaultContent: "--",
             render: function (data, type, row) {
-                return "<a href='/Accessories/Detail/" + row.id + "' style='color:hotpink' >" + row.name + "</a>";
+                return "<a href='/accessories/detail/" + row.id + "' style='color:hotpink' >" + row.name + "</a>";
             }
         },
         {
@@ -33,16 +33,16 @@
                 "                                </div>",
             render: function (data, type, row) {
                 return "<div class=\"hstack gap-3 flex-wrap\">\n" +
-                    "                                    <a href='/Accessories/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
+                    "                                    <a href='/accessories/addedit/" + row.id + "' class=\"link-success fs-20\">\n" +
                     "                                        <i class=\"ri-edit-2-line\" Title=\"Edit Record.\"></i>\n" +
                     "                                    </a>\n" +
-                    "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/Accessories/Delete/" + row.id + "')\">\n" +
+                    "                                    <a class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('/accessories/delete/" + row.id + "')\">\n" +
                     "                                        <i class=\"ri-delete-bin-line\" Title=\"Delete Record.\"></i>\n" +
-                    "                                    </a>\n" + getActiveInActiveHTML(row.isActive, row.id, '/Accessories/ActiveInActiveRecord/' + row.id) +
+                    "                                    </a>\n" + getActiveInActiveHTML(row.isActive, row.id, '/accessories/ActiveInActiveRecord/' + row.id) +
                     "                                </div>";
             }
         },
     ];
 
-    BindGrid("/Accessories/BindData/", columns, [1, 2, 3], [1, 2, 3], [1, 2, 3]);
+    BindGrid("/accessories/bindData/", columns, [1, 2, 3], [1, 2, 3], [1, 2, 3]);
 });
