@@ -189,17 +189,23 @@ public sealed class CustomerController : Controller
         return Ok(result.Value);
     }
 
+    /// <summary>
+    /// Deletes the image.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
-        //var isDeleted = await _accessoriesService.Value
-        //    .DeleteImageAsync(id, cancellationToken)
-        //    .ConfigureAwait(false);
+        var isDeleted = await _customerService.Value
+            .DeleteImageAsync(id, cancellationToken)
+            .ConfigureAwait(false);
 
-        //if (isDeleted)
-        //{
-        //    return NoContent();
-        //}
+        if (isDeleted)
+        {
+            return NoContent();
+        }
 
         return NotFound();
     }

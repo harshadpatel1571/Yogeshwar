@@ -102,9 +102,15 @@ public class OrderController : Controller
     {
         using var _ = dropDownService;
 
-        ViewBag.Customers = new SelectList(await dropDownService.BindDropDownForCustomersAsync(cancellationToken, customerId)
-                .ConfigureAwait(false),
-            "Key", "Text");
+        var customers = await dropDownService.BindDropDownForCustomersAsync(cancellationToken, customerId)
+                .ConfigureAwait(false);
+
+        if (customers.Count < 1)
+        {
+            return NotFound();
+        }
+
+        ViewBag.Customers = new SelectList(customers, "Key", "Text");
         ViewBag.Status = new SelectList(dropDownService.BindDropDownForOrderStatus(),
             "Key", "Text");
         ViewBag.OrderStatus = new SelectList(dropDownService.BindDropDownForOrderDetailStatus(),

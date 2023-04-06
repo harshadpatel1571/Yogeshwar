@@ -12,33 +12,48 @@ internal static class DataExtractor
     /// <returns>DataTableFilterDto.</returns>
     public static DataTableFilterDto Extract(HttpRequest request)
     {
-        var sortColumn = request.Form["columns[" + request.Form["order[0][column]"][0] + "][name]"][0]!;
-
-        string sortColumnActual;
-
-        var sortOrder = request.Form["order[0][dir]"][0]!;
-
-        if (sortColumn.Equals("id", StringComparison.InvariantCultureIgnoreCase))
+        try
         {
-            sortColumnActual = "CreatedDate";
-            sortOrder = "desc";
+            var sortColumn = request.Form["columns[" + request.Form["order[0][column]"][0] + "][name]"][0]!;
+
+            string sortColumnActual;
+
+            var sortOrder = request.Form["order[0][dir]"][0]!;
+
+            if (sortColumn.Equals("id", StringComparison.InvariantCultureIgnoreCase))
+            {
+                sortColumnActual = "CreatedDate";
+                sortOrder = "desc";
+            }
+            else
+            {
+                sortColumnActual = sortColumn!.Contains(' ')
+                    ? string.Join(null, sortColumn.Split(' '))
+                    : sortColumn;
+            }
+
+            return new DataTableFilterDto
+            {
+                Draw = request.Form["draw"][0]!,
+                Skip = Convert.ToInt32(request.Form["start"][0]),
+                Take = Convert.ToInt32(request.Form["length"][0]),
+                SortColumn = sortColumnActual,
+                SortOrder = sortOrder,
+                SearchValue = request.Form["search[value]"][0]
+            };
         }
-        else
+        catch
         {
-            sortColumnActual = sortColumn!.Contains(' ')
-                ? string.Join(null, sortColumn.Split(' '))
-                : sortColumn;
+            return new DataTableFilterDto
+            {
+                Draw = "1",
+                Skip = 0,
+                Take = 10,
+                SortColumn = "CreatedDate",
+                SortOrder = "desc",
+                SearchValue = null
+            };
         }
-
-        return new DataTableFilterDto
-        {
-            Draw = request.Form["draw"][0]!,
-            Skip = Convert.ToInt32(request.Form["start"][0]),
-            Take = Convert.ToInt32(request.Form["length"][0]),
-            SortColumn = sortColumnActual,
-            SortOrder = sortOrder,
-            SearchValue = request.Form["search[value]"][0]
-        };
     }
 }
 

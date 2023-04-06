@@ -65,7 +65,12 @@ internal class ProductService : IProductService
     async Task<DataTableResponseCarrier<ProductDto>> IProductService.GetByFilterAsync(DataTableFilterDto filterDto,
         CancellationToken cancellationToken)
     {
-        var result = _context.Products.Where(x => !x.IsDeleted).AsNoTracking();
+        var result = _context.Products.Where(x => !x.IsDeleted)
+            .Include(x => x.ProductCategories)
+            .Include(x => x.ProductAccessories)
+            .ThenInclude(x => x.Accessories)
+            .Include(x => x.ProductImages)
+            .AsNoTracking();
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
@@ -103,7 +108,8 @@ internal class ProductService : IProductService
     /// <returns>object.</returns>
     public async Task<object> GetAccessoriesQuantity(int id, CancellationToken cancellationToken)
     {
-        return await _context.ProductAccessories.Where(x => x.ProductId == id)
+        return await _context.ProductAccessories
+            .Where(x => x.ProductId == id)
             .Select(x => new { key = x.Accessories.Name, value = x.Quantity })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -155,7 +161,9 @@ internal class ProductService : IProductService
     public async Task<ProductDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
     {
         return await _context.Products.AsNoTracking()
-            .Where(x => x.Id == id).Include(x => x.ProductAccessories)
+            .Where(x => x.Id == id)
+            .Include(x => x.ProductCategories)
+            .Include(x => x.ProductAccessories)
             .ThenInclude(x => x.Accessories)
             .Include(x => x.ProductImages)
             .Select(x => DtoSelector(x, _configuration))
@@ -291,7 +299,6 @@ internal class ProductService : IProductService
         dbModel.Name = productDto.Name;
         dbModel.Description = productDto.Description;
         dbModel.ModelNo = productDto.ModelNo;
-        dbModel.IsActive = productDto.IsActive;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
         dbModel.Price = productDto.Price!.Value;

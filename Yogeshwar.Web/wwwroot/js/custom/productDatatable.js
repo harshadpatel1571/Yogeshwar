@@ -9,17 +9,6 @@
             }
         },
         { data: "modelNo", name: "Model No", "autoWidth": true },
-        {
-            name: "Description", "autoWidth": true,
-            sDefaultContent: "",
-            render: function (data, type, row) {
-                if ((row.description != null || row.description != undefined) && row.description.length > 20) {
-                    return row.description.substring(0, 20) + '...'
-                }
-
-                return row.description;
-            }
-        },
         { data: "price", name: "Price", "autoWidth": true },
         {
             bSortable: false,

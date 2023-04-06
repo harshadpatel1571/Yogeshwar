@@ -47,8 +47,7 @@
                     <input asp-for="Id" type="hidden" />
                     <label class="form-label">Customer</label>
                     <span class="text-danger">*</span>
-                    <select class="js-example-disabled" id="customer" name="customer" asp-items="@ViewBag.Customers" required>
-                        <option value="">Select Customer</option>
+                    <select class="form-select" id="customer" name="customer" asp-items="@ViewBag.Customers" required>
                     </select>
                     <span id="customerValidation" class="text-danger field-validation-error"></span>
                 </div>
