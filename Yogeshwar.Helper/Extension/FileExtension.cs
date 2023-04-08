@@ -12,7 +12,8 @@ internal static class FileExtension
     /// <param name="pathWithName">Name of the path with.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public static async Task SaveAsync(this IFormFile file, string pathWithName, CancellationToken cancellationToken = default)
+    public static async Task SaveAsync(this IFormFile file, string pathWithName,
+        CancellationToken cancellationToken)
     {
         var stream = new FileStream(pathWithName, FileMode.Create);
         await using var _ = stream.ConfigureAwait(false);

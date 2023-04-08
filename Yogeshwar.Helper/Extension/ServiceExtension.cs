@@ -3,7 +3,7 @@
 /// <summary>
 /// Class ExtensionHelper.
 /// </summary>
-public static class ExtensionHelper
+public static class ServiceExtension
 {
     /// <summary>
     /// Adds the custom services.
@@ -48,7 +48,7 @@ public static class ExtensionHelper
                 continue;
             }
 
-            var genericMethod = typeof(ExtensionHelper).GetMethod(nameof(EnableLazyLoading),
+            var genericMethod = typeof(ServiceExtension).GetMethod(nameof(EnableLazyLoading),
                 BindingFlags.Static | BindingFlags.NonPublic)!;
 
             genericMethod = genericMethod.MakeGenericMethod(baseType ?? type.Child);

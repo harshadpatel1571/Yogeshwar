@@ -34,16 +34,17 @@ internal class UserService : IUserService
     /// <summary>
     /// Gets the user by credential.
     /// </summary>
-    /// <param name="username">The username.</param>
+    /// <param name="userName">The user name.</param>
     /// <param name="password">The password.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;UserDetailDto&gt; representing the asynchronous operation.</returns>
-    public async Task<UserDetailDto?> GetUserByCredentialAsync(string username, string password, CancellationToken cancellationToken)
+    public async Task<UserDetailDto?> GetUserByCredentialAsync(string userName,
+        string password, CancellationToken cancellationToken)
     {
-        var encryptedPassword = ServiceExtension.Encrypt(password);
+        var encryptedPassword = EncryptionHelper.Encrypt(password);
 
         return await _context.Users
-            .Where(x => x.Username == username && x.Password == encryptedPassword)
+            .Where(x => x.Username == userName && x.Password == encryptedPassword)
             .Select(x => new UserDetailDto
             {
                 Id = x.Id,

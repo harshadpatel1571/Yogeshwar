@@ -1,9 +1,9 @@
 ﻿namespace Yogeshwar.Helper.Extension;
 
 /// <summary>
-/// Class ServiceExtension.
+/// Class EncryptionHelper.
 /// </summary>
-internal static class ServiceExtension
+internal static class EncryptionHelper
 {
     /// <summary>
     /// The key

@@ -88,10 +88,12 @@ internal class OrderService : IOrderService
             result = result.Take(filterDto.Take);
         }
 
-        IList<OrderDto> data = await result.Include(x => x.Customer)
+        IList<OrderDto> data = await result
+            .Include(x => x.Customer)
             .Include(x => x.OrderDetails)
             .Select(x => DtoSelector(x))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
 
@@ -101,7 +103,7 @@ internal class OrderService : IOrderService
     }
 
     /// <summary>
-    /// Dtoes the selector.
+    /// Dto selector.
     /// </summary>
     /// <param name="order">The order.</param>
     /// <returns>OrderDto.</returns>

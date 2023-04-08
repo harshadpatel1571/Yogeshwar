@@ -35,7 +35,7 @@ public class CurrentUserService : ICurrentUserService
     public string GetCurrentUserName() => _claimsPrincipal.FindFirst(ClaimTypes.Name)!.Value;
 
     /// <summary>
-    /// Gets the username of the current user.
+    /// Gets the user name of the current user.
     /// </summary>
     /// <returns>System.String.</returns>
     public string GetCurrentUserUserName() => _claimsPrincipal.FindFirst("UserName")!.Value;

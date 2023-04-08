@@ -38,8 +38,8 @@ internal static class MvcHelper
             .Select(x => new
             {
                 x.Key,
-                Message = x.Value.Errors
-                    .Select(c => c.ErrorMessage).FirstOrDefault()
+                Message = x.Value.Errors.Select(c => c.ErrorMessage)
+                    .FirstOrDefault()
             });
 
         return keyError;
