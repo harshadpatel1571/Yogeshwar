@@ -277,3 +277,10 @@ function deleteImage(id) {
         });
     });
 }
+
+document.addEventListener("keydown", function (event) {
+    if (event.altKey && event.shiftKey && event.code === "KeyC") {
+        alert('Alt + Shift + C pressed!');
+        event.preventDefault();
+    }
+});

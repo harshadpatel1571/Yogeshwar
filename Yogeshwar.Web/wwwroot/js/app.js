@@ -307,8 +307,6 @@
                 : document.body.classList.add("twocolumn-panel"));
     }
     function B() {
-
-        debugger;
         var url = "/" == location.pathname ? "/" : location.pathname.substring(1);
         var menuHref;
         if (url == "/") {

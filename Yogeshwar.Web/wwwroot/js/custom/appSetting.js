@@ -32,6 +32,32 @@ var ckClassicEditor = document.querySelectorAll(".ckeditor-classic"),
         })
     );
 
+document.addEventListener("keydown", function (event) {
+    if (event.altKey && event.shiftKey && event.code === "KeyC") {
+        navigateToUrl("/customer")
+        event.preventDefault();
+    }
+    else if (event.altKey && event.shiftKey && event.code === "KeyP") {
+        navigateToUrl("/product")
+        event.preventDefault();
+    }
+    else if (event.altKey && event.shiftKey && event.code === "KeyO") {
+        navigateToUrl("/order")
+        event.preventDefault();
+    }
+    else if (event.altKey && event.shiftKey && event.code === "KeyA") {
+        navigateToUrl("/accessories")
+        event.preventDefault();
+    }
+    else if (event.altKey && event.shiftKey && event.code === "KeyG") {
+        navigateToUrl("/categories")
+        event.preventDefault();
+    } 
+});
+
+function navigateToUrl(url) {
+    window.location.href = url;
+}
 
 function changeMode() {
     const mod = $.cookie("mod");
