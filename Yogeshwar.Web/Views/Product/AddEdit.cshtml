@@ -64,7 +64,7 @@
                         <input class="form-control" asp-for="Price" onkeypress="return isNumberKey(event, this);" required>
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <label class="form-label">Select Accessories</label>
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
@@ -73,7 +73,16 @@
                         </select>
                         <span asp-validation-for="Accessories" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" id="create-btn" data-bs-target="#showModal">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="col-md-5">
                         <label class="form-label">Select Categories</label>
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
@@ -81,6 +90,15 @@
                                 asp-items="Model.SelectListsForCategories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
                         </select>
                         <span asp-validation-for="Categories" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-primary mt-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
+                                </div>
+                            </div>
+                        </button>
                     </div>
                     @{
                         var display = isCreate ? "none" : "initial";
@@ -153,6 +171,31 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-3">
+                <h5 class="modal-title" id="exampleModalLabel">Add Catagories</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+            </div>
+            <form action="#">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="customername-field" class="form-label">Accessories Name</label>
+                        <input type="text" id="customername-field" class="form-control" placeholder="Enter name" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" id="addCatagorie">Add New</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
