@@ -54,7 +54,9 @@
 
                 <div class="col-md-12">
                     <label class="form-label">Description</label>
-                    @Html.Raw(Model.Description)
+                    <div class="ck ck-content ck-rounded-corners ck-editor__editable_inline">
+                        @Html.Raw(Model.Description)
+                    </div>
                 </div>
 
                 <div class="col-md-12">

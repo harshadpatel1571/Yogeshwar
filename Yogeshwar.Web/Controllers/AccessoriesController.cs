@@ -208,4 +208,9 @@ public class AccessoriesController : Controller
 
         return Ok(result.Value);
     }
+
+    public IActionResult foo()
+    {
+        return PartialView("_AccessoriesAddEdit");
+    }
 }

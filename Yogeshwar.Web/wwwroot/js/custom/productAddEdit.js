@@ -284,3 +284,15 @@ document.addEventListener("keydown", function (event) {
         event.preventDefault();
     }
 });
+
+$("#btnAddAccessory").click(function () {
+    $.ajax({
+        type: "GET",
+        url: "/accessories/foo/",
+        success: function (html) {
+            $("#accessoryModalBody").html(html);
+            ckEditorInit("#accessoryModalBody");
+            $('#showAccessoryModal').modal('show');
+        }
+    });
+});

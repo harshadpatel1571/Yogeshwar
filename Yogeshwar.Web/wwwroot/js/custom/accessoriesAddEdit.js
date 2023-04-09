@@ -2,7 +2,7 @@
     if (input.files && input.files[0]) {
         const imageDiv = $('#ImageDiv');
         imageDiv.empty();
-        
+
         const imageHtml = "<img id=\"imageContainerNew\" src='-' class=\"rounded-squre avatar-xl img-thumbnail shadow\" alt=\"accessories-image\">\n" +
             "                                <div class=\"avatar-xs p-0 rounded-circle profile-photo-edit\">\n" +
             "                                    <label for=\"profile-img-file-input\" class=\"profile-photo-edit avatar-xs\" onclick='deleteImage()'>\n" +

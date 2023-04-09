@@ -49,7 +49,9 @@
 
                 <div class="col-md-12">
                     <label class="form-label">Description</label>
-                    <textarea class="form-control ckeditor-classic" asp-for="Description" rows="2" readonly></textarea>
+                    <div class="ck ck-content ck-rounded-corners ck-editor__editable_inline">
+                        @Html.Raw(Model.Description)
+                    </div>
                 </div>
 
                 @if (Model.Image is not null)

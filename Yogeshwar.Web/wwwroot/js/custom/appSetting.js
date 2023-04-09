@@ -23,7 +23,6 @@ var ckClassicEditor = document.querySelectorAll(".ckeditor-classic"),
                     'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed']
             })
                 .then(function (e) {
-                    console.log(e.plugins._availablePlugins);
                     e.ui.view.editable.element.style.height = "200px";
                 })
                 .catch(function (e) {
@@ -33,26 +32,26 @@ var ckClassicEditor = document.querySelectorAll(".ckeditor-classic"),
     );
 
 document.addEventListener("keydown", function (event) {
-    if (event.altKey && event.shiftKey && event.code === "KeyC") {
+    if (event.altKey && event.code === "KeyC") {
+        event.preventDefault();
         navigateToUrl("/customer")
-        event.preventDefault();
     }
-    else if (event.altKey && event.shiftKey && event.code === "KeyP") {
+    else if (event.altKey && event.code === "KeyP") {
+        event.preventDefault();
         navigateToUrl("/product")
-        event.preventDefault();
     }
-    else if (event.altKey && event.shiftKey && event.code === "KeyO") {
+    else if (event.altKey && event.code === "KeyO") {
+        event.preventDefault();
         navigateToUrl("/order")
-        event.preventDefault();
     }
-    else if (event.altKey && event.shiftKey && event.code === "KeyA") {
+    else if (event.altKey && event.code === "KeyA") {
+        event.preventDefault();
         navigateToUrl("/accessories")
-        event.preventDefault();
     }
-    else if (event.altKey && event.shiftKey && event.code === "KeyG") {
-        navigateToUrl("/categories")
+    else if (event.altKey && event.code === "KeyG") {
         event.preventDefault();
-    } 
+        navigateToUrl("/categories")
+    }
 });
 
 function navigateToUrl(url) {
@@ -312,4 +311,22 @@ function flatInit() {
                 o["data-time-inline"] && ((a.enableTime = !0), (a.noCalendar = !0), (a.defaultDate = o["data-time-inline"].value.toString()), (a.inline = !0)),
                 flatpickr(e, a));
     });
+}
+
+function ckEditorInit(id) {
+    var ckClassicEditor = document.querySelectorAll(id + " .ckeditor-classic"),
+        snowEditor = (ckClassicEditor &&
+            Array.from(ckClassicEditor).forEach(function () {
+                ClassicEditor.create(document.querySelector(id + " .ckeditor-classic"), {
+                    removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image',
+                        'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed']
+                })
+                    .then(function (e) {
+                        e.ui.view.editable.element.style.height = "200px";
+                    })
+                    .catch(function (e) {
+                        console.error(e);
+                    });
+            })
+        );
 }
