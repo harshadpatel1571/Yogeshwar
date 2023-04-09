@@ -673,37 +673,55 @@
                         <li class="nav-item">
                             <a class="nav-link menu-link" asp-action="Index" asp-controller="Home">
                                 <i class="mdi mdi-speedometer"></i>
-                                <span data-key="t-dashboards"><b class="text-danger">D</b>ashboards</span>
+                                <span data-key="t-dashboards" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + d"><b class="text-danger">D</b>ashboards</span>
                             </a>
                         </li>
 
                         <li class="menu-title">
-                            <i class="ri-more-fill"></i> <span data-key="t-pages">Masters</span>
+                            <i class="ri-more-fill"></i>
+                            <span data-key="t-pages">Masters</span>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" id="ddlMaster" href="#masterMenu" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="masterMenu">
-                                <i class="mdi mdi-sticker-text-outline"></i> <span data-key="t-advance-ui"><b class="text-danger">M</b>asters</span>
+                                <i class="mdi mdi-sticker-text-outline"></i>
+                                <span data-key="t-advance-ui" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + m">
+                                    <b class="text-danger">M</b>asters
+                                </span>
                             </a>
                             <div class="collapse menu-dropdown" id="masterMenu">
                                 <ul class="nav nav-sm flex-column">
-
                                     <li class="nav-item">
-                                        <a asp-controller="Categories" asp-action="Index" class="nav-link" data-key="t-categories"> Categories </a>
+                                        <a asp-controller="Categories" asp-action="Index" class="nav-link">
+                                            <span data-key="t-categories" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + g">
+                                                Cate<b class="text-danger">g</b>ories
+                                            </span>
+                                        </a>
                                     </li>
 
                                     <li class="nav-item">
-                                        <a asp-controller="Accessories" asp-action="Index" class="nav-link" data-key="t-productaccessories"> Accessories </a>
+                                        <a asp-controller="Accessories" asp-action="Index" class="nav-link">
+                                            <span data-key="t-accessories" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + a">
+                                                <b class="text-danger">A</b>ccessories
+                                            </span>
+                                        </a>
                                     </li>
 
                                     <li class="nav-item">
-                                        <a asp-controller="Product" asp-action="Index" class="nav-link" data-key="t-product"> Product </a>
+                                        <a asp-controller="Product" asp-action="Index" class="nav-link">
+                                            <span data-key="t-product" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + p">
+                                                <b class="text-danger">P</b>roduct
+                                            </span>
+                                        </a>
                                     </li>
 
                                     <li class="nav-item">
-                                        <a asp-controller="Customer" asp-action="Index" class="nav-link" data-key="t-customer"> Customer </a>
+                                        <a asp-controller="Customer" asp-action="Index" class="nav-link">
+                                            <span data-key="t-customer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + c">
+                                                <b class="text-danger">C</b>ustomer
+                                            </span>
+                                        </a>
                                     </li>
-
                                 </ul>
                             </div>
                         </li>
@@ -714,13 +732,19 @@
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" asp-action="Index" asp-controller="Order">
-                                <i class="mdi mdi-notebook-edit-outline"></i> <span data-key="t-service">Order</span>
+                                <i class="mdi mdi-notebook-edit-outline"></i>
+                                <span data-key="t-order" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + o">
+                                    <b class="text-danger">O</b>rder
+                                </span>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" asp-controller="Service" asp-action="Index">
-                                <i class="mdi mdi-account-wrench-outline"></i> <span data-key="t-service">Service</span>
+                                <i class="mdi mdi-account-wrench-outline"></i>
+                                <span data-key="t-service" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alt + s">
+                                    <b class="text-danger">S</b>ervice
+                                </span>
                             </a>
                         </li>
 

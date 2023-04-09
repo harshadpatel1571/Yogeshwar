@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-
     select2Init();
 
     const mod = $.cookie("mod");
@@ -12,7 +11,9 @@
 
     if (view !== undefined && view !== '') {
         $('body').addClass(view);
-    }
+    }  
+
+    
 });
 
 var ckClassicEditor = document.querySelectorAll(".ckeditor-classic"),
