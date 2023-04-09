@@ -64,19 +64,19 @@
                         <input class="form-control" asp-for="Price" onkeypress="return isNumberKey(event, this);" required>
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-5" id="accessoriesDiv">
                         <label class="form-label">Select Accessories</label>
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
                         <select class="js-example-basic-multiple" asp-for="Accessories"
-                                asp-items="Model.SelectListsForAccessories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
+                                asp-items="Model.SelectListsForAccessories" multiple="multiple">
                         </select>
                         <span asp-validation-for="Accessories" class="text-danger"></span>
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-primary mt-4" id="btnAddAccessory">
+                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForAccessories()" title="Shift + A">
                             <div class="d-flex">
-                                <div class="flex-shrink-0">
+                                <div class="flex-shrink-0" style="padding-left:6px">
                                     <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
                                 </div>
                             </div>
@@ -87,14 +87,14 @@
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
                         <select class="js-example-basic-multiple" asp-for="Categories"
-                                asp-items="Model.SelectListsForCategories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
+                                asp-items="Model.SelectListsForCategories" multiple="multiple">
                         </select>
                         <span asp-validation-for="Categories" class="text-danger"></span>
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-primary mt-4">
+                        <button type="button" class="btn btn-primary mt-4" title="Shift + C">
                             <div class="d-flex">
-                                <div class="flex-shrink-0">
+                                <div class="flex-shrink-0" style="padding-left:6px">
                                     <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
                                 </div>
                             </div>
@@ -184,7 +184,6 @@
             </div>
 
             <div class="modal-body" id="accessoryModalBody">
-                
             </div>
         </div>
     </div>
@@ -192,4 +191,5 @@
 
 @section Scripts{
     <script src="~/js/custom/productaddedit.js"></script>
+    <script src="~/js/custom/accessoriesaddedit.js"></script>
 }

@@ -120,6 +120,28 @@ public class AccessoriesController : Controller
     }
 
     /// <summary>
+    /// Adds the edit popup.
+    /// </summary>
+    /// <param name="accessory">The accessory.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IActionResult.</returns>
+    [HttpPost]
+    public async Task<IActionResult> AddEditPopup(AccessoriesDto accessory, CancellationToken cancellationToken)
+    {
+        ModelState.Remove("Id");
+
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.GetKeyErrors();
+            return BadRequest(errors);
+        }
+
+        await _accessoriesService.Value.CreateOrUpdateAsync(accessory, cancellationToken).ConfigureAwait(false);
+
+        return Ok(accessory);
+    }
+
+    /// <summary>
     /// Deletes the specified identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
@@ -211,6 +233,15 @@ public class AccessoriesController : Controller
 
     public IActionResult foo()
     {
-        return PartialView("_AccessoriesAddEdit");
+        try
+        {
+            return PartialView("_AccessoriesAddEdit");
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 }

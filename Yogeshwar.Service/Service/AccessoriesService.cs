@@ -168,7 +168,11 @@ internal class AccessoriesService : IAccessoriesService
 
         await _context.Accessories.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        accessory.Id = dbModel.Id;
+
+        return count;
     }
 
     /// <summary>

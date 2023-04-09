@@ -279,20 +279,8 @@ function deleteImage(id) {
 }
 
 document.addEventListener("keydown", function (event) {
-    if (event.altKey && event.shiftKey && event.code === "KeyC") {
-        alert('Alt + Shift + C pressed!');
+    if (event.shiftKey && event.code === "KeyA") {
         event.preventDefault();
+        openPopupForAccessories()
     }
-});
-
-$("#btnAddAccessory").click(function () {
-    $.ajax({
-        type: "GET",
-        url: "/accessories/foo/",
-        success: function (html) {
-            $("#accessoryModalBody").html(html);
-            ckEditorInit("#accessoryModalBody");
-            $('#showAccessoryModal').modal('show');
-        }
-    });
 });
