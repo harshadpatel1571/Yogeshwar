@@ -24,28 +24,28 @@
     }
 }
 
-$("#AccesoryFile").change(function () {
+$("#File").change(function () {
     changeImage(this);
-    $('#AccesoryImageDiv').show();
+    $('#ImageDiv').show();
 });
 
 function deleteImage() {
-    const id = $('#AccesoryId').val();
-    const file = $('#AccesoryFile');
+    const id = $('#Id').val();
+    const file = $('#File');
 
     if (id == 0 || file.val()) {
         file.val('')
-        $('#AccesoryImageDiv').empty();
+        $('#ImageDiv').empty();
         return
     }
 
-    //const imageName = $('#AccesoryImage').val();
+    const imageName = $('#Image').val();
 
-    //if (imageName == undefined || imageName == '' || imageName == null) {
-    //    file.val('')
-    //    $('#AccesoryImageDiv').empty();
-    //    return;
-    //}
+    if (imageName == undefined || imageName == '' || imageName == null) {
+        file.val('')
+        $('#ImageDiv').empty();
+        return;
+    }
 
     Swal.fire({
         title: "Are you sure want to delete image from system?",
@@ -75,58 +75,5 @@ function deleteImage() {
                 });
             }
         });
-    });
-}
-
-function saveAccessories() {
-
-    var formData = new FormData();
-
-    const file = $('#AccesoryFile')[0].files;
-
-    if (file.length > 0) {
-        formData.append("File", file[0])
-    }
-
-    formData.append("Name", $('#AccesoryName').val())
-    formData.append("Quantity", $('#AccesoryQuantity').val())
-    formData.append("Description", document.getElementsByClassName('ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline ck-blurred')[1].innerHTML)
-
-    $.ajax({
-        type: "POST",
-        url: "/Accessories/AddEditPopup/",
-        contentType: false,
-        data: formData,
-        cache: false,
-        processData: false,
-        success: function (obj) {
-            const dropDown = $('.select2-results');
-            if (dropDown.length > 0) {
-                dropDown.append(`<li class="select2-results__option select2-results__option--selectable select2-results__option--selected" id="select2-Accessories-result-q6av-${obj.id}" role="option" data-select2-id="select2-data-select2-Accessories-result-q6av-${obj.id}" aria-selected="false">${obj.name}</li>`)
-            }
-
-            showToaster("success", "Created", "Accessory has been Created.");
-
-            $('#showAccessoryModal').modal('hide');
-        },
-        error: function (obj) {
-            if (obj.responseJSON) {
-                for (let i = 0; i < obj.responseJSON.length; i++) {
-                    $('#ValidationAccesory' + obj.responseJSON[i].key).text(obj.responseJSON[i].message)
-                }
-            }
-        }
-    });
-}
-
-function openPopupForAccessories() {
-    $.ajax({
-        type: "GET",
-        url: "/accessories/foo/",
-        success: function (html) {
-            $("#accessoryModalBody").html(html);
-            ckEditorInit("#accessoryModalBody");
-            $('#showAccessoryModal').modal('show');
-        }
     });
 }

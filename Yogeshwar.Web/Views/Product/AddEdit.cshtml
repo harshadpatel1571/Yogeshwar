@@ -69,12 +69,12 @@
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
                         <select class="js-example-basic-multiple" asp-for="Accessories"
-                                asp-items="Model.SelectListsForAccessories" multiple="multiple">
+                                asp-items="Model.SelectListsForAccessories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
                         </select>
                         <span asp-validation-for="Accessories" class="text-danger"></span>
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForAccessories()" title="Shift + A">
+                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForAccessories()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shift + A">
                             <div class="d-flex">
                                 <div class="flex-shrink-0" style="padding-left:6px">
                                     <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
@@ -92,7 +92,7 @@
                         <span asp-validation-for="Categories" class="text-danger"></span>
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-primary mt-4" title="Shift + C">
+                        <button type="button" class="btn btn-primary mt-4" title="Shift + C" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <div class="d-flex">
                                 <div class="flex-shrink-0" style="padding-left:6px">
                                     <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
@@ -191,5 +191,5 @@
 
 @section Scripts{
     <script src="~/js/custom/productaddedit.js"></script>
-    <script src="~/js/custom/accessoriesaddedit.js"></script>
+    <script src="~/js/custom/accessoriesaddeditpopup.js"></script>
 }

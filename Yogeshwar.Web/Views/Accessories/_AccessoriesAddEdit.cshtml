@@ -1,44 +1,25 @@
-﻿@model AccessoriesDto
-
-<div class="row g-3 needs-validation">
+﻿<div class="row g-3 needs-validation">
     <div class="col-md-6">
-        <input class="form-control" type="hidden" asp-for="Id" id="AccesoryId">
-        <input class="form-control" type="hidden" asp-for="Image" id="AccesoryImage">
         <label class="form-label">Accessories Name</label>
         <span class="text-danger">*</span>
-        <input class="form-control" asp-for="Name" id="AccesoryName" maxlength="100" required>
-        <span id="ValidationAccesoryName" asp-validation-for="Name" class="text-danger"></span>
+        <input class="form-control" id="AccesoryName" maxlength="100" required>
+        <span id="ValidationAccesoryName" class="text-danger"></span>
     </div>
     <div class="col-md-6">
         <label class="form-label">Quantity</label>
         <span class="text-danger">*</span>
-        <input class="form-control" asp-for="Quantity" id="AccesoryQuantity" required>
-        <span id="ValidationAccesoryQuantity" asp-validation-for="Quantity" class="text-danger"></span>
+        <input class="form-control" id="AccesoryQuantity" required>
+        <span id="ValidationAccesoryQuantity" class="text-danger"></span>
     </div>
     <div class="col-md-12">
         <label class="form-label">Description</label>
-        <textarea class="form-control ckeditor-classic" id="AccesoryDescription" asp-for="Description" rows="2" maxlength="250"></textarea>
-        <span id="ValidationAccesoryDescription" asp-validation-for="Description" class="text-danger"></span>
+        <textarea class="form-control ckeditor-classic" id="AccesoryDescription" rows="2" maxlength="250"></textarea>
+        <span id="ValidationAccesoryDescription" class="text-danger"></span>
     </div>
     <div class="col-md-6">
         <label class="form-label">Upload Image <span class="text-info">(Only images are allowed.)</span></label>
-        <input class="form-control md-2" id="AccesoryFile" asp-for="File" accept="image/*">
+        <input class="form-control md-2" id="AccesoryFile" type="file" onchange="showImage(this)" accept="image/*">
         <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="AccesoryImageDiv">
-            @if (Model?.Image is null)
-            {
-                @*<img id="imageContainer" src="~/images/users/avatar-1.jpg" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">*@
-            }
-            else
-            {
-                <img id="imageContainer" src="@Model.Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
-                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage()'>
-                        <span class="avatar-title rounded-circle bg-light text-body shadow">
-                            <i class="ri-delete-bin-line"></i>
-                        </span>
-                    </label>
-                </div>
-            }
         </div>
     </div>
     <div class="col-12">
