@@ -82,7 +82,7 @@ public class CustomerViewDto
     /// Gets or sets the address.
     /// </summary>
     /// <value>The address.</value>
-    public required string Address { get; set; }
+    public string Address { get; set; }
 
     /// <summary>
     /// Gets or sets the image.

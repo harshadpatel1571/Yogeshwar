@@ -66,7 +66,7 @@ function saveAccessories() {
 function openPopupForAccessories() {
     $.ajax({
         type: "GET",
-        url: "/accessories/foo/",
+        url: "/partialview/accessoriesaddpopupview/",
         success: function (html) {
             $("#accessoryModalBody").html(html);
             ckEditorInit("#accessoryModalBody");

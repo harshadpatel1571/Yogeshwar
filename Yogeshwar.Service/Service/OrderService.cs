@@ -350,7 +350,7 @@ internal class OrderService : IOrderService
                     Name = x.Customer.FirstName + " " + x.Customer.LastName,
                     Email = x.Customer.Email,
                     PhoneNo = x.Customer.PhoneNo,
-                    Address = x.Customer.Address + ", " + x.Customer.City + " - " + x.Customer.PinCode + ".",
+                    //Address = x.Customer.Address + ", " + x.Customer.City + " - " + x.Customer.PinCode + ".",
                     Image = x.Customer.Image == null ? null : $"{_customerImageReadPath}/{x.Customer.Image}",
                 },
                 OrderDetails = x.OrderDetails.Select(c => new OrderDetailsViewDto

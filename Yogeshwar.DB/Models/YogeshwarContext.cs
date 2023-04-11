@@ -1,4 +1,8 @@
-﻿namespace Yogeshwar.DB.Models;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace Yogeshwar.DB.Models;
 
 public partial class YogeshwarContext : DbContext
 {
@@ -15,7 +19,11 @@ public partial class YogeshwarContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Configuration> Configurations { get; set; }
+
     public virtual DbSet<Customer> Customers { get; set; }
+
+    public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
 
     public virtual DbSet<CustomerService> CustomerServices { get; set; }
 
@@ -36,6 +44,7 @@ public partial class YogeshwarContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=65.108.57.75;Database=Yogeshwar;MultipleActiveResultSets=true;TrustServerCertificate=True;User Id=sa;Password=Harshad@@1234;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,6 +57,7 @@ public partial class YogeshwarContext : DbContext
             entity.Property(e => e.Image)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.MeasurementType).HasMaxLength(9);
             entity.Property(e => e.ModifiedDate).HasPrecision(0);
             entity.Property(e => e.Name).HasMaxLength(100);
         });
@@ -57,11 +67,32 @@ public partial class YogeshwarContext : DbContext
             entity.ToTable("Category");
 
             entity.Property(e => e.CreatedDate).HasPrecision(0);
+            entity.Property(e => e.Hsnno)
+                .HasMaxLength(9)
+                .HasColumnName("HSNNo");
             entity.Property(e => e.Image)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.ModifiedDate).HasPrecision(0);
             entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Configuration>(entity =>
+        {
+            entity.ToTable("Configuration");
+
+            entity.Property(e => e.CompanyLogo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CompanyName).HasMaxLength(200);
+            entity.Property(e => e.Gst)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("GST");
+            entity.Property(e => e.Gstnumber)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("GSTNumber");
+            entity.Property(e => e.TermAndCondition).HasMaxLength(2000);
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -73,15 +104,11 @@ public partial class YogeshwarContext : DbContext
             entity.Property(e => e.AccountHolderName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.BankName)
                 .HasMaxLength(25)
                 .IsUnicode(false);
             entity.Property(e => e.BranchName)
                 .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.City)
-                .HasMaxLength(25)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedDate)
                 .HasPrecision(0)
@@ -106,6 +133,35 @@ public partial class YogeshwarContext : DbContext
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(12)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<CustomerAddress>(entity =>
+        {
+            entity.ToTable("CustomerAddress");
+
+            entity.Property(e => e.Address)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+            entity.Property(e => e.City)
+                .HasMaxLength(150)
+                .IsUnicode(false);
+            entity.Property(e => e.District)
+                .HasMaxLength(150)
+                .IsUnicode(false);
+            entity.Property(e => e.PhoneNo)
+                .HasMaxLength(12)
+                .IsUnicode(false);
+            entity.Property(e => e.PinCode)
+                .HasMaxLength(7)
+                .IsUnicode(false);
+            entity.Property(e => e.State)
+                .HasMaxLength(150)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.CustomerAddresses)
+                .HasForeignKey(d => d.CustomerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CustomerAddress_Customer");
         });
 
         modelBuilder.Entity<CustomerService>(entity =>
@@ -191,6 +247,12 @@ public partial class YogeshwarContext : DbContext
             entity.Property(e => e.CreatedDate)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Gst)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("GST");
+            entity.Property(e => e.Hsnno)
+                .HasMaxLength(9)
+                .HasColumnName("HSNNo");
             entity.Property(e => e.ModelNo).HasMaxLength(50);
             entity.Property(e => e.ModifiedDate).HasPrecision(0);
             entity.Property(e => e.Name).HasMaxLength(100);

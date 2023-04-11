@@ -1,4 +1,7 @@
-﻿namespace Yogeshwar.DB.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Yogeshwar.DB.Models;
 
 public partial class Product
 {
@@ -11,6 +14,10 @@ public partial class Product
     public decimal Price { get; set; }
 
     public string ModelNo { get; set; } = null!;
+
+    public string Hsnno { get; set; } = null!;
+
+    public decimal Gst { get; set; }
 
     public string? Video { get; set; }
 

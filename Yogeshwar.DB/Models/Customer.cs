@@ -1,4 +1,7 @@
-﻿namespace Yogeshwar.DB.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Yogeshwar.DB.Models;
 
 public partial class Customer
 {
@@ -12,10 +15,6 @@ public partial class Customer
 
     public string PhoneNo { get; set; } = null!;
 
-    public string Address { get; set; } = null!;
-
-    public string City { get; set; } = null!;
-
     public string? Gstnumber { get; set; }
 
     public string Ifsccode { get; set; } = null!;
@@ -27,8 +26,6 @@ public partial class Customer
     public string BranchName { get; set; } = null!;
 
     public long AccountNumber { get; set; }
-
-    public int PinCode { get; set; }
 
     public string? Image { get; set; }
 
@@ -43,6 +40,8 @@ public partial class Customer
     public bool IsActive { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public virtual ICollection<CustomerAddress> CustomerAddresses { get; } = new List<CustomerAddress>();
 
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

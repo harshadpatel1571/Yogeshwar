@@ -107,10 +107,10 @@ internal class CustomerService : ICustomerService
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Email = customer.Email,
-            Address = customer.Address,
-            City = customer.City,
+            //Address = customer.Address,
+            //City = customer.City,
             PhoneNo = customer.PhoneNo,
-            PinCode = customer.PinCode,
+            //PinCode = customer.PinCode,
             AccountHolderName = customer.AccountHolderName,
             AccountNumber = customer.AccountNumber,
             BankName = customer.BankName,
@@ -182,11 +182,11 @@ internal class CustomerService : ICustomerService
             BranchName = customer.BranchName,
             Gstnumber = customer.GstNumber,
             Ifsccode = customer.IFSCCode,
-            Address = customer.Address,
+            //Address = customer.Address,
             Image = image,
             IsActive = true,
-            City = customer.City,
-            PinCode = customer.PinCode,
+            //City = customer.City,
+            //PinCode = customer.PinCode,
             CreatedBy = _currentUserService.GetCurrentUserId(),
             CreatedDate = DateTime.Now
         };
@@ -229,15 +229,15 @@ internal class CustomerService : ICustomerService
         dbModel.LastName = customer.LastName;
         dbModel.Email = customer.Email;
         dbModel.PhoneNo = customer.PhoneNo;
-        dbModel.Address = customer.Address;
+        //dbModel.Address = customer.Address;
         dbModel.AccountHolderName = customer.AccountHolderName;
         dbModel.AccountNumber = customer.AccountNumber;
         dbModel.BankName = customer.BankName;
         dbModel.BranchName = customer.BranchName;
         dbModel.Gstnumber = customer.GstNumber;
         dbModel.Ifsccode = customer.IFSCCode;
-        dbModel.City = customer.City;
-        dbModel.PinCode = customer.PinCode;
+        //dbModel.City = customer.City;
+        //dbModel.PinCode = customer.PinCode;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
 
