@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="IUserService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IUserService))]
-internal class UserService : IUserService
+internal sealed class UserService : IUserService
 {
     /// <summary>
     /// The context

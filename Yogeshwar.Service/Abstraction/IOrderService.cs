@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Abstraction;
+﻿using Yogeshwar.DB.DbModels;
+
+namespace Yogeshwar.Service.Abstraction;
 
 /// <summary>
 /// Interface IOrderService
@@ -45,5 +47,5 @@ public interface IOrderService : IDisposable
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;System.Nullable&lt;Order&gt;&gt;.</returns>
-    Task<Order?> DeleteAsync(int id, CancellationToken cancellationToken);
+    internal Task<Order?> DeleteAsync(int id, CancellationToken cancellationToken);
 }

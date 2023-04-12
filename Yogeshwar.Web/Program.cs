@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Yogeshwar.DB.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
@@ -23,7 +26,10 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
 
 #region Custom
 
-services.AddScoped<Yogeshwar.DB.Models.YogeshwarContext>();
+services.AddDbContextPool<YogeshwarContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("Server"));
+});
 services.AddCustomServices(typeof(IUserService));
 services.AddHttpContextAccessor();
 services.AddHostedService<NotificationBackgroundService>();

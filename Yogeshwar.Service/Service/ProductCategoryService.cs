@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="IProductCategoryService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IProductCategoryService))]
-public class ProductCategoryService : IProductCategoryService
+internal sealed class ProductCategoryService : IProductCategoryService
 {
     /// <summary>
     /// The context

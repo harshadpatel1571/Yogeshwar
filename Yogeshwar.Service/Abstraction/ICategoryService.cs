@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Abstraction;
+﻿using Yogeshwar.DB.DbModels;
+
+namespace Yogeshwar.Service.Abstraction;
 
 /// <summary>
 /// Interface ICategoryService
@@ -37,7 +39,7 @@ public interface ICategoryService : IDisposable
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>ValueTask&lt;System.Nullable&lt;Category&gt;&gt;.</returns>
-    ValueTask<Category?> DeleteAsync(int id, CancellationToken cancellationToken);
+    internal ValueTask<Category?> DeleteAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the image asynchronous.

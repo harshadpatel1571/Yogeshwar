@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="ICustomerService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(ICustomerService))]
-internal class CustomerService : ICustomerService
+internal sealed class CustomerService : ICustomerService
 {
     /// <summary>
     /// The context
@@ -68,7 +68,7 @@ internal class CustomerService : ICustomerService
         {
             result = result.Where(x => x.FirstName.Contains(filterDto.SearchValue) ||
                                        x.LastName.Contains(filterDto.SearchValue) ||
-                                       x.Gstnumber.Contains(filterDto.SearchValue));
+                                       x.GstNumber.Contains(filterDto.SearchValue));
         }
 
         var model = new DataTableResponseCarrier<CustomerDto>
@@ -115,8 +115,8 @@ internal class CustomerService : ICustomerService
             AccountNumber = customer.AccountNumber,
             BankName = customer.BankName,
             BranchName = customer.BranchName,
-            GstNumber = customer.Gstnumber,
-            IFSCCode = customer.Ifsccode,
+            GstNumber = customer.GstNumber,
+            IFSCCode = customer.IfscCode,
             Image = customer.Image == null ? null : $"{configuration["File:ReadPath"]}/Customer/{customer.Image}",
             IsActive = customer.IsActive,
             CreatedDate = customer.CreatedDate,
@@ -147,10 +147,10 @@ internal class CustomerService : ICustomerService
     {
         if (customer.Id < 1)
         {
-            return await CreateAsync(customer,cancellationToken).ConfigureAwait(false);
+            return await CreateAsync(customer, cancellationToken).ConfigureAwait(false);
         }
 
-        return await UpdateAsync(customer,cancellationToken).ConfigureAwait(false);
+        return await UpdateAsync(customer, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -167,7 +167,7 @@ internal class CustomerService : ICustomerService
         {
             image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                     Path.GetExtension(customer.ImageFile.FileName);
-            await customer.ImageFile.SaveAsync($"{_savePath}/{image}",cancellationToken).ConfigureAwait(false);
+            await customer.ImageFile.SaveAsync($"{_savePath}/{image}", cancellationToken).ConfigureAwait(false);
         }
 
         var dbModel = new Customer
@@ -180,8 +180,8 @@ internal class CustomerService : ICustomerService
             AccountNumber = customer.AccountNumber,
             BankName = customer.BankName,
             BranchName = customer.BranchName,
-            Gstnumber = customer.GstNumber,
-            Ifsccode = customer.IFSCCode,
+            GstNumber = customer.GstNumber,
+            IfscCode = customer.IFSCCode,
             //Address = customer.Address,
             Image = image,
             IsActive = true,
@@ -191,7 +191,7 @@ internal class CustomerService : ICustomerService
             CreatedDate = DateTime.Now
         };
 
-        await _context.Customers.AddAsync(dbModel,cancellationToken).ConfigureAwait(false);
+        await _context.Customers.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
 
         return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -234,8 +234,8 @@ internal class CustomerService : ICustomerService
         dbModel.AccountNumber = customer.AccountNumber;
         dbModel.BankName = customer.BankName;
         dbModel.BranchName = customer.BranchName;
-        dbModel.Gstnumber = customer.GstNumber;
-        dbModel.Ifsccode = customer.IFSCCode;
+        dbModel.GstNumber = customer.GstNumber;
+        dbModel.IfscCode = customer.IFSCCode;
         //dbModel.City = customer.City;
         //dbModel.PinCode = customer.PinCode;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();

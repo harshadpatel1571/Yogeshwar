@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="ICategoryService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(ICategoryService))]
-public class CategoryService : ICategoryService
+internal sealed class CategoryService : ICategoryService
 {
     /// <summary>
     /// The context
@@ -212,7 +212,7 @@ public class CategoryService : ICategoryService
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Task&lt;Category&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<Category?> DeleteAsync(int id, CancellationToken cancellationToken)
+    async ValueTask<Category?> ICategoryService.DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Categories
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
