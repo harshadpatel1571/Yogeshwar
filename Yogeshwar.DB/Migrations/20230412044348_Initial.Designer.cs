@@ -12,7 +12,7 @@ using Yogeshwar.DB.Context;
 namespace Yogeshwar.DB.Migrations
 {
     [DbContext(typeof(YogeshwarContext))]
-    [Migration("20230412043521_Initial")]
+    [Migration("20230412044348_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -92,7 +92,7 @@ namespace Yogeshwar.DB.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2(0)");
 
-                    b.Property<string>("HsnCode")
+                    b.Property<string>("HsnNo")
                         .IsRequired()
                         .HasMaxLength(10)
                         .IsUnicode(false)
