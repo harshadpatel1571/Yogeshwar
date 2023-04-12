@@ -4,7 +4,7 @@
 /// Class PushNotificationService.
 /// </summary>
 [RegisterService(ServiceLifetime.Singleton, enableLazyLoading: false)]
-internal class PushNotificationService
+internal sealed class PushNotificationService
 {
     /// <summary>
     /// The configuration

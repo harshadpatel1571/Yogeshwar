@@ -6,24 +6,28 @@
 /// </summary>
 /// <seealso cref="IProductService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IProductService))]
-internal class ProductService : IProductService
+internal sealed class ProductService : IProductService
 {
     /// <summary>
     /// The context
     /// </summary>
     private readonly YogeshwarContext _context;
+
     /// <summary>
     /// The configuration
     /// </summary>
     private readonly IConfiguration _configuration;
+
     /// <summary>
     /// The image save path
     /// </summary>
     private readonly string _imageSavePath;
+
     /// <summary>
     /// The video save path
     /// </summary>
     private readonly string _videoSavePath;
+
     /// <summary>
     /// The current user service
     /// </summary>
@@ -180,10 +184,10 @@ internal class ProductService : IProductService
     {
         if (productDto.Id < 1)
         {
-            return await CreateAsync(productDto,cancellationToken).ConfigureAwait(false);
+            return await CreateAsync(productDto, cancellationToken).ConfigureAwait(false);
         }
 
-        return await UpdateAsync(productDto,cancellationToken).ConfigureAwait(false);
+        return await UpdateAsync(productDto, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -202,7 +206,7 @@ internal class ProductService : IProductService
         {
             video = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                     Path.GetExtension(productDto.VideoFile.FileName);
-            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}",cancellationToken).ConfigureAwait(false);
+            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}", cancellationToken).ConfigureAwait(false);
         }
 
         if (productDto.ImageFiles is { Count: > 0 })
@@ -214,7 +218,8 @@ internal class ProductService : IProductService
                 images[i] = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
-                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}",cancellationToken).ConfigureAwait(false);
+                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}", cancellationToken)
+                    .ConfigureAwait(false);
             }
         }
 
@@ -244,7 +249,7 @@ internal class ProductService : IProductService
             }).ToArray()
         };
 
-        await _context.Products.AddAsync(dbModel,cancellationToken).ConfigureAwait(false);
+        await _context.Products.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
 
         return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -261,7 +266,7 @@ internal class ProductService : IProductService
         var dbModel = await _context.Products
             .Include(x => x.ProductAccessories)
             .Include(x => x.ProductCategories)
-            .FirstOrDefaultAsync(x => x.Id == productDto.Id,cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == productDto.Id, cancellationToken).ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -273,7 +278,7 @@ internal class ProductService : IProductService
             var video = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                         Path.GetExtension(productDto.VideoFile.FileName);
 
-            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}",cancellationToken).ConfigureAwait(false);
+            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}", cancellationToken).ConfigureAwait(false);
 
             DeleteFileIfExist($"{_videoSavePath}/{dbModel.Video}");
 
@@ -291,7 +296,8 @@ internal class ProductService : IProductService
                 images[i] = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
-                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}",cancellationToken).ConfigureAwait(false);
+                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}", cancellationToken)
+                    .ConfigureAwait(false);
             }
         }
 
@@ -326,15 +332,15 @@ internal class ProductService : IProductService
                 Image = x
             });
 
-            await _context.ProductImages.AddRangeAsync(newImages,cancellationToken).ConfigureAwait(false);
+            await _context.ProductImages.AddRangeAsync(newImages, cancellationToken).ConfigureAwait(false);
         }
 
         _context.ProductAccessories.RemoveRange(dbModel.ProductAccessories);
-        await _context.ProductAccessories.AddRangeAsync(newAccessories,cancellationToken)
+        await _context.ProductAccessories.AddRangeAsync(newAccessories, cancellationToken)
             .ConfigureAwait(false);
 
         _context.ProductCategories.RemoveRange(dbModel.ProductCategories);
-        await _context.ProductCategories.AddRangeAsync(newCategories,cancellationToken)
+        await _context.ProductCategories.AddRangeAsync(newCategories, cancellationToken)
             .ConfigureAwait(false);
 
         _context.Products.Update(dbModel);
@@ -363,7 +369,7 @@ internal class ProductService : IProductService
     public async Task<int> DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
-            .FirstOrDefaultAsync(x => x.Id == id,cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
@@ -390,7 +396,7 @@ internal class ProductService : IProductService
     public async ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.ProductImages
-            .FirstOrDefaultAsync(x => x.Id == id,cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
@@ -421,7 +427,7 @@ internal class ProductService : IProductService
     public async ValueTask<bool> DeleteVideoAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
-            .FirstOrDefaultAsync(x => x.Id == id,cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
@@ -439,7 +445,7 @@ internal class ProductService : IProductService
         dbModel.Video = null;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
-        
+
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return true;
@@ -455,7 +461,7 @@ internal class ProductService : IProductService
     public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
-            .FirstOrDefaultAsync(x => x.Id == id,cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)

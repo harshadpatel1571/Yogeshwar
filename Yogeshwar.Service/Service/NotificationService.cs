@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="INotificationService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(INotificationService))]
-internal class NotificationService : INotificationService
+internal sealed class NotificationService : INotificationService
 {
     /// <summary>
     /// The context

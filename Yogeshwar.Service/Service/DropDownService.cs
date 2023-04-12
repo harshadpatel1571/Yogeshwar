@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="IDropDownService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IDropDownService))]
-internal class DropDownService : IDropDownService
+internal sealed class DropDownService : IDropDownService
 {
     /// <summary>
     /// The context

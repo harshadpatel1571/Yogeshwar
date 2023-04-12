@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="IOrderService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IOrderService))]
-internal class OrderService : IOrderService
+internal sealed class OrderService : IOrderService
 {
     /// <summary>
     /// The context
@@ -149,7 +149,8 @@ internal class OrderService : IOrderService
         var productIds = orderDto.OrderDetails.Select(c => c.ProductId);
 
         var productDetails =
-            (Dictionary<int, ProductDetailDto>)await GetProductDetailsAsync(productIds, cancellationToken).ConfigureAwait(false);
+            (Dictionary<int, ProductDetailDto>)await GetProductDetailsAsync(productIds, cancellationToken)
+                .ConfigureAwait(false);
 
         if (!orderDto.ForceCreate)
         {

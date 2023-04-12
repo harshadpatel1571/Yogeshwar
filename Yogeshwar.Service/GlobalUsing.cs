@@ -1,5 +1,5 @@
 ﻿global using System.ComponentModel.DataAnnotations;
-global using Yogeshwar.DB.Models;
+global using Yogeshwar.DB.DbModels;
 global using Microsoft.EntityFrameworkCore;
 global using Yogeshwar.Service.Abstraction;
 global using Yogeshwar.Service.Dto;
@@ -18,5 +18,6 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Yogeshwar.Helper.Attribute;
 global using OneOf;
 global using OneOf.Types;
-global using System.Text.Json.Serialization;
 global using System.Security.Claims;
+global using Yogeshwar.DB.Context;
+

@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="ICurrentUserService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(ICurrentUserService))]
-public class CurrentUserService : ICurrentUserService
+internal sealed class CurrentUserService : ICurrentUserService
 {
     /// <summary>
     /// The claims principal

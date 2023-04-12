@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Yogeshwar.DB.DbModels;
 
-namespace Yogeshwar.DB.Models;
-
-public partial class OrderDetail
+[Table("OrderDetails")]
+internal sealed class OrderDetail
 {
-    public int Id { get; set; }
+    [Key] public int Id { get; set; }
 
     public int OrderId { get; set; }
 
@@ -15,21 +13,26 @@ public partial class OrderDetail
 
     public decimal Amount { get; set; }
 
+    [Column(TypeName = GlobalDataType.DateDataType)]
     public DateTime? ReceiveDate { get; set; }
 
     public byte Status { get; set; }
 
     public bool IsDeleted { get; set; }
 
+    [Column(TypeName = GlobalDataType.DateDataType)]
+
     public DateTime CreatedDate { get; set; }
 
     public int? CreatedBy { get; set; }
+
+    [Column(TypeName = GlobalDataType.DateDataType)]
 
     public DateTime? ModifiedDate { get; set; }
 
     public int? ModifiedBy { get; set; }
 
-    public virtual Order Order { get; set; } = null!;
+    [ForeignKey(nameof(OrderId))] public Order Order { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    [ForeignKey(nameof(ProductId))] public Product Product { get; set; }
 }

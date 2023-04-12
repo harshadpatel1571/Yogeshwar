@@ -6,20 +6,23 @@
 /// </summary>
 /// <seealso cref="IAccessoriesService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IAccessoriesService))]
-internal class AccessoriesService : IAccessoriesService
+internal sealed class AccessoriesService : IAccessoriesService
 {
     /// <summary>
     /// The context
     /// </summary>
     private readonly YogeshwarContext _context;
+
     /// <summary>
     /// The configuration
     /// </summary>
     private readonly IConfiguration _configuration;
+
     /// <summary>
     /// The current user service
     /// </summary>
     private readonly ICurrentUserService _currentUserService;
+
     /// <summary>
     /// The save path
     /// </summary>
