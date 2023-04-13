@@ -70,7 +70,8 @@ internal sealed class DropDownService : IDropDownService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForOrdersAsync(CancellationToken cancellationToken)
+    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForOrdersAsync(
+        CancellationToken cancellationToken)
     {
         return await _context.Orders
             .Where(x => !x.IsDeleted)

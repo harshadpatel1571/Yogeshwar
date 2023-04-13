@@ -84,20 +84,11 @@ internal sealed class ProductCategoryService : IProductCategoryService
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;ProductCategory&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<ProductCategory?> DeleteAsync(int id, CancellationToken cancellationToken)
+    public async ValueTask<int> DeleteAsync(int id, CancellationToken cancellationToken)
     {
-        var dbModel = await _context.ProductCategories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+        return await _context.ProductCategories
+            .Where(x => x.Id == id)
+            .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
-
-        if (dbModel is null)
-        {
-            return null;
-        }
-
-        _context.ProductCategories.Remove(dbModel);
-        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-        return dbModel;
     }
 }

@@ -2,11 +2,11 @@
 
 /// <summary>
 /// Class ServiceService.
-/// Implements the <see cref="IServiceService" />
+/// Implements the <see cref="IMaintenanceService" />
 /// </summary>
-/// <seealso cref="IServiceService" />
-[RegisterService(ServiceLifetime.Scoped, typeof(IServiceService))]
-internal sealed class ServiceService : IServiceService
+/// <seealso cref="IMaintenanceService" />
+[RegisterService(ServiceLifetime.Scoped, typeof(IMaintenanceService))]
+internal sealed class MaintenanceService : IMaintenanceService
 {
     /// <summary>
     /// The context
@@ -14,10 +14,10 @@ internal sealed class ServiceService : IServiceService
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceService" /> class.
+    /// Initializes a new instance of the <see cref="MaintenanceService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
-    public ServiceService(YogeshwarContext context)
+    public MaintenanceService(YogeshwarContext context)
     {
         _context = context;
     }
@@ -37,7 +37,7 @@ internal sealed class ServiceService : IServiceService
     /// <param name="filterDto">The filter dto.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;DataTableResponseCarrier&lt;ServiceDto&gt;&gt;.</returns>
-    async Task<DataTableResponseCarrier<ServiceDto>> IServiceService.GetByFilterAsync(DataTableFilterDto filterDto,
+    async Task<DataTableResponseCarrier<ServiceDto>> IMaintenanceService.GetByFilterAsync(DataTableFilterDto filterDto,
         CancellationToken cancellationToken)
     {
         var result = _context.CustomerServices.Where(x => !x.IsDeleted).AsNoTracking();

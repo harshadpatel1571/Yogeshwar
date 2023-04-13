@@ -21,6 +21,8 @@ public class AccessoriesDto : BaseDto
     [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be 3 to 100 character long.")]
     public string Name { get; set; }
 
+    public string MeasurementType { get; set; }
+
     /// <summary>
     /// Gets or sets the description.
     /// </summary>

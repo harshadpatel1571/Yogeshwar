@@ -8,14 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Yogeshwar.DB\Yogeshwar.DB.csproj"/>
-        <ProjectReference Include="..\Yogeshwar.Helper\Yogeshwar.Helper.csproj"/>
-        <PackageReference Include="OneOf" Version="3.0.243"/>
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20"/>
+        <ProjectReference Include="..\Yogeshwar.DB\Yogeshwar.DB.csproj" />
+        <ProjectReference Include="..\Yogeshwar.Helper\Yogeshwar.Helper.csproj" />
+        <PackageReference Include="OneOf" Version="3.0.243" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="Yogeshwar.Web"/>
+        <InternalsVisibleTo Include="Yogeshwar.Web" />
     </ItemGroup>
   
 </Project>

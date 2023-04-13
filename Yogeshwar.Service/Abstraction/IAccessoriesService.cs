@@ -13,7 +13,8 @@ public interface IAccessoriesService : IDisposable
     /// <param name="filterDto">The filter dto.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;DataTableResponseCarrier&lt;AccessoriesDto&gt;&gt;.</returns>
-    internal Task<DataTableResponseCarrier<AccessoriesDto>> GetByFilterAsync(DataTableFilterDto filterDto, CancellationToken cancellationToken);
+    internal Task<DataTableResponseCarrier<AccessoriesDto>> GetByFilterAsync(DataTableFilterDto filterDto,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the single asynchronous.
@@ -45,7 +46,7 @@ public interface IAccessoriesService : IDisposable
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
-    Task<int> DeleteAsync(int id, CancellationToken cancellationToken);
+    internal Task<int> DeleteAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Actives and in active record asynchronous.

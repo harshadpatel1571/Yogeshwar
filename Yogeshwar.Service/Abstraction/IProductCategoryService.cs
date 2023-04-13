@@ -31,5 +31,5 @@ public interface IProductCategoryService : IDisposable
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>ValueTask&lt;System.Nullable&lt;ProductCategory&gt;&gt;.</returns>
-    internal ValueTask<ProductCategory?> DeleteAsync(int id, CancellationToken cancellationToken);
+    internal ValueTask<int> DeleteAsync(int id, CancellationToken cancellationToken);
 }

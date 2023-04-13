@@ -46,29 +46,6 @@ public class CustomerDto : BaseDto
     public string PhoneNo { get; set; }
 
     /// <summary>
-    /// Gets or sets the address.
-    /// </summary>
-    /// <value>The address.</value>
-    [Required(ErrorMessage = "Address is required.")]
-    [StringLength(250, MinimumLength = 5, ErrorMessage = "Address must be 5 to 250 character long.")]
-    public string Address { get; set; }
-
-    /// <summary>
-    /// Gets or sets the city.
-    /// </summary>
-    /// <value>The city.</value>
-    [Required(ErrorMessage = "City is required.")]
-    [StringLength(25, MinimumLength = 3, ErrorMessage = "City must be 3 to 25 character long.")]
-    public string City { get; set; }
-
-    /// <summary>
-    /// Gets or sets the pin code.
-    /// </summary>
-    /// <value>The pin code.</value>
-    [Required(ErrorMessage = "Pin code is required.")]
-    public int PinCode { get; set; }
-
-    /// <summary>
     /// Gets or sets the GST number.
     /// </summary>
     /// <value>The GST number.</value>
@@ -102,9 +79,9 @@ public class CustomerDto : BaseDto
     /// Gets or sets the ifsc code.
     /// </summary>
     /// <value>The ifsc code.</value>
-    [Required(ErrorMessage = "IFSCCode is required.")]
-    [StringLength(11, MinimumLength = 11, ErrorMessage = "IFSCCode must be 11 character long.")]
-    public string IFSCCode { get; set; }
+    [Required(ErrorMessage = "IfscCode is required.")]
+    [StringLength(11, MinimumLength = 11, ErrorMessage = "IfscCode must be 11 character long.")]
+    public string IfscCode { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the branch.
@@ -126,4 +103,36 @@ public class CustomerDto : BaseDto
     /// <value>The image file.</value>
     [ValidateFile]
     public IFormFile? ImageFile { get; set; }
+
+    public IList<CustomerAddressDto> CustomerAddresses { get; set; }
+}
+
+public class CustomerAddressDto
+{
+    public int Id { get; set; }
+
+    public int CustomerId { get; set; }
+
+    [Required(ErrorMessage = "City is required.")]
+    [StringLength(25, MinimumLength = 3, ErrorMessage = "City must be 3 to 50 character long.")]
+    public string City { get; set; }
+
+    [Required(ErrorMessage = "District is required.")]
+    [StringLength(25, MinimumLength = 3, ErrorMessage = "District must be 3 to 50 character long.")]
+    public string District { get; set; }
+
+    [Required(ErrorMessage = "State is required.")]
+    [StringLength(25, MinimumLength = 3, ErrorMessage = "State must be 3 to 50 character long.")]
+    public string State { get; set; }
+
+    [Required(ErrorMessage = "Address is required.")]
+    [StringLength(250, MinimumLength = 10, ErrorMessage = "Address must be 10 to 250 character long.")]
+    public string Address { get; set; }
+
+    [Required(ErrorMessage = "PinCode is required.")]
+    [StringLength(7, MinimumLength = 5, ErrorMessage = "PinCode must be 5 to 7 character long.")]
+    public string PinCode { get; set; }
+
+    [StringLength(13, MinimumLength = 10, ErrorMessage = "PinCode must be 10 to 13 character long.")]
+    public string? PhoneNo { get; set; }
 }

@@ -59,13 +59,6 @@ internal sealed class ProductService : IProductService
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Get by filter as an asynchronous operation.
-    /// </summary>
-    /// <param name="filterDto">The filter dto.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;Yogeshwar.Service.Dto.DataTableResponseCarrier<Yogeshwar.Service.Dto.ProductDto>&gt; representing the asynchronous operation.</returns>
-    /// <font color="red">Badly formed XML comment.</font>
     async Task<DataTableResponseCarrier<ProductDto>> IProductService.GetByFilterAsync(DataTableFilterDto filterDto,
         CancellationToken cancellationToken)
     {
@@ -132,6 +125,7 @@ internal sealed class ProductService : IProductService
             ModelNo = product.ModelNo,
             Description = product.Description,
             Price = product.Price,
+            HsnNo = product.HsnNo,
             Video = product.Video != null ? $"{configuration["File:ReadPath"]}/Product/Video/{product.Video}" : null,
             AccessoriesQuantity = product.ProductAccessories.Select(x => new AccessoriesQuantity
             {
@@ -204,7 +198,7 @@ internal sealed class ProductService : IProductService
 
         if (productDto.VideoFile is not null)
         {
-            video = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            video = Guid.NewGuid().ToString().Replace("-", "") +
                     Path.GetExtension(productDto.VideoFile.FileName);
             await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}", cancellationToken).ConfigureAwait(false);
         }
@@ -215,7 +209,7 @@ internal sealed class ProductService : IProductService
 
             for (var i = 0; i < images.Length; i++)
             {
-                images[i] = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                images[i] = Guid.NewGuid().ToString().Replace("-", "") +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
                 await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}", cancellationToken)
@@ -229,6 +223,7 @@ internal sealed class ProductService : IProductService
             Name = productDto.Name,
             Description = productDto.Description,
             Video = video,
+            HsnNo = productDto.HsnNo,
             ModelNo = productDto.ModelNo,
             Price = productDto.Price!.Value,
             IsActive = true,
@@ -264,9 +259,8 @@ internal sealed class ProductService : IProductService
     private async ValueTask<int> UpdateAsync(ProductDto productDto, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
-            .Include(x => x.ProductAccessories)
-            .Include(x => x.ProductCategories)
-            .FirstOrDefaultAsync(x => x.Id == productDto.Id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == productDto.Id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -275,7 +269,7 @@ internal sealed class ProductService : IProductService
 
         if (productDto.VideoFile is not null)
         {
-            var video = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            var video = Guid.NewGuid().ToString().Replace("-", "") +
                         Path.GetExtension(productDto.VideoFile.FileName);
 
             await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}", cancellationToken).ConfigureAwait(false);
@@ -293,7 +287,7 @@ internal sealed class ProductService : IProductService
 
             for (var i = 0; i < images.Length; i++)
             {
-                images[i] = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+                images[i] = Guid.NewGuid().ToString().Replace("-", "") +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
                 await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}", cancellationToken)
@@ -308,6 +302,7 @@ internal sealed class ProductService : IProductService
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
         dbModel.Price = productDto.Price!.Value;
+        dbModel.HsnNo = productDto.HsnNo;
 
         var newAccessories = productDto.AccessoriesQuantity
             .Select(x => new ProductAccessory
@@ -332,16 +327,21 @@ internal sealed class ProductService : IProductService
                 Image = x
             });
 
-            await _context.ProductImages.AddRangeAsync(newImages, cancellationToken).ConfigureAwait(false);
+            _context.ProductImages.AddRange(newImages);
         }
 
-        _context.ProductAccessories.RemoveRange(dbModel.ProductAccessories);
-        await _context.ProductAccessories.AddRangeAsync(newAccessories, cancellationToken)
+        await _context.ProductAccessories
+            .Where(x => x.ProductId == dbModel.Id)
+            .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        _context.ProductCategories.RemoveRange(dbModel.ProductCategories);
-        await _context.ProductCategories.AddRangeAsync(newCategories, cancellationToken)
+        await _context.ProductAccessories
+            .Where(x => x.ProductId == dbModel.Id)
+            .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
+
+        _context.ProductAccessories.AddRange(newAccessories);
+        _context.ProductCategories.AddRange(newCategories);
 
         _context.Products.Update(dbModel);
 

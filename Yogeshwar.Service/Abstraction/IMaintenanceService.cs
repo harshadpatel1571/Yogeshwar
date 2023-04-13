@@ -5,7 +5,7 @@
 /// Extends the <see cref="IDisposable" />
 /// </summary>
 /// <seealso cref="IDisposable" />
-public interface IServiceService : IDisposable
+public interface IMaintenanceService : IDisposable
 {
     /// <summary>
     /// Gets by filter asynchronous.

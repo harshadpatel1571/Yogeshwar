@@ -11,13 +11,13 @@ public sealed class ServiceController : Controller
     /// <summary>
     /// The service service
     /// </summary>
-    private readonly Lazy<IServiceService> _serviceService;
+    private readonly Lazy<IMaintenanceService> _serviceService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ServiceController" /> class.
     /// </summary>
     /// <param name="serviceService">The service service.</param>
-    public ServiceController(Lazy<IServiceService> serviceService)
+    public ServiceController(Lazy<IMaintenanceService> serviceService)
     {
         _serviceService = serviceService;
     }

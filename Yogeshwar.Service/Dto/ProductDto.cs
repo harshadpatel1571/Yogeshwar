@@ -44,6 +44,10 @@ public class ProductDto : BaseDto
     [StringLength(50, ErrorMessage = "Model no must be up to 50 character long.")]
     public string ModelNo { get; set; }
 
+    [Required(ErrorMessage = "HsnNo is required.")]
+    [StringLength(10, ErrorMessage = "HsnNo must be up to 10 character long.")]
+    public string HsnNo { get; set; }
+
     /// <summary>
     /// Gets or sets the accessories.
     /// </summary>

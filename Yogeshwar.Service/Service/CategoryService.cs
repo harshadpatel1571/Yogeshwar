@@ -102,6 +102,7 @@ internal sealed class CategoryService : ICategoryService
             Id = category.Id,
             Name = category.Name,
             IsActive = category.IsActive,
+            HsnNo = category.HsnNo,
             Image = category.Image != null ? $"{configuration["File:ReadPath"]}/Category/{category.Image}" : null,
             CreatedDate = category.CreatedDate,
             ModifiedDate = category.ModifiedDate
@@ -149,15 +150,17 @@ internal sealed class CategoryService : ICategoryService
 
         if (category.ImageFile is not null)
         {
-            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            image = Guid.NewGuid().ToString().Replace("-", "") +
                     Path.GetExtension(category.ImageFile.FileName);
-            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}", cancellationToken).ConfigureAwait(false);
+            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}", cancellationToken)
+                .ConfigureAwait(false);
         }
 
         var dbModel = new Category
         {
             Name = category.Name,
             Image = image,
+            HsnNo = category.HsnNo,
             IsActive = true,
             CreatedDate = DateTime.Now,
             CreatedBy = _currentUserService.GetCurrentUserId()
@@ -177,7 +180,8 @@ internal sealed class CategoryService : ICategoryService
     private async ValueTask<int> UpdateAsync(CategoryDto category, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Categories
-            .FirstOrDefaultAsync(x => x.Id == category.Id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == category.Id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel is null)
         {
@@ -185,6 +189,7 @@ internal sealed class CategoryService : ICategoryService
         }
 
         dbModel.Name = category.Name;
+        dbModel.HsnNo = category.HsnNo;
         dbModel.ModifiedDate = DateTime.Now;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
 
@@ -194,9 +199,10 @@ internal sealed class CategoryService : ICategoryService
 
             DeleteFileIfExist(path);
 
-            var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            var image = Guid.NewGuid().ToString().Replace("-", "") +
                         Path.GetExtension(category.ImageFile.FileName);
-            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}", cancellationToken).ConfigureAwait(false);
+            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}", cancellationToken)
+                .ConfigureAwait(false);
 
             dbModel.Image = image;
         }
@@ -215,7 +221,8 @@ internal sealed class CategoryService : ICategoryService
     async ValueTask<Category?> ICategoryService.DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Categories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel is null)
         {
@@ -283,7 +290,8 @@ internal sealed class CategoryService : ICategoryService
     /// <returns>A Task&lt;OneOf`2&gt; representing the asynchronous operation.</returns>
     public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
-        var dbModel = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+        var dbModel = await _context.Categories
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)

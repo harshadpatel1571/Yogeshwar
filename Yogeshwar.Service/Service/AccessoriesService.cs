@@ -105,6 +105,7 @@ internal sealed class AccessoriesService : IAccessoriesService
             Description = accessory.Description,
             Image = accessory.Image == null ? null : $"{configuration["File:ReadPath"]}/Accessories/{accessory.Image}",
             Quantity = accessory.Quantity,
+            MeasurementType = accessory.MeasurementType,
             IsActive = accessory.IsActive,
             CreatedDate = accessory.CreatedDate,
             ModifiedDate = accessory.ModifiedDate,
@@ -164,6 +165,7 @@ internal sealed class AccessoriesService : IAccessoriesService
             Description = accessory.Description,
             Image = image,
             Quantity = accessory.Quantity,
+            MeasurementType = accessory.MeasurementType,
             IsActive = true,
             CreatedDate = DateTime.Now,
             CreatedBy = _currentUserService.GetCurrentUserId(),
@@ -207,6 +209,7 @@ internal sealed class AccessoriesService : IAccessoriesService
 
         dbModel.Id = accessory.Id;
         dbModel.Name = accessory.Name;
+        dbModel.MeasurementType = accessory.MeasurementType;
         dbModel.Description = accessory.Description;
         dbModel.Quantity = accessory.Quantity;
         dbModel.ModifiedDate = DateTime.Now;
@@ -235,10 +238,11 @@ internal sealed class AccessoriesService : IAccessoriesService
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async Task<int> DeleteAsync(int id, CancellationToken cancellationToken)
+    async Task<int> IAccessoriesService.DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -251,7 +255,7 @@ internal sealed class AccessoriesService : IAccessoriesService
 
         _context.Accessories.Update(dbModel);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+       return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

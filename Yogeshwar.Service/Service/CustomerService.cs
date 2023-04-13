@@ -107,20 +107,29 @@ internal sealed class CustomerService : ICustomerService
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Email = customer.Email,
-            //Address = customer.Address,
-            //City = customer.City,
             PhoneNo = customer.PhoneNo,
-            //PinCode = customer.PinCode,
             AccountHolderName = customer.AccountHolderName,
             AccountNumber = customer.AccountNumber,
             BankName = customer.BankName,
             BranchName = customer.BranchName,
             GstNumber = customer.GstNumber,
-            IFSCCode = customer.IfscCode,
+            IfscCode = customer.IfscCode,
             Image = customer.Image == null ? null : $"{configuration["File:ReadPath"]}/Customer/{customer.Image}",
             IsActive = customer.IsActive,
             CreatedDate = customer.CreatedDate,
-            ModifiedDate = customer.ModifiedDate
+            ModifiedDate = customer.ModifiedDate,
+            CustomerAddresses = customer.CustomerAddresses
+                .Select(x => new CustomerAddressDto
+                {
+                    Id = x.Id,
+                    CustomerId = x.CustomerId,
+                    City = x.City,
+                    PinCode = x.PinCode,
+                    PhoneNo = x.PhoneNo,
+                    State = x.State,
+                    Address = x.Address,
+                    District = x.District
+                }).ToArray()
         };
 
     /// <summary>
@@ -165,9 +174,10 @@ internal sealed class CustomerService : ICustomerService
 
         if (customer.ImageFile is not null)
         {
-            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            image = Guid.NewGuid().ToString().Replace("-", "") +
                     Path.GetExtension(customer.ImageFile.FileName);
-            await customer.ImageFile.SaveAsync($"{_savePath}/{image}", cancellationToken).ConfigureAwait(false);
+            await customer.ImageFile.SaveAsync($"{_savePath}/{image}", cancellationToken)
+                .ConfigureAwait(false);
         }
 
         var dbModel = new Customer
@@ -181,14 +191,21 @@ internal sealed class CustomerService : ICustomerService
             BankName = customer.BankName,
             BranchName = customer.BranchName,
             GstNumber = customer.GstNumber,
-            IfscCode = customer.IFSCCode,
-            //Address = customer.Address,
+            IfscCode = customer.IfscCode,
             Image = image,
             IsActive = true,
-            //City = customer.City,
-            //PinCode = customer.PinCode,
             CreatedBy = _currentUserService.GetCurrentUserId(),
-            CreatedDate = DateTime.Now
+            CreatedDate = DateTime.Now,
+            CustomerAddresses = customer.CustomerAddresses
+                .Select(x => new CustomerAddress
+                {
+                    City = x.City,
+                    PinCode = x.PinCode,
+                    PhoneNo = x.PhoneNo,
+                    State = x.State,
+                    Address = x.Address,
+                    District = x.District,
+                }).ToArray()
         };
 
         await _context.Customers.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
@@ -215,7 +232,7 @@ internal sealed class CustomerService : ICustomerService
 
         if (customer.ImageFile is not null)
         {
-            var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            var image = Guid.NewGuid().ToString().Replace("-", "") +
                         Path.GetExtension(customer.ImageFile.FileName);
             await customer.ImageFile.SaveAsync($"{_savePath}/{image}", cancellationToken)
                 .ConfigureAwait(false);
@@ -229,17 +246,29 @@ internal sealed class CustomerService : ICustomerService
         dbModel.LastName = customer.LastName;
         dbModel.Email = customer.Email;
         dbModel.PhoneNo = customer.PhoneNo;
-        //dbModel.Address = customer.Address;
         dbModel.AccountHolderName = customer.AccountHolderName;
         dbModel.AccountNumber = customer.AccountNumber;
         dbModel.BankName = customer.BankName;
         dbModel.BranchName = customer.BranchName;
         dbModel.GstNumber = customer.GstNumber;
-        dbModel.IfscCode = customer.IFSCCode;
-        //dbModel.City = customer.City;
-        //dbModel.PinCode = customer.PinCode;
+        dbModel.IfscCode = customer.IfscCode;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
+        dbModel.CustomerAddresses = customer.CustomerAddresses
+            .Select(x => new CustomerAddress
+            {
+                City = x.City,
+                PinCode = x.PinCode,
+                PhoneNo = x.PhoneNo,
+                State = x.State,
+                Address = x.Address,
+                District = x.District,
+            }).ToArray();
+
+        await _context.CustomerAddresses
+            .Where(x => x.CustomerId == customer.Id)
+            .ExecuteDeleteAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         _context.Customers.Update(dbModel);
 
