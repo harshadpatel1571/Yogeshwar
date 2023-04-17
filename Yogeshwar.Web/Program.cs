@@ -22,6 +22,8 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
     options.Cookie.Name = "Yogeshwar.Authentication";
 });
 
+services.AddMemoryCache();
+
 #endregion
 
 #region Custom

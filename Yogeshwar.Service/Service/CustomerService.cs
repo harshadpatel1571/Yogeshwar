@@ -14,9 +14,9 @@ internal sealed class CustomerService : ICustomerService
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// The configuration
+    /// The mapping service
     /// </summary>
-    private readonly IConfiguration _configuration;
+    private readonly IMappingService _mappingService;
 
     /// <summary>
     /// The current user service
@@ -24,24 +24,29 @@ internal sealed class CustomerService : ICustomerService
     private readonly ICurrentUserService _currentUserService;
 
     /// <summary>
-    /// The save path
+    /// The root path
     /// </summary>
-    private readonly string _savePath;
+    private readonly string _rootPath;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CustomerService" /> class.
+    /// The prefix path
+    /// </summary>
+    private const string PrefixPath = "/DataImages/Customer/";
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CustomerService"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="currentUserService">The current user service.</param>
-    /// <param name="configuration">The configuration.</param>
     /// <param name="hostEnvironment">The host environment.</param>
+    /// <param name="mappingService">The mapping service.</param>
     public CustomerService(YogeshwarContext context, ICurrentUserService currentUserService,
-        IConfiguration configuration, IWebHostEnvironment hostEnvironment)
+        IWebHostEnvironment hostEnvironment, IMappingService mappingService)
     {
         _currentUserService = currentUserService;
+        _mappingService = mappingService;
         _context = context;
-        _configuration = configuration;
-        _savePath = $"{hostEnvironment.WebRootPath}/DataImages/Customer";
+        _rootPath = hostEnvironment.WebRootPath;
     }
 
     /// <summary>
@@ -86,51 +91,13 @@ internal sealed class CustomerService : ICustomerService
         }
 
         var data = await result
-            .Select(x => DtoSelector(x, _configuration))
+            .Select(x => _mappingService.Map(x))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         model.Data = data;
 
         return model;
     }
-
-    /// <summary>
-    /// Select the Dto.
-    /// </summary>
-    /// <param name="customer">The customer.</param>
-    /// <param name="configuration">The configuration.</param>
-    /// <returns>CustomerDto.</returns>
-    private static CustomerDto DtoSelector(Customer customer, IConfiguration configuration) =>
-        new()
-        {
-            Id = customer.Id,
-            FirstName = customer.FirstName,
-            LastName = customer.LastName,
-            Email = customer.Email,
-            PhoneNo = customer.PhoneNo,
-            AccountHolderName = customer.AccountHolderName,
-            AccountNumber = customer.AccountNumber,
-            BankName = customer.BankName,
-            BranchName = customer.BranchName,
-            GstNumber = customer.GstNumber,
-            IfscCode = customer.IfscCode,
-            Image = customer.Image == null ? null : $"{configuration["File:ReadPath"]}/Customer/{customer.Image}",
-            IsActive = customer.IsActive,
-            CreatedDate = customer.CreatedDate,
-            ModifiedDate = customer.ModifiedDate,
-            CustomerAddresses = customer.CustomerAddresses
-                .Select(x => new CustomerAddressDto
-                {
-                    Id = x.Id,
-                    CustomerId = x.CustomerId,
-                    City = x.City,
-                    PinCode = x.PinCode,
-                    PhoneNo = x.PhoneNo,
-                    State = x.State,
-                    Address = x.Address,
-                    District = x.District
-                }).ToArray()
-        };
 
     /// <summary>
     /// Gets the single asynchronous.
@@ -142,7 +109,7 @@ internal sealed class CustomerService : ICustomerService
     {
         return await _context.Customers.AsNoTracking()
             .Where(x => x.Id == id)
-            .Select(x => DtoSelector(x, _configuration))
+            .Select(x => _mappingService.Map(x))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -165,48 +132,29 @@ internal sealed class CustomerService : ICustomerService
     /// <summary>
     /// Creates the asynchronous.
     /// </summary>
-    /// <param name="customer">The customer.</param>
+    /// <param name="customerDto">The customer.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> CreateAsync(CustomerDto customer, CancellationToken cancellationToken)
+    private async ValueTask<int> CreateAsync(CustomerDto customerDto, CancellationToken cancellationToken)
     {
         var image = (string?)null;
 
-        if (customer.ImageFile is not null)
+        if (customerDto.ImageFile is not null)
         {
-            image = Guid.NewGuid().ToString().Replace("-", "") +
-                    Path.GetExtension(customer.ImageFile.FileName);
-            await customer.ImageFile.SaveAsync($"{_savePath}/{image}", cancellationToken)
+            image = PrefixPath +
+                    Guid.NewGuid().ToString().Replace("-", "") +
+                    Path.GetExtension(customerDto.ImageFile.FileName);
+
+            await customerDto.ImageFile.SaveAsync(_rootPath + image, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        var dbModel = new Customer
-        {
-            FirstName = customer.FirstName,
-            LastName = customer.LastName,
-            Email = customer.Email,
-            PhoneNo = customer.PhoneNo,
-            AccountHolderName = customer.AccountHolderName,
-            AccountNumber = customer.AccountNumber,
-            BankName = customer.BankName,
-            BranchName = customer.BranchName,
-            GstNumber = customer.GstNumber,
-            IfscCode = customer.IfscCode,
-            Image = image,
-            IsActive = true,
-            CreatedBy = _currentUserService.GetCurrentUserId(),
-            CreatedDate = DateTime.Now,
-            CustomerAddresses = customer.CustomerAddresses
-                .Select(x => new CustomerAddress
-                {
-                    City = x.City,
-                    PinCode = x.PinCode,
-                    PhoneNo = x.PhoneNo,
-                    State = x.State,
-                    Address = x.Address,
-                    District = x.District,
-                }).ToArray()
-        };
+        var dbModel = _mappingService.Map(customerDto);
+
+        dbModel.Image = image;
+        dbModel.IsActive = true;
+        dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
+        dbModel.CreatedDate = DateTime.Now;
 
         await _context.Customers.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
 
@@ -216,13 +164,13 @@ internal sealed class CustomerService : ICustomerService
     /// <summary>
     /// Updates the asynchronous.
     /// </summary>
-    /// <param name="customer">The customer.</param>
+    /// <param name="customerDto">The customer.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> UpdateAsync(CustomerDto customer, CancellationToken cancellationToken)
+    private async ValueTask<int> UpdateAsync(CustomerDto customerDto, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Customers
-            .FirstOrDefaultAsync(x => x.Id == customer.Id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == customerDto.Id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
@@ -230,31 +178,32 @@ internal sealed class CustomerService : ICustomerService
             return 0;
         }
 
-        if (customer.ImageFile is not null)
+        if (customerDto.ImageFile is not null)
         {
             var image = Guid.NewGuid().ToString().Replace("-", "") +
-                        Path.GetExtension(customer.ImageFile.FileName);
-            await customer.ImageFile.SaveAsync($"{_savePath}/{image}", cancellationToken)
+                        Path.GetExtension(customerDto.ImageFile.FileName);
+
+            await customerDto.ImageFile.SaveAsync(_rootPath + image, cancellationToken)
                 .ConfigureAwait(false);
 
-            DeleteFileIfExist($"{_savePath}/{dbModel.Image}");
+            DeleteFileIfExist(_rootPath + dbModel.Image);
 
             dbModel.Image = image;
         }
 
-        dbModel.FirstName = customer.FirstName;
-        dbModel.LastName = customer.LastName;
-        dbModel.Email = customer.Email;
-        dbModel.PhoneNo = customer.PhoneNo;
-        dbModel.AccountHolderName = customer.AccountHolderName;
-        dbModel.AccountNumber = customer.AccountNumber;
-        dbModel.BankName = customer.BankName;
-        dbModel.BranchName = customer.BranchName;
-        dbModel.GstNumber = customer.GstNumber;
-        dbModel.IfscCode = customer.IfscCode;
+        dbModel.FirstName = customerDto.FirstName;
+        dbModel.LastName = customerDto.LastName;
+        dbModel.Email = customerDto.Email;
+        dbModel.PhoneNo = customerDto.PhoneNo;
+        dbModel.AccountHolderName = customerDto.AccountHolderName;
+        dbModel.AccountNumber = customerDto.AccountNumber;
+        dbModel.BankName = customerDto.BankName;
+        dbModel.BranchName = customerDto.BranchName;
+        dbModel.GstNumber = customerDto.GstNumber;
+        dbModel.IfscCode = customerDto.IfscCode;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
-        dbModel.CustomerAddresses = customer.CustomerAddresses
+        dbModel.CustomerAddresses = customerDto.CustomerAddresses
             .Select(x => new CustomerAddress
             {
                 City = x.City,
@@ -262,11 +211,11 @@ internal sealed class CustomerService : ICustomerService
                 PhoneNo = x.PhoneNo,
                 State = x.State,
                 Address = x.Address,
-                District = x.District,
+                District = x.District
             }).ToArray();
 
         await _context.CustomerAddresses
-            .Where(x => x.CustomerId == customer.Id)
+            .Where(x => x.CustomerId == customerDto.Id)
             .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
 
@@ -330,9 +279,7 @@ internal sealed class CustomerService : ICustomerService
             return false;
         }
 
-        var path = $"{_savePath}/{dbModel.Image}";
-
-        DeleteFileIfExist(path);
+        DeleteFileIfExist(_rootPath + dbModel.Image);
 
         dbModel.Image = null;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();

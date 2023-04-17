@@ -90,7 +90,7 @@ internal sealed class MaintenanceService : IMaintenanceService
         ServiceStatusString = ((ServiceStatus)service.Status).ToString(),
         OrderCustomerName = "Order #" + service.OrderId + " - " +
                             service.Order.Customer.FirstName + " " + service.Order.Customer.LastName,
-        ComplainDate = service.ComplainDate.ToString("dd-MM-yyyy"),
+        ComplainDate = service.ComplainDate.ToString("dd-MM-yyyy")
     };
 
     /// <summary>

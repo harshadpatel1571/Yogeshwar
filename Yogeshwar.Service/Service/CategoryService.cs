@@ -14,34 +14,47 @@ internal sealed class CategoryService : ICategoryService
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// The configuration
-    /// </summary>
-    private readonly IConfiguration _configuration;
-
-    /// <summary>
     /// The current user service
     /// </summary>
     private readonly ICurrentUserService _currentUserService;
 
     /// <summary>
-    /// The image save path
+    /// The caching service
     /// </summary>
-    private readonly string _imageSavePath;
+    private readonly ICachingService _cachingService;
+
+    /// <summary>
+    /// The mapping service
+    /// </summary>
+    private readonly IMappingService _mappingService;
+
+    /// <summary>
+    /// The root path
+    /// </summary>
+    private readonly string _rootPath;
+
+    /// <summary>
+    /// The prefix path
+    /// </summary>
+    private const string PrefixPath = "/DataImages/Category/";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CategoryService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <param name="configuration">The configuration.</param>
     /// <param name="hostEnvironment">The host environment.</param>
     /// <param name="currentUserService">The current user service.</param>
-    public CategoryService(YogeshwarContext context, IConfiguration configuration,
-        IWebHostEnvironment hostEnvironment, ICurrentUserService currentUserService)
+    /// <param name="cachingService">The caching service.</param>
+    /// <param name="mappingService">The mapping service.</param>
+    public CategoryService(YogeshwarContext context, IWebHostEnvironment hostEnvironment,
+        ICurrentUserService currentUserService, ICachingService cachingService,
+        IMappingService mappingService)
     {
         _context = context;
-        _configuration = configuration;
         _currentUserService = currentUserService;
-        _imageSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Category";
+        _cachingService = cachingService;
+        _mappingService = mappingService;
+        _rootPath = hostEnvironment.WebRootPath;
     }
 
     /// <summary>
@@ -62,7 +75,9 @@ internal sealed class CategoryService : ICategoryService
     async Task<DataTableResponseCarrier<CategoryDto>> ICategoryService.GetByFilterAsync(
         DataTableFilterDto filterDto, CancellationToken cancellationToken)
     {
-        var result = _context.Categories.Where(x => !x.IsDeleted).AsNoTracking();
+        var cachedData = await _cachingService.GetCategoriesAsync(cancellationToken).ConfigureAwait(false);
+
+        var result = cachedData.AsQueryable();
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
@@ -71,7 +86,7 @@ internal sealed class CategoryService : ICategoryService
 
         var model = new DataTableResponseCarrier<CategoryDto>
         {
-            TotalCount = result.Count(),
+            TotalCount = result.Count()
         };
 
         result = result.Skip(filterDto.Skip);
@@ -81,32 +96,13 @@ internal sealed class CategoryService : ICategoryService
             result = result.Take(filterDto.Take);
         }
 
-        var data = await result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Select(x => DtoSelector(x, _configuration))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        var data = result.OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
+            .ToArray();
 
         model.Data = data;
 
         return model;
     }
-
-    /// <summary>
-    /// Select the Dto.
-    /// </summary>
-    /// <param name="category">The category.</param>
-    /// <param name="configuration">The configuration.</param>
-    /// <returns>CategoryDto.</returns>
-    private static CategoryDto DtoSelector(Category category, IConfiguration configuration) =>
-        new()
-        {
-            Id = category.Id,
-            Name = category.Name,
-            IsActive = category.IsActive,
-            HsnNo = category.HsnNo,
-            Image = category.Image != null ? $"{configuration["File:ReadPath"]}/Category/{category.Image}" : null,
-            CreatedDate = category.CreatedDate,
-            ModifiedDate = category.ModifiedDate
-        };
 
     /// <summary>
     /// Gets the single asynchronous.
@@ -116,10 +112,9 @@ internal sealed class CategoryService : ICategoryService
     /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
     public async Task<CategoryDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
     {
-        return await _context.Categories.AsNoTracking()
-            .Where(x => x.Id == id)
-            .Select(x => DtoSelector(x, _configuration))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        var data = await _cachingService.GetCategoriesAsync(cancellationToken).ConfigureAwait(false);
+
+        return data.FirstOrDefault(x => x.Id == id);
     }
 
     /// <summary>
@@ -150,25 +145,27 @@ internal sealed class CategoryService : ICategoryService
 
         if (category.ImageFile is not null)
         {
-            image = Guid.NewGuid().ToString().Replace("-", "") +
+            image = PrefixPath +
+                    Guid.NewGuid().ToString().Replace("-", "") +
                     Path.GetExtension(category.ImageFile.FileName);
-            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}", cancellationToken)
+
+            await category.ImageFile.SaveAsync(_rootPath + image, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        var dbModel = new Category
-        {
-            Name = category.Name,
-            Image = image,
-            HsnNo = category.HsnNo,
-            IsActive = true,
-            CreatedDate = DateTime.Now,
-            CreatedBy = _currentUserService.GetCurrentUserId()
-        };
+        var dbModel = _mappingService.Map(category);
+
+        dbModel.Image = image;
+        dbModel.IsActive = true;
+        dbModel.CreatedDate = DateTime.Now;
+        dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
 
         await _context.Categories.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
+        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        _cachingService.RemoveCategories();
+
+        return count;
     }
 
     /// <summary>
@@ -195,21 +192,23 @@ internal sealed class CategoryService : ICategoryService
 
         if (category.ImageFile is not null)
         {
-            var path = $"{_imageSavePath}/{dbModel.Image}";
-
-            DeleteFileIfExist(path);
-
             var image = Guid.NewGuid().ToString().Replace("-", "") +
                         Path.GetExtension(category.ImageFile.FileName);
-            await category.ImageFile.SaveAsync($"{_imageSavePath}/{image}", cancellationToken)
+
+            await category.ImageFile.SaveAsync(_rootPath + image, cancellationToken)
                 .ConfigureAwait(false);
 
-            dbModel.Image = image;
+            DeleteFileIfExist(_rootPath + dbModel.Image);
+
+            dbModel.Image = PrefixPath + image;
         }
 
         _context.Categories.Update(dbModel);
+        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        _cachingService.RemoveCategories();
+
+        return count;
     }
 
     /// <summary>
@@ -235,6 +234,8 @@ internal sealed class CategoryService : ICategoryService
 
         _context.Categories.Update(dbModel);
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        _cachingService.RemoveCategories();
 
         return dbModel;
     }
@@ -268,9 +269,7 @@ internal sealed class CategoryService : ICategoryService
             return false;
         }
 
-        var path = $"{_imageSavePath}/{dbModel.Image}";
-
-        DeleteFileIfExist(path);
+        DeleteFileIfExist(_rootPath + dbModel.Image);
 
         dbModel.Image = null;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
@@ -278,6 +277,8 @@ internal sealed class CategoryService : ICategoryService
 
         _context.Categories.Update(dbModel);
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        _cachingService.RemoveCategories();
 
         return true;
     }
@@ -306,6 +307,8 @@ internal sealed class CategoryService : ICategoryService
         _context.Categories.Update(dbModel);
 
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        _cachingService.RemoveCategories();
 
         return dbModel.IsActive;
     }

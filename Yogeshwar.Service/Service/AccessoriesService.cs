@@ -14,34 +14,47 @@ internal sealed class AccessoriesService : IAccessoriesService
     private readonly YogeshwarContext _context;
 
     /// <summary>
-    /// The configuration
-    /// </summary>
-    private readonly IConfiguration _configuration;
-
-    /// <summary>
     /// The current user service
     /// </summary>
     private readonly ICurrentUserService _currentUserService;
 
     /// <summary>
-    /// The save path
+    /// The caching service
     /// </summary>
-    private readonly string _savePath;
+    private readonly ICachingService _cachingService;
+
+    /// <summary>
+    /// The mapping service
+    /// </summary>
+    private readonly IMappingService _mappingService;
+
+    /// <summary>
+    /// The root path
+    /// </summary>
+    private readonly string _rootPath;
+
+    /// <summary>
+    /// The prefix path
+    /// </summary>
+    private const string PrefixPath = "/DataImages/Accessories/";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AccessoriesService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <param name="configuration">The configuration.</param>
     /// <param name="hostEnvironment">The host environment.</param>
     /// <param name="currentUserService">The current user service.</param>
-    public AccessoriesService(YogeshwarContext context, IConfiguration configuration,
-        IWebHostEnvironment hostEnvironment, ICurrentUserService currentUserService)
+    /// <param name="cachingService">The caching service.</param>
+    /// <param name="mappingService">The mapping service.</param>
+    public AccessoriesService(YogeshwarContext context, IWebHostEnvironment hostEnvironment,
+        ICurrentUserService currentUserService, ICachingService cachingService,
+        IMappingService mappingService)
     {
         _context = context;
-        _configuration = configuration;
         _currentUserService = currentUserService;
-        _savePath = $"{hostEnvironment.WebRootPath}/DataImages/Accessories";
+        _cachingService = cachingService;
+        _mappingService = mappingService;
+        _rootPath = hostEnvironment.WebRootPath;
     }
 
     /// <summary>
@@ -62,7 +75,9 @@ internal sealed class AccessoriesService : IAccessoriesService
     async Task<DataTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(
         DataTableFilterDto filterDto, CancellationToken cancellationToken)
     {
-        var result = _context.Accessories.Where(x => !x.IsDeleted).AsNoTracking();
+        var cachedData = await _cachingService.GetAccessoriesAsync(cancellationToken).ConfigureAwait(false);
+
+        var result = cachedData.AsQueryable();
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
@@ -71,7 +86,7 @@ internal sealed class AccessoriesService : IAccessoriesService
 
         var model = new DataTableResponseCarrier<AccessoriesDto>
         {
-            TotalCount = result.Count(),
+            TotalCount = result.Count()
         };
 
         result = result.Skip(filterDto.Skip);
@@ -81,35 +96,14 @@ internal sealed class AccessoriesService : IAccessoriesService
             result = result.Take(filterDto.Take);
         }
 
-        var data = await result
+        var data = result
             .OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder)
-            .Select(x => DtoSelector(x, _configuration))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToArray();
 
         model.Data = data;
 
         return model;
     }
-
-    /// <summary>
-    /// Select the Dto.
-    /// </summary>
-    /// <param name="accessory">The accessory.</param>
-    /// <param name="configuration">The configuration.</param>
-    /// <returns>AccessoriesDto.</returns>
-    private static AccessoriesDto DtoSelector(Accessory accessory, IConfiguration configuration) =>
-        new()
-        {
-            Id = accessory.Id,
-            Name = accessory.Name,
-            Description = accessory.Description,
-            Image = accessory.Image == null ? null : $"{configuration["File:ReadPath"]}/Accessories/{accessory.Image}",
-            Quantity = accessory.Quantity,
-            MeasurementType = accessory.MeasurementType,
-            IsActive = accessory.IsActive,
-            CreatedDate = accessory.CreatedDate,
-            ModifiedDate = accessory.ModifiedDate,
-        };
 
     /// <summary>
     /// Gets the single asynchronous.
@@ -119,26 +113,25 @@ internal sealed class AccessoriesService : IAccessoriesService
     /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
     public async Task<AccessoriesDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
     {
-        return await _context.Accessories.AsNoTracking()
-            .Where(x => x.Id == id)
-            .Select(x => DtoSelector(x, _configuration))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        var data = await _cachingService.GetAccessoriesAsync(cancellationToken).ConfigureAwait(false);
+
+        return data.FirstOrDefault(x => x.Id == id);
     }
 
     /// <summary>
     /// Creates or update asynchronous.
     /// </summary>
-    /// <param name="customer">The customer.</param>
+    /// <param name="accessoriesDto">The customer.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async Task<int> CreateOrUpdateAsync(AccessoriesDto customer, CancellationToken cancellationToken)
+    public async Task<int> CreateOrUpdateAsync(AccessoriesDto accessoriesDto, CancellationToken cancellationToken)
     {
-        if (customer.Id < 1)
+        if (accessoriesDto.Id < 1)
         {
-            return await CreateAsync(customer, cancellationToken).ConfigureAwait(false);
+            return await CreateAsync(accessoriesDto, cancellationToken).ConfigureAwait(false);
         }
 
-        return await UpdateAsync(customer, cancellationToken).ConfigureAwait(false);
+        return await UpdateAsync(accessoriesDto, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -153,29 +146,27 @@ internal sealed class AccessoriesService : IAccessoriesService
 
         if (accessory.File is not null)
         {
-            image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            image = PrefixPath +
+                    Guid.NewGuid().ToString().Replace("-", "") +
                     Path.GetExtension(accessory.File.FileName);
-            await accessory.File.SaveAsync($"{_savePath}/{image}", cancellationToken).ConfigureAwait(false);
+
+            await accessory.File.SaveAsync(_rootPath + image, cancellationToken)
+                .ConfigureAwait(false);
         }
 
-        var dbModel = new Accessory
-        {
-            Id = accessory.Id,
-            Name = accessory.Name,
-            Description = accessory.Description,
-            Image = image,
-            Quantity = accessory.Quantity,
-            MeasurementType = accessory.MeasurementType,
-            IsActive = true,
-            CreatedDate = DateTime.Now,
-            CreatedBy = _currentUserService.GetCurrentUserId(),
-        };
+        var dbModel = _mappingService.Map(accessory);
+
+        dbModel.Image = image;
+        dbModel.IsActive = true;
+        dbModel.CreatedDate = DateTime.Now;
+        dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
 
         await _context.Accessories.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
-
         var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         accessory.Id = dbModel.Id;
+
+        _cachingService.RemoveAccessories();
 
         return count;
     }
@@ -189,7 +180,8 @@ internal sealed class AccessoriesService : IAccessoriesService
     private async ValueTask<int> UpdateAsync(AccessoriesDto accessory, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == accessory.Id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == accessory.Id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel == null)
         {
@@ -198,16 +190,17 @@ internal sealed class AccessoriesService : IAccessoriesService
 
         if (accessory.File is not null)
         {
-            var image = string.Join(null, Guid.NewGuid().ToString().Split('-')) +
+            var image = PrefixPath +
+                        Guid.NewGuid().ToString().Replace("-", "") +
                         Path.GetExtension(accessory.File.FileName);
-            await accessory.File.SaveAsync($"{_savePath}/{image}", cancellationToken).ConfigureAwait(false);
 
-            DeleteFileIfExist($"{_savePath}/{dbModel.Image}");
+            await accessory.File.SaveAsync(_rootPath + image, cancellationToken).ConfigureAwait(false);
 
-            dbModel.Image = image;
+            DeleteFileIfExist(_rootPath + dbModel.Image);
+
+            dbModel.Image = PrefixPath + image;
         }
 
-        dbModel.Id = accessory.Id;
         dbModel.Name = accessory.Name;
         dbModel.MeasurementType = accessory.MeasurementType;
         dbModel.Description = accessory.Description;
@@ -216,8 +209,11 @@ internal sealed class AccessoriesService : IAccessoriesService
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
 
         _context.Accessories.Update(dbModel);
+        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        _cachingService.RemoveAccessories();
+
+        return count;
     }
 
     /// <summary>
@@ -254,8 +250,11 @@ internal sealed class AccessoriesService : IAccessoriesService
         dbModel.ModifiedDate = DateTime.Now;
 
         _context.Accessories.Update(dbModel);
+        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-       return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        _cachingService.RemoveAccessories();
+
+        return count;
     }
 
     /// <summary>
@@ -267,22 +266,24 @@ internal sealed class AccessoriesService : IAccessoriesService
     public async ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .ConfigureAwait(false);
 
         if (dbModel == null)
         {
             return false;
         }
 
-        var path = $"{_savePath}/{dbModel.Image}";
-
-        DeleteFileIfExist(path);
+        DeleteFileIfExist(_rootPath + dbModel.Image);
 
         dbModel.Image = null;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
 
+        _context.Accessories.Update(dbModel);
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        _cachingService.RemoveAccessories();
 
         return true;
     }
@@ -295,7 +296,8 @@ internal sealed class AccessoriesService : IAccessoriesService
     /// <returns>A Task&lt;OneOf`2&gt; representing the asynchronous operation.</returns>
     public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
-        var dbModel = await _context.Accessories.FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+        var dbModel = await _context.Accessories
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
@@ -308,8 +310,9 @@ internal sealed class AccessoriesService : IAccessoriesService
         dbModel.ModifiedDate = DateTime.Now;
 
         _context.Accessories.Update(dbModel);
-
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        _cachingService.RemoveAccessories();
 
         return dbModel.IsActive;
     }

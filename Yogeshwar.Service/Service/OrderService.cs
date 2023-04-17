@@ -78,7 +78,7 @@ internal sealed class OrderService : IOrderService
 
         var model = new DataTableResponseCarrier<OrderDto>
         {
-            TotalCount = result.Count(),
+            TotalCount = result.Count()
         };
 
         result = result.Skip(filterDto.Skip);
@@ -352,7 +352,7 @@ internal sealed class OrderService : IOrderService
                     Email = x.Customer.Email,
                     PhoneNo = x.Customer.PhoneNo,
                     //Address = x.Customer.Address + ", " + x.Customer.City + " - " + x.Customer.PinCode + ".",
-                    Image = x.Customer.Image == null ? null : $"{_customerImageReadPath}/{x.Customer.Image}",
+                    Image = x.Customer.Image == null ? null : $"{_customerImageReadPath}/{x.Customer.Image}"
                 },
                 OrderDetails = x.OrderDetails.Select(c => new OrderDetailsViewDto
                 {
