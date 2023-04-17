@@ -67,7 +67,9 @@ internal sealed class CustomerService : ICustomerService
     async Task<DataTableResponseCarrier<CustomerDto>> ICustomerService.GetByFilterAsync(
         DataTableFilterDto filterDto, CancellationToken cancellationToken)
     {
-        var result = _context.Customers.Where(x => !x.IsDeleted).AsNoTracking();
+        var result = _context.Customers.Where(x => !x.IsDeleted)
+            .Include(x => x.CustomerAddresses)
+            .AsNoTracking();
 
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
@@ -87,7 +89,7 @@ internal sealed class CustomerService : ICustomerService
 
         if (filterDto.Take != -1)
         {
-            result = result.Take(filterDto.Take);
+            result = result.Take(1500);
         }
 
         var data = await result

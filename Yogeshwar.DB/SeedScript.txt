@@ -11,11 +11,11 @@
         t1.Join();
         t2.Join();
         t3.Join();
-    }
+}
 
-    private void InsertData()
+private void InsertData()
     {
-        using var context = new DB.Models.YogeshwarContext();
+        using var context = new DB.Context.YogeshwarContext(options);
 
         var list = new[] { "RBI", "SBI", "RDC", "BOB", "AXIS", "HDFC", "KOTAK", "ANDHRA", "NAGRIK", "CANARA", "INDIAN", "PNB", "UNION", "CSB", "BANDHAN", "FEDERAL", "ICICI", "RBL", "YES", "DCB", "UCO", "IDBI", "DZ" };
 
@@ -26,24 +26,69 @@
             var city = Faker.Address.City();
             var bank = list[Faker.RandomNumber.Next(0, list.Length - 1)];
 
-            return new DB.Models.Customer
+            return new DB.DbModels.Customer
             {
                 FirstName = firstName,
                 LastName = lastName,
                 Email = Faker.Internet.Email(firstName + lastName),
-                City = city,
                 PhoneNo = Faker.RandomNumber.Next(81, 99).ToString() + Faker.RandomNumber.Next(11111111, 99999999),
                 AccountHolderName = firstName + " " + Faker.Name.Middle() + " " + lastName,
-                PinCode = Random.Shared.Next(333333, 999999),
                 AccountNumber = (long)Faker.RandomNumber.Next(1234567, 76543218) * Faker.RandomNumber.Next(1234567, 76543218),
-                Ifsccode = bank + RandomNumberString(11 - bank.Length),
-                Gstnumber = RandomString(),
+                IfscCode = bank + RandomNumberString(11 - bank.Length),
+                GstNumber = RandomString(),
                 CreatedDate = RandomDate(),
                 CreatedBy = int.Parse(User.FindFirst("Id")!.Value),
                 IsActive = true,
-                Address = Faker.Address.StreetAddress(true),
                 BranchName = bank + ", " + city,
                 BankName = bank,
+                CustomerAddresses = new DB.DbModels.CustomerAddress[]
+                {
+                    new DB.DbModels.CustomerAddress()
+                    {
+                        Address = Faker.Address.StreetAddress(true),
+                        City = Faker.Address.City(),
+                        District = Faker.Address.City(),
+                        State = Faker.Address.UsState(),
+                        PinCode = Random.Shared.Next(333333, 999999).ToString(),
+                        PhoneNo = Faker.RandomNumber.Next(81, 99).ToString() + Faker.RandomNumber.Next(11111111, 99999999),
+                    },
+                    new DB.DbModels.CustomerAddress()
+                    {
+                        Address = Faker.Address.StreetAddress(true),
+                        City = Faker.Address.City(),
+                        District = Faker.Address.City(),
+                        State = Faker.Address.UsState(),
+                        PinCode = Random.Shared.Next(333333, 999999).ToString(),
+                        PhoneNo = Faker.RandomNumber.Next(81, 99).ToString() + Faker.RandomNumber.Next(11111111, 99999999),
+                    },
+                    new DB.DbModels.CustomerAddress()
+                    {
+                        Address = Faker.Address.StreetAddress(true),
+                        City = Faker.Address.City(),
+                        District = Faker.Address.City(),
+                        State = Faker.Address.UsState(),
+                        PinCode = Random.Shared.Next(333333, 999999).ToString(),
+                        PhoneNo = Faker.RandomNumber.Next(81, 99).ToString() + Faker.RandomNumber.Next(11111111, 99999999),
+                    },
+                    new DB.DbModels.CustomerAddress()
+                    {
+                        Address = Faker.Address.StreetAddress(true),
+                        City = Faker.Address.City(),
+                        District = Faker.Address.City(),
+                        State = Faker.Address.UsState(),
+                        PinCode = Random.Shared.Next(333333, 999999).ToString(),
+                        PhoneNo = Faker.RandomNumber.Next(81, 99).ToString() + Faker.RandomNumber.Next(11111111, 99999999),
+                    },
+                    new DB.DbModels.CustomerAddress()
+                    {
+                        Address = Faker.Address.StreetAddress(true),
+                        City = Faker.Address.City(),
+                        District = Faker.Address.City(),
+                        State = Faker.Address.UsState(),
+                        PinCode = Random.Shared.Next(333333, 999999).ToString(),
+                        PhoneNo = Faker.RandomNumber.Next(81, 99).ToString() + Faker.RandomNumber.Next(11111111, 99999999),
+                    }
+                }
             };
         }).ToArray();
 
