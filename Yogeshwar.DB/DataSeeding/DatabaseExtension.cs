@@ -37,7 +37,7 @@ internal static class DataSeeding
             .HasData(new Category
             {
                 Id = 1,
-                Name = "Machine",
+                Name = "Pneumatic",
                 HsnNo = "HSN4547JD7",
                 CreatedDate = DateTime.Now,
                 CreatedBy = 1,
@@ -45,7 +45,7 @@ internal static class DataSeeding
             }, new Category
             {
                 Id = 2,
-                Name = "Spare Part",
+                Name = "Hydraulic",
                 HsnNo = "HSNSP54475",
                 CreatedDate = DateTime.Now,
                 CreatedBy = 1,
@@ -53,7 +53,7 @@ internal static class DataSeeding
             }, new Category
             {
                 Id = 3,
-                Name = "Electronic",
+                Name = "Linear motion",
                 HsnNo = "HSN5445ELC",
                 CreatedDate = DateTime.Now,
                 CreatedBy = 1,
@@ -61,7 +61,7 @@ internal static class DataSeeding
             }, new Category
             {
                 Id = 4,
-                Name = "Iron",
+                Name = "Electronic automation penal goods",
                 HsnNo = "HSN7887IRN",
                 CreatedDate = DateTime.Now,
                 CreatedBy = 1,
@@ -69,7 +69,15 @@ internal static class DataSeeding
             }, new Category
             {
                 Id = 5,
-                Name = "Bolt & Nuts",
+                Name = "Machine tools spare parts",
+                HsnNo = "HSN87707BN",
+                CreatedDate = DateTime.Now,
+                CreatedBy = 1,
+                IsActive = true
+            }, new Category
+            {
+                Id = 6,
+                Name = "Inquiry  as per your drawing",
                 HsnNo = "HSN87707BN",
                 CreatedDate = DateTime.Now,
                 CreatedBy = 1,
