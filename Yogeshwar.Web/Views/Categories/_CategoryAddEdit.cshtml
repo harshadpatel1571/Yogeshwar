@@ -1,0 +1,26 @@
+﻿<div class="row g-3 needs-validation">
+    <div class="col-md-6">
+        <label class="form-label">Categories Name</label>
+        <span class="text-danger">*</span>
+        <input class="form-control" id="CategoryName" maxlength="100" required>
+        <span id="ValidationCategoryName" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">HSN Number</label>
+        <span class="text-danger">*</span>
+        <input class="form-control" id="CategoryHSN" required>
+        <span id="ValidationCategoryHSN" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Upload Image <span class="text-info">(Only images are allowed.)</span></label>
+        <input class="form-control md-2" id="CategoryFile" type="file" onchange="showCategoryImage(this)" accept="image/*">
+        <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="CategoryImageDiv">
+        </div>
+    </div>
+    <div class="col-12">
+        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="saveCategories()">
+            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+            Save
+        </button>
+    </div>
+</div>

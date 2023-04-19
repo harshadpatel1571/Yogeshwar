@@ -16,4 +16,8 @@ public class PartialViewController : Controller
     {
         return PartialView("~/Views/Accessories/_AccessoriesAddEdit.cshtml");
     }
+    public IActionResult CategoryAddPopupView()
+    {
+        return PartialView("~/Views/Categories/_CategoryAddEdit.cshtml");
+    }
 }

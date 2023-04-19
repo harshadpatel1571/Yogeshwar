@@ -52,6 +52,12 @@
                         <input class="form-control" asp-for="Name" maxlength="100" required>
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label">HSN Number</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="HsnNo">
+                        <span asp-validation-for="HsnNo" class="text-danger"></span>
+                    </div>
                     <div class="col-md-6" id="ImageApped">
                         <label class="form-label">Upload Image <span class="text-info">(Only images are allowed.)</span></label>
                         <input class="form-control md-2" asp-for="ImageFile" accept="image/*" multiple>

@@ -11,9 +11,10 @@ const html = "<li class=\"list-group-item\" id=\"replace_id\">\n" +
     "                                <div class=\"flex-grow-1 ms-2\">\n" +
     "                                    replace_name\n" +
     "                                </div>\n" +
-    "                                <div class=\"flex-grow-2 ms-2\" style='position:relative;right:40%;'>\n" +
-    "                                    <input class=\"form-control\" value='quantity_value' name='AccessoriesQuantity.Quantity' required type=\"number\" />\n" +
-    "                                </div>\n" +
+    "                                   <div class=\"input-group\">" +
+    "                                       <input class=\"form-control\" value='quantity_value' name='AccessoriesQuantity.Quantity' required type=\"number\" />" +
+    "                                       <span class=\"input-group-text\" id='AccessoriesQuantity.Quantity''>ExampleMasurement</span>\n" +
+    "                                   </div>" +
     "                            </div>\n" +
     "                        </li>";
 
@@ -282,5 +283,10 @@ document.addEventListener("keydown", function (event) {
     if (event.shiftKey && event.code === "KeyA") {
         event.preventDefault();
         openPopupForAccessories()
+    }
+
+    else if (event.shiftKey && event.code === "KeyC") {
+        event.preventDefault();
+        openPopupForCategories()
     }
 });

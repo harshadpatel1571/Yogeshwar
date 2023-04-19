@@ -46,25 +46,37 @@
             <div class="card-body">
                 <form class="row g-3 needs-validation" asp-action="AddEdit" enctype="multipart/form-data">
                     <input class="form-control" asp-for="Id" type="hidden" readonly>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Product Name</label>
                         <span class="text-danger">*</span>
                         <input class="form-control" asp-for="Name" maxlength="100" required>
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Model No</label>
                         <span class="text-danger">*</span>
                         <input class="form-control" asp-for="ModelNo" maxlength="50" required>
                         <span asp-validation-for="ModelNo" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Price</label>
                         <span class="text-danger">*</span>
                         <input class="form-control" asp-for="Price" onkeypress="return isNumberKey(event, this);" required>
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
-                    <div class="col-md-5" id="accessoriesDiv">
+                    <div class="col-md-3">
+                        <label class="form-label">HSN Number</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="HsnNo">
+                        <span asp-validation-for="HsnNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">GST</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="HsnNo">
+                        <span asp-validation-for="HsnNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4" id="accessoriesDiv">
                         <label class="form-label">Select Accessories</label>
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
@@ -82,7 +94,7 @@
                             </div>
                         </button>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <label class="form-label">Select Categories</label>
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
@@ -92,7 +104,7 @@
                         <span asp-validation-for="Categories" class="text-danger"></span>
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-primary mt-4" title="Shift + C" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForCategories()" title="Shift + C" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <div class="d-flex">
                                 <div class="flex-shrink-0" style="padding-left:6px">
                                     <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
@@ -100,6 +112,7 @@
                             </div>
                         </button>
                     </div>
+
                     @{
                         var display = isCreate ? "none" : "initial";
                     }
@@ -175,15 +188,29 @@
     </div>
 </div>
 
-<div class="modal fade" id="showAccessoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="showAccessoryModal" tabindex="-1" aria-labelledby="accessoriesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="exampleModalLabel">Add Accessories</h5>
+                <h5 class="modal-title" id="accessoriesModalLabel">Add Accessories</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
             </div>
 
             <div class="modal-body" id="accessoryModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showCategoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-3">
+                <h5 class="modal-title" id="categoryModalLabel">Add Categories</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+            </div>
+
+            <div class="modal-body" id="categoryModalBody">
             </div>
         </div>
     </div>

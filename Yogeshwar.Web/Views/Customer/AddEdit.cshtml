@@ -72,7 +72,7 @@
                         <span asp-validation-for="PhoneNo" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-12">
+                    @*<div class="col-md-12">
                         <label class="form-label">Address</label>
                         <span class="text-danger">*</span>
                         <textarea class="form-control" rows="4" asp-for="Address" maxlength="250" required></textarea>
@@ -91,7 +91,7 @@
                         <span class="text-danger">*</span>
                         <input class="form-control" asp-for="PinCode" required>
                         <span asp-validation-for="PinCode" class="text-danger"></span>
-                    </div>
+                    </div>*@
 
                     <div class="col-md-6">
                         <label class="form-label">GST Number</label>
@@ -120,6 +120,48 @@
                             }
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">Customer Address</h5>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-label waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#addressModal">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    Add Address
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body row g-3">
+                    <table id="grid" class="display table caption-top table-nowrap" style="width:100%">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="col-3">Full Address</th>
+                                <th class="col-2">City</th>
+                                <th class="col-2">Distic</th>
+                                <th class="col-2">State</th>
+                                <th class="col-2">PinCode</th>
+                                <th class="col-1">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Satapar Road, Jinmil Ploat, Near BOI, Vansjaliya</td>
+                                <td>Vansjaliya</td>
+                                <td>Jamnagar</td>
+                                <td>Gujrat</td>
+                                <td>360531</td>
+                                <td>Edit || Delete</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
