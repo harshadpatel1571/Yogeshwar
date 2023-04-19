@@ -28,7 +28,7 @@ internal sealed class Accessory
     /// Gets or sets the image.
     /// </summary>
     /// <value>The image.</value>
-    [Unicode(false)] [MaxLength(50)] public string? Image { get; set; }
+    [Unicode(false)][MaxLength(50)] public string? Image { get; set; }
 
     /// <summary>
     /// Gets or sets the quantity.
@@ -40,7 +40,7 @@ internal sealed class Accessory
     /// Gets or sets the type of the measurement.
     /// </summary>
     /// <value>The type of the measurement.</value>
-    [Unicode(false)] [MaxLength(10)] public string MeasurementType { get; set; }
+    [Unicode(false)][MaxLength(10)] public string MeasurementType { get; set; }
 
     /// <summary>
     /// Gets or sets the created date.

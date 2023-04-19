@@ -16,19 +16,19 @@ internal sealed class User
     /// Gets or sets the name.
     /// </summary>
     /// <value>The name.</value>
-    [Unicode(false)] [MaxLength(50)] public string Name { get; set; }
+    [Unicode(false)][MaxLength(50)] public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the email.
     /// </summary>
     /// <value>The email.</value>
-    [DataType(DataType.EmailAddress)] public string? Email { get; set; }
+    [MaxLength(100)][Unicode(false)] public string? Email { get; set; }
 
     /// <summary>
     /// Gets or sets the username.
     /// </summary>
     /// <value>The username.</value>
-    [Unicode(false)] [MaxLength(25)] public string Username { get; set; }
+    [Unicode(false)][MaxLength(25)] public string Username { get; set; }
 
     /// <summary>
     /// Gets or sets the phone no.
@@ -40,7 +40,7 @@ internal sealed class User
     /// Gets or sets the password.
     /// </summary>
     /// <value>The password.</value>
-    [DataType(DataType.Password)] public string Password { get; set; }
+    [MaxLength(250)][Unicode(false)] public string Password { get; set; }
 
     /// <summary>
     /// Gets or sets the type of the user.

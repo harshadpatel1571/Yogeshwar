@@ -2,9 +2,9 @@
 
 /// <summary>
 /// Interface ICachingService
-/// Extends the <see cref="System.IDisposable" />
+/// Extends the <see cref="IDisposable" />
 /// </summary>
-/// <seealso cref="System.IDisposable" />
+/// <seealso cref="IDisposable" />
 internal interface ICachingService : IDisposable
 {
     /// <summary>

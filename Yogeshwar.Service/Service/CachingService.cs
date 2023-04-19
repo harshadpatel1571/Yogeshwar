@@ -2,9 +2,9 @@
 
 /// <summary>
 /// Class CachingService.
-/// Implements the <see cref="Yogeshwar.Service.Abstraction.ICachingService" />
+/// Implements the <see cref="ICachingService" />
 /// </summary>
-/// <seealso cref="Yogeshwar.Service.Abstraction.ICachingService" />
+/// <seealso cref="ICachingService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(ICachingService))]
 internal class CachingService : ICachingService
 {

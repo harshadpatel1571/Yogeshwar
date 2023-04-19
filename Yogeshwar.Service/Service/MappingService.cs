@@ -2,9 +2,9 @@
 
 /// <summary>
 /// Class MappingService.
-/// Implements the <see cref="Yogeshwar.Service.Abstraction.IMappingService" />
+/// Implements the <see cref="IMappingService" />
 /// </summary>
-/// <seealso cref="Yogeshwar.Service.Abstraction.IMappingService" />
+/// <seealso cref="IMappingService" />
 [RegisterService(ServiceLifetime.Singleton, typeof(IMappingService))]
 internal class MappingService : IMappingService
 {
@@ -35,6 +35,20 @@ internal class MappingService : IMappingService
     /// <param name="customerDto">The customer dto.</param>
     /// <returns>Customer.</returns>
     Customer IMappingService.Map(CustomerDto customerDto) => InternalMapper.Map(customerDto);
+
+    /// <summary>
+    /// Maps the specified customer address.
+    /// </summary>
+    /// <param name="customerAddress">The customer address.</param>
+    /// <returns>CustomerAddressDto.</returns>
+    CustomerAddressDto IMappingService.Map(CustomerAddress customerAddress) => InternalMapper.Map(customerAddress);
+
+    /// <summary>
+    /// Maps the specified customer address dto.
+    /// </summary>
+    /// <param name="customerAddressDto">The customer address dto.</param>
+    /// <returns>CustomerAddress.</returns>
+    CustomerAddress IMappingService.Map(CustomerAddressDto customerAddressDto) => InternalMapper.Map(customerAddressDto);
 
     /// <summary>
     /// Maps the specified category.

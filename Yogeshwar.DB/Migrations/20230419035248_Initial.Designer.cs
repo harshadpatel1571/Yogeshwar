@@ -12,7 +12,7 @@ using Yogeshwar.DB.Context;
 namespace Yogeshwar.DB.Migrations
 {
     [DbContext(typeof(YogeshwarContext))]
-    [Migration("20230412044348_Initial")]
+    [Migration("20230419035248_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -123,6 +123,58 @@ namespace Yogeshwar.DB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedBy = 1,
+                            CreatedDate = new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1898),
+                            HsnNo = "HSN4547JD7",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Machine"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedBy = 1,
+                            CreatedDate = new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1900),
+                            HsnNo = "HSNSP54475",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Spare Part"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedBy = 1,
+                            CreatedDate = new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1901),
+                            HsnNo = "HSN5445ELC",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Electronic"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedBy = 1,
+                            CreatedDate = new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1903),
+                            HsnNo = "HSN7887IRN",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Iron"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedBy = 1,
+                            CreatedDate = new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1904),
+                            HsnNo = "HSN87707BN",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Bolt & Nuts"
+                        });
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.Configuration", b =>
@@ -199,7 +251,9 @@ namespace Yogeshwar.DB.Migrations
                         .HasColumnType("datetime2(0)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -277,7 +331,9 @@ namespace Yogeshwar.DB.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("PhoneNo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(13)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(13)");
 
                     b.Property<string>("PinCode")
                         .IsRequired()
@@ -606,7 +662,9 @@ namespace Yogeshwar.DB.Migrations
                         .HasColumnType("datetime2(0)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2(0)");
@@ -619,7 +677,9 @@ namespace Yogeshwar.DB.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("PhoneNo")
                         .IsRequired()
@@ -637,6 +697,30 @@ namespace Yogeshwar.DB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1652),
+                            Email = "sohampipaliyapatel@gmail.com",
+                            Name = "Soham Patel",
+                            Password = "xE1lAwv+UqE7GX5q6MWJZA==",
+                            PhoneNo = "8128195769",
+                            UserType = (byte)1,
+                            Username = "Soham Patel"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1663),
+                            Email = "harshadpatel1571@gmail.com",
+                            Name = "Harshad Patel",
+                            Password = "+e2tW/Ybi3njCdaCY5kG3g==",
+                            PhoneNo = "8128382487",
+                            UserType = (byte)1,
+                            Username = "yogeshwar"
+                        });
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.CustomerAddress", b =>

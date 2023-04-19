@@ -16,7 +16,7 @@ internal sealed class CustomerService
     /// Gets or sets the name of the worker.
     /// </summary>
     /// <value>The name of the worker.</value>
-    [MaxLength(50)] [Unicode(false)] public string WorkerName { get; set; }
+    [MaxLength(50)][Unicode(false)] public string WorkerName { get; set; }
 
     /// <summary>
     /// Gets or sets the order identifier.

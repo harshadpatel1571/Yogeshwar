@@ -22,19 +22,19 @@ internal sealed class Configuration
     /// Gets or sets the company logo.
     /// </summary>
     /// <value>The company logo.</value>
-    [Unicode(false)] [MaxLength(50)] public string? CompanyLogo { get; set; }
+    [Unicode(false)][MaxLength(50)] public string? CompanyLogo { get; set; }
 
     /// <summary>
     /// Gets or sets the GST number.
     /// </summary>
     /// <value>The GST number.</value>
-    [Unicode(false)] [MaxLength(15)] public string GstNumber { get; set; }
+    [Unicode(false)][MaxLength(15)] public string GstNumber { get; set; }
 
     /// <summary>
     /// Gets or sets the term and condition.
     /// </summary>
     /// <value>The term and condition.</value>
-    [Unicode(false)] [MaxLength(1000)] public string TermAndCondition { get; set; }
+    [Unicode(false)][MaxLength(1000)] public string TermAndCondition { get; set; }
 
     /// <summary>
     /// Gets or sets the GST.

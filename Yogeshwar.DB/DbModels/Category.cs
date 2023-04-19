@@ -22,13 +22,13 @@ internal sealed class Category
     /// Gets or sets the HSN no.
     /// </summary>
     /// <value>The HSN no.</value>
-    [Unicode(false)] [MaxLength(10)] public string HsnNo { get; set; }
+    [Unicode(false)][MaxLength(10)] public string HsnNo { get; set; }
 
     /// <summary>
     /// Gets or sets the image.
     /// </summary>
     /// <value>The image.</value>
-    [Unicode(false)] [MaxLength(50)] public string? Image { get; set; }
+    [Unicode(false)][MaxLength(50)] public string? Image { get; set; }
 
     /// <summary>
     /// Gets or sets the created date.

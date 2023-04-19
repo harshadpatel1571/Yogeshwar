@@ -2,9 +2,9 @@
 
 /// <summary>
 /// Class YogeshwarContext. This class cannot be inherited.
-/// Implements the <see cref="Microsoft.EntityFrameworkCore.DbContext" />
+/// Implements the <see cref="DbContext" />
 /// </summary>
-/// <seealso cref="Microsoft.EntityFrameworkCore.DbContext" />
+/// <seealso cref="DbContext" />
 public sealed class YogeshwarContext : DbContext
 {
     /// <summary>
@@ -14,6 +14,16 @@ public sealed class YogeshwarContext : DbContext
     public YogeshwarContext(DbContextOptions<YogeshwarContext> options)
         : base(options)
     {
+    }
+
+    /// <summary>
+    /// Called when [model creating].
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.SeedData();
+        base.OnModelCreating(builder);
     }
 
     /// <summary>

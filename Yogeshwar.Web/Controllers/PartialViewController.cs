@@ -2,9 +2,9 @@
 
 /// <summary>
 /// Class PartialViewController.
-/// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
+/// Implements the <see cref="Controller" />
 /// </summary>
-/// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+/// <seealso cref="Controller" />
 [Authorize]
 public class PartialViewController : Controller
 {

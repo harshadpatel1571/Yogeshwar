@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Yogeshwar.DB.Migrations
 {
     /// <inheritdoc />
@@ -80,7 +82,7 @@ namespace Yogeshwar.DB.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
                     PhoneNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GstNumber = table.Column<string>(type: "varchar(15)", unicode: false, maxLength: 15, nullable: true),
                     IfscCode = table.Column<string>(type: "varchar(15)", unicode: false, maxLength: 15, nullable: false),
@@ -133,10 +135,10 @@ namespace Yogeshwar.DB.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
                     Username = table.Column<string>(type: "varchar(25)", unicode: false, maxLength: 25, nullable: false),
                     PhoneNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "varchar(250)", unicode: false, maxLength: 250, nullable: false),
                     UserType = table.Column<byte>(type: "tinyint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true)
@@ -158,7 +160,7 @@ namespace Yogeshwar.DB.Migrations
                     State = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     PinCode = table.Column<string>(type: "varchar(7)", unicode: false, maxLength: 7, nullable: false),
-                    PhoneNo = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PhoneNo = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -358,6 +360,27 @@ namespace Yogeshwar.DB.Migrations
                         principalTable: "ProductAccessories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "CreatedBy", "CreatedDate", "HsnNo", "Image", "IsActive", "IsDeleted", "ModifiedBy", "ModifiedDate", "Name" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1898), "HSN4547JD7", null, true, false, null, null, "Machine" },
+                    { 2, 1, new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1900), "HSNSP54475", null, true, false, null, null, "Spare Part" },
+                    { 3, 1, new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1901), "HSN5445ELC", null, true, false, null, null, "Electronic" },
+                    { 4, 1, new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1903), "HSN7887IRN", null, true, false, null, null, "Iron" },
+                    { 5, 1, new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1904), "HSN87707BN", null, true, false, null, null, "Bolt & Nuts" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreatedDate", "Email", "ModifiedDate", "Name", "Password", "PhoneNo", "UserType", "Username" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1652), "sohampipaliyapatel@gmail.com", null, "Soham Patel", "xE1lAwv+UqE7GX5q6MWJZA==", "8128195769", (byte)1, "Soham Patel" },
+                    { 2, new DateTime(2023, 4, 19, 9, 22, 48, 463, DateTimeKind.Local).AddTicks(1663), "harshadpatel1571@gmail.com", null, "Harshad Patel", "+e2tW/Ybi3njCdaCY5kG3g==", "8128382487", (byte)1, "yogeshwar" }
                 });
 
             migrationBuilder.CreateIndex(

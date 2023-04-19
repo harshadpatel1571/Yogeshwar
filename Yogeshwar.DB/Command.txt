@@ -8,3 +8,7 @@ Scaffold-DbContext "Data Source=5.161.187.26;Database=Yogeshwar;MultipleActiveRe
 
 == Harshad DB ==
 "Default": "Data Source=DESKTOP-QR0FI4I\\SQLEXPRESS;Database=Yogeshwar;MultipleActiveResultSets=true;Trusted_Connection=true;TrustServerCertificate=True;"
+
+Add-Migration {name}
+
+Update-Database
