@@ -10,7 +10,8 @@ internal sealed class Notification
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the product accessories identifier.
@@ -41,7 +42,8 @@ internal sealed class Notification
     /// Gets or sets the order.
     /// </summary>
     /// <value>The order.</value>
-    [ForeignKey(nameof(OrderId))] public Order Order { get; set; }
+    [ForeignKey(nameof(OrderId))]
+    public Order Order { get; set; }
 
     /// <summary>
     /// Gets or sets the product accessories.

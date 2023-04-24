@@ -89,7 +89,7 @@ internal sealed class CustomerService : ICustomerService
 
         if (filterDto.Take != -1)
         {
-            result = result.Take(1500);
+            result = result.Take(filterDto.Take);
         }
 
         var data = await result
@@ -206,15 +206,7 @@ internal sealed class CustomerService : ICustomerService
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
         dbModel.CustomerAddresses = customerDto.CustomerAddresses
-            .Select(x => new CustomerAddress
-            {
-                City = x.City,
-                PinCode = x.PinCode,
-                PhoneNo = x.PhoneNo,
-                State = x.State,
-                Address = x.Address,
-                District = x.District
-            }).ToArray();
+            .Select(_mappingService.Map).ToArray();
 
         await _context.CustomerAddresses
             .Where(x => x.CustomerId == customerDto.Id)

@@ -192,15 +192,16 @@ internal sealed class CategoryService : ICategoryService
 
         if (category.ImageFile is not null)
         {
-            var image = Guid.NewGuid().ToString().Replace("-", "") +
-                        Path.GetExtension(category.ImageFile.FileName);
+            var image = PrefixPath +
+                Guid.NewGuid().ToString().Replace("-", "") +
+                Path.GetExtension(category.ImageFile.FileName);
 
             await category.ImageFile.SaveAsync(_rootPath + image, cancellationToken)
                 .ConfigureAwait(false);
 
             DeleteFileIfExist(_rootPath + dbModel.Image);
 
-            dbModel.Image = PrefixPath + image;
+            dbModel.Image = image;
         }
 
         _context.Categories.Update(dbModel);

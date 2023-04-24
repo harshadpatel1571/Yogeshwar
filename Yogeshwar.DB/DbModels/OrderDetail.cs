@@ -10,7 +10,8 @@ internal sealed class OrderDetail
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the order identifier.
@@ -87,11 +88,13 @@ internal sealed class OrderDetail
     /// Gets or sets the order.
     /// </summary>
     /// <value>The order.</value>
-    [ForeignKey(nameof(OrderId))] public Order Order { get; set; }
+    [ForeignKey(nameof(OrderId))]
+    public Order Order { get; set; }
 
     /// <summary>
     /// Gets or sets the product.
     /// </summary>
     /// <value>The product.</value>
-    [ForeignKey(nameof(ProductId))] public Product Product { get; set; }
+    [ForeignKey(nameof(ProductId))]
+    public Product Product { get; set; }
 }

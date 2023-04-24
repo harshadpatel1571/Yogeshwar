@@ -10,61 +10,77 @@ internal sealed class Customer
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the first name.
     /// </summary>
     /// <value>The first name.</value>
-    [MaxLength(25)] public string FirstName { get; set; }
+    [MaxLength(25)]
+    public string FirstName { get; set; }
 
     /// <summary>
     /// Gets or sets the last name.
     /// </summary>
     /// <value>The last name.</value>
-    [MaxLength(25)] public string LastName { get; set; }
+    [MaxLength(25)]
+    public string LastName { get; set; }
 
     /// <summary>
     /// Gets or sets the email.
     /// </summary>
     /// <value>The email.</value>
-    [MaxLength(100)][Unicode(false)] public string? Email { get; set; }
+    [MaxLength(100)]
+    [Unicode(false)]
+    public string? Email { get; set; }
 
     /// <summary>
     /// Gets or sets the phone no.
     /// </summary>
     /// <value>The phone no.</value>
-    [DataType(DataType.PhoneNumber)] public string PhoneNo { get; set; }
+    [DataType(DataType.PhoneNumber)]
+    public string PhoneNo { get; set; }
 
     /// <summary>
     /// Gets or sets the GST number.
     /// </summary>
     /// <value>The GST number.</value>
-    [MaxLength(15)][Unicode(false)] public string? GstNumber { get; set; }
+    [MaxLength(15)]
+    [Unicode(false)]
+    public string? GstNumber { get; set; }
 
     /// <summary>
     /// Gets or sets the ifsc code.
     /// </summary>
     /// <value>The ifsc code.</value>
-    [MaxLength(15)][Unicode(false)] public string IfscCode { get; set; }
+    [MaxLength(15)]
+    [Unicode(false)]
+    public string IfscCode { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the account holder.
     /// </summary>
     /// <value>The name of the account holder.</value>
-    [MaxLength(100)][Unicode(false)] public string AccountHolderName { get; set; }
+    [MaxLength(100)]
+    [Unicode(false)]
+    public string AccountHolderName { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the bank.
     /// </summary>
     /// <value>The name of the bank.</value>
-    [MaxLength(25)][Unicode(false)] public string BankName { get; set; }
+    [MaxLength(25)]
+    [Unicode(false)]
+    public string BankName { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the branch.
     /// </summary>
     /// <value>The name of the branch.</value>
-    [MaxLength(50)][Unicode(false)] public string BranchName { get; set; }
+    [MaxLength(50)]
+    [Unicode(false)]
+    public string BranchName { get; set; }
 
     /// <summary>
     /// Gets or sets the account number.
@@ -76,7 +92,9 @@ internal sealed class Customer
     /// Gets or sets the image.
     /// </summary>
     /// <value>The image.</value>
-    [MaxLength(50)][Unicode(false)] public string? Image { get; set; }
+    [MaxLength(100)]
+    [Unicode(false)]
+    public string? Image { get; set; }
 
     /// <summary>
     /// Gets or sets the created date.

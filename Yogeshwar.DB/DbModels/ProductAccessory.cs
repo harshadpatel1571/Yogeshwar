@@ -10,7 +10,8 @@ internal sealed class ProductAccessory
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the product identifier.
@@ -34,13 +35,15 @@ internal sealed class ProductAccessory
     /// Gets or sets the accessories.
     /// </summary>
     /// <value>The accessories.</value>
-    [ForeignKey(nameof(AccessoriesId))] public Accessory Accessories { get; set; }
+    [ForeignKey(nameof(AccessoriesId))]
+    public Accessory Accessories { get; set; }
 
     /// <summary>
     /// Gets or sets the product.
     /// </summary>
     /// <value>The product.</value>
-    [ForeignKey(nameof(ProductId))] public Product Product { get; set; }
+    [ForeignKey(nameof(ProductId))]
+    public Product Product { get; set; }
 
     /// <summary>
     /// Gets the notifications.

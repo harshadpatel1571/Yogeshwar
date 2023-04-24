@@ -22,7 +22,7 @@ public sealed class YogeshwarContext : DbContext
     /// <param name="builder">The builder.</param>
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.SeedData();
+        //builder.SeedData();
         base.OnModelCreating(builder);
     }
 

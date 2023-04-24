@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yogeshwar.DB.Context;
 
@@ -11,9 +12,11 @@ using Yogeshwar.DB.Context;
 namespace Yogeshwar.DB.Migrations
 {
     [DbContext(typeof(YogeshwarContext))]
-    partial class YogeshwarContextModelSnapshot : ModelSnapshot
+    [Migration("20230423104502_ExtendedImageSizeLimit")]
+    partial class ExtendedImageSizeLimit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,9 +69,6 @@ namespace Yogeshwar.DB.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

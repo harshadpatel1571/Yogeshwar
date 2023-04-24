@@ -13,13 +13,8 @@
                 }
             }
         },
-        {
-            name: "name", "autoWidth": true,
-            sDefaultContent: "--",
-            render: function (data, type, row) {
-                return "<p style='color:hotpink' >" + row.name + "</p>";
-            }
-        },
+        { data: "name", name: "Name", "autoWidth": true },
+        { data: "hsnNo", name: "HsnNo", "autoWidth": true },
         {
             bSortable: false,
             autoWidth: true,

@@ -24,14 +24,19 @@ internal sealed class ProductService : IProductService
     private readonly IMappingService _mappingService;
 
     /// <summary>
-    /// The image save path
+    /// The root path
     /// </summary>
-    private readonly string _imageSavePath;
+    private readonly string _rootPath;
 
     /// <summary>
-    /// The video save path
+    /// The prefix image path
     /// </summary>
-    private readonly string _videoSavePath;
+    private const string PrefixImagePath = "/DataImages/Product/";
+
+    /// <summary>
+    /// The prefix video path
+    /// </summary>
+    private const string PrefixVideoPath = "/DataImages/Product/Video/";
 
     /// <summary>
     /// The current user service
@@ -54,8 +59,7 @@ internal sealed class ProductService : IProductService
         _cachingService = cachingService;
         _mappingService = mappingService;
         _currentUserService = currentUserService;
-        _imageSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product";
-        _videoSavePath = $"{hostEnvironment.WebRootPath}/DataImages/Product/Video";
+        _rootPath = hostEnvironment.WebRootPath;
     }
 
     /// <summary>
@@ -163,9 +167,11 @@ internal sealed class ProductService : IProductService
 
         if (productDto.VideoFile is not null)
         {
-            video = Guid.NewGuid().ToString().Replace("-", "") +
+            video = PrefixVideoPath +
+                    Guid.NewGuid().ToString().Replace("-", "") +
                     Path.GetExtension(productDto.VideoFile.FileName);
-            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}", cancellationToken)
+
+            await productDto.VideoFile.SaveAsync(_rootPath + video, cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -175,10 +181,11 @@ internal sealed class ProductService : IProductService
 
             for (var i = 0; i < images.Length; i++)
             {
-                images[i] = Guid.NewGuid().ToString().Replace("-", "") +
+                images[i] = PrefixImagePath +
+                            Guid.NewGuid().ToString().Replace("-", "") +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
-                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}", cancellationToken)
+                await productDto.ImageFiles[i].SaveAsync(_rootPath + images[i], cancellationToken)
                     .ConfigureAwait(false);
             }
         }
@@ -221,12 +228,13 @@ internal sealed class ProductService : IProductService
 
         if (productDto.VideoFile is not null)
         {
-            var video = Guid.NewGuid().ToString().Replace("-", "") +
+            var video = PrefixVideoPath +
+                        Guid.NewGuid().ToString().Replace("-", "") +
                         Path.GetExtension(productDto.VideoFile.FileName);
 
-            await productDto.VideoFile.SaveAsync($"{_videoSavePath}/{video}", cancellationToken).ConfigureAwait(false);
+            await productDto.VideoFile.SaveAsync(_rootPath + video, cancellationToken).ConfigureAwait(false);
 
-            DeleteFileIfExist($"{_videoSavePath}/{dbModel.Video}");
+            DeleteFileIfExist(_rootPath + dbModel.Video);
 
             dbModel.Video = video;
         }
@@ -239,10 +247,11 @@ internal sealed class ProductService : IProductService
 
             for (var i = 0; i < images.Length; i++)
             {
-                images[i] = Guid.NewGuid().ToString().Replace("-", "") +
+                images[i] = PrefixImagePath +
+                            Guid.NewGuid().ToString().Replace("-", "") +
                             Path.GetExtension(productDto.ImageFiles[i].FileName);
 
-                await productDto.ImageFiles[i].SaveAsync($"{_imageSavePath}/{images[i]}", cancellationToken)
+                await productDto.ImageFiles[i].SaveAsync(_rootPath + images[i], cancellationToken)
                     .ConfigureAwait(false);
             }
         }
@@ -287,7 +296,7 @@ internal sealed class ProductService : IProductService
             .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        await _context.ProductAccessories
+        await _context.ProductCategories
             .Where(x => x.ProductId == dbModel.Id)
             .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -344,7 +353,6 @@ internal sealed class ProductService : IProductService
         return count;
     }
 
-
     /// <summary>
     /// Delete image as an asynchronous operation.
     /// </summary>
@@ -362,12 +370,7 @@ internal sealed class ProductService : IProductService
             return false;
         }
 
-        var path = $"{_imageSavePath}/{dbModel.Image}";
-
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
+        DeleteFileIfExist(_rootPath + dbModel.Image);
 
         _context.ProductImages.Remove(dbModel);
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -394,12 +397,7 @@ internal sealed class ProductService : IProductService
             return false;
         }
 
-        var path = $"{_videoSavePath}/{dbModel.Video}";
-
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
+        DeleteFileIfExist(_rootPath + dbModel.Video);
 
         dbModel.Video = null;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();

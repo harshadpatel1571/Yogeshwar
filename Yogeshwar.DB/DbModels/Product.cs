@@ -10,13 +10,15 @@ internal sealed class Product
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the name.
     /// </summary>
     /// <value>The name.</value>
-    [MaxLength(100)] public string Name { get; set; }
+    [MaxLength(100)]
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the description.
@@ -34,13 +36,16 @@ internal sealed class Product
     /// Gets or sets the model no.
     /// </summary>
     /// <value>The model no.</value>
-    [MaxLength(50)] public string ModelNo { get; set; }
+    [MaxLength(50)]
+    public string ModelNo { get; set; }
 
     /// <summary>
     /// Gets or sets the HSN no.
     /// </summary>
     /// <value>The HSN no.</value>
-    [Unicode(false)][MaxLength(10)] public string HsnNo { get; set; }
+    [Unicode(false)]
+    [MaxLength(10)]
+    public string HsnNo { get; set; }
 
     /// <summary>
     /// Gets or sets the GST.
@@ -52,7 +57,9 @@ internal sealed class Product
     /// Gets or sets the video.
     /// </summary>
     /// <value>The video.</value>
-    [Unicode(false)][MaxLength(10)] public string? Video { get; set; }
+    [Unicode(false)]
+    [MaxLength(10)]
+    public string? Video { get; set; }
 
     /// <summary>
     /// Gets or sets the created date.

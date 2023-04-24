@@ -10,7 +10,8 @@ internal sealed class ProductCategory
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the product identifier.
@@ -28,11 +29,13 @@ internal sealed class ProductCategory
     /// Gets or sets the category.
     /// </summary>
     /// <value>The category.</value>
-    [ForeignKey(nameof(CategoryId))] public Category Category { get; set; }
+    [ForeignKey(nameof(CategoryId))]
+    public Category Category { get; set; }
 
     /// <summary>
     /// Gets or sets the product.
     /// </summary>
     /// <value>The product.</value>
-    [ForeignKey(nameof(ProductId))] public Product Product { get; set; }
+    [ForeignKey(nameof(ProductId))]
+    public Product Product { get; set; }
 }

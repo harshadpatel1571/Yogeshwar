@@ -23,6 +23,9 @@ public class AccessoriesDto : BaseDto
 
     public string MeasurementType { get; set; }
 
+    [Required(ErrorMessage = "Price is required.")]
+    public decimal Price { get; set; }
+
     /// <summary>
     /// Gets or sets the description.
     /// </summary>

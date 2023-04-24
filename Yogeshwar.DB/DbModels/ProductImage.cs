@@ -10,7 +10,8 @@ internal sealed class ProductImage
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the product identifier.
@@ -22,11 +23,14 @@ internal sealed class ProductImage
     /// Gets or sets the image.
     /// </summary>
     /// <value>The image.</value>
+    [MaxLength(100)]
+    [Unicode(false)]
     public string Image { get; set; }
 
     /// <summary>
     /// Gets or sets the product.
     /// </summary>
     /// <value>The product.</value>
-    [ForeignKey(nameof(ProductId))] public Product Product { get; set; }
+    [ForeignKey(nameof(ProductId))]
+    public Product Product { get; set; }
 }

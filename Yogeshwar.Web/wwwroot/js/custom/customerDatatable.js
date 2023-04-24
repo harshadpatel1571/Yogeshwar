@@ -9,9 +9,9 @@
             }
         },
         { data: "lastName", name: "Last name", "autoWidth": true },
-        {data: "email", sDefaultContent: "", name: "Email", "autoWidth": true},
+        { data: "email", sDefaultContent: "", name: "Email", "autoWidth": true },
         { data: "phoneNo", name: "Phone no", "autoWidth": true },
-        { data: "city", name: "City", "autoWidth": true },
+        { data: "gstNumber", name: "Gst number", "autoWidth": true, sDefaultContent: "" },
         {
             bSortable: false,
             autoWidth: true,

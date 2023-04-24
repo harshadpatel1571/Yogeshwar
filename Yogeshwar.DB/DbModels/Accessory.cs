@@ -10,13 +10,15 @@ internal sealed class Accessory
     /// Gets or sets the identifier.
     /// </summary>
     /// <value>The identifier.</value>
-    [Key] public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the name.
     /// </summary>
     /// <value>The name.</value>
-    [MaxLength(100)] public string Name { get; set; }
+    [MaxLength(100)]
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the description.
@@ -28,7 +30,9 @@ internal sealed class Accessory
     /// Gets or sets the image.
     /// </summary>
     /// <value>The image.</value>
-    [Unicode(false)][MaxLength(50)] public string? Image { get; set; }
+    [Unicode(false)]
+    [MaxLength(100)]
+    public string? Image { get; set; }
 
     /// <summary>
     /// Gets or sets the quantity.
@@ -40,7 +44,15 @@ internal sealed class Accessory
     /// Gets or sets the type of the measurement.
     /// </summary>
     /// <value>The type of the measurement.</value>
-    [Unicode(false)][MaxLength(10)] public string MeasurementType { get; set; }
+    [Unicode(false)]
+    [MaxLength(10)]
+    public string MeasurementType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the price.
+    /// </summary>
+    /// <value>The price.</value>
+    public decimal Price { get; set; }
 
     /// <summary>
     /// Gets or sets the created date.
