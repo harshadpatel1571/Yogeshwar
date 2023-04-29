@@ -5,7 +5,7 @@
 /// Implements the <see cref="BaseDto" />
 /// </summary>
 /// <seealso cref="BaseDto" />
-public class CustomerDto : BaseDto
+public sealed class CustomerDto : BaseDto
 {
     /// <summary>
     /// Gets or sets the identifier.
@@ -104,35 +104,9 @@ public class CustomerDto : BaseDto
     [ValidateFile]
     public IFormFile? ImageFile { get; set; }
 
+    /// <summary>
+    /// Gets or sets the customer addresses.
+    /// </summary>
+    /// <value>The customer addresses.</value>
     public IList<CustomerAddressDto> CustomerAddresses { get; set; }
-}
-
-public class CustomerAddressDto
-{
-    public int Id { get; set; }
-
-    public int CustomerId { get; set; }
-
-    [Required(ErrorMessage = "City is required.")]
-    [StringLength(25, MinimumLength = 3, ErrorMessage = "City must be 3 to 50 character long.")]
-    public string City { get; set; }
-
-    [Required(ErrorMessage = "District is required.")]
-    [StringLength(25, MinimumLength = 3, ErrorMessage = "District must be 3 to 50 character long.")]
-    public string District { get; set; }
-
-    [Required(ErrorMessage = "State is required.")]
-    [StringLength(25, MinimumLength = 3, ErrorMessage = "State must be 3 to 50 character long.")]
-    public string State { get; set; }
-
-    [Required(ErrorMessage = "Address is required.")]
-    [StringLength(250, MinimumLength = 10, ErrorMessage = "Address must be 10 to 250 character long.")]
-    public string Address { get; set; }
-
-    [Required(ErrorMessage = "PinCode is required.")]
-    [StringLength(7, MinimumLength = 5, ErrorMessage = "PinCode must be 5 to 7 character long.")]
-    public string PinCode { get; set; }
-
-    [StringLength(13, MinimumLength = 10, ErrorMessage = "PinCode must be 10 to 13 character long.")]
-    public string? PhoneNo { get; set; }
 }

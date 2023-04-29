@@ -24,14 +24,14 @@
     }
 }
 
-$("#File").change(function () {
+$("#ImageFile").change(function () {
     changeImage(this);
     $('#ImageDiv').show();
 });
 
 function deleteImage() {
     const id = $('#Id').val();
-    const file = $('#File');
+    const file = $('#ImageFile');
 
     if (id == 0 || file.val()) {
         file.val('')

@@ -50,7 +50,7 @@ internal sealed class UserService : IUserService
                 Id = x.Id,
                 Name = x.Name,
                 Username = x.Username,
-                CreatedDate = x.CreatedDate.ToString("dd-MM-yyyy"),
+                CreatedDate = x.CreatedDate,
                 Email = x.Email,
                 PhoneNo = x.PhoneNo,
                 UserType = x.UserType

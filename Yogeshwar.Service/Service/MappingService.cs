@@ -77,6 +77,48 @@ internal class MappingService : IMappingService
     /// <param name="productDto">The product dto.</param>
     /// <returns>Product.</returns>
     Product IMappingService.Map(ProductDto productDto) => InternalMapper.Map(productDto);
+
+    /// <summary>
+    /// Maps the specified product accessory.
+    /// </summary>
+    /// <param name="productAccessory">The product accessory.</param>
+    /// <returns>ProductAccessoryDto.</returns>
+    ProductAccessoryDto IMappingService.Map(ProductAccessory productAccessory) => InternalMapper.Map(productAccessory);
+
+    /// <summary>
+    /// Maps the specified product accessory dto.
+    /// </summary>
+    /// <param name="productAccessoryDto">The product accessory dto.</param>
+    /// <returns>ProductAccessory.</returns>
+    ProductAccessory IMappingService.Map(ProductAccessoryDto productAccessoryDto) => InternalMapper.Map(productAccessoryDto);
+
+    /// <summary>
+    /// Maps the specified product category dto.
+    /// </summary>
+    /// <param name="productCategoryDto">The product category dto.</param>
+    /// <returns>ProductCategory.</returns>
+    ProductCategory IMappingService.Map(ProductCategoryDto productCategoryDto) => InternalMapper.Map(productCategoryDto);
+
+    /// <summary>
+    /// Maps the specified product category.
+    /// </summary>
+    /// <param name="productCategory">The product category.</param>
+    /// <returns>ProductCategoryDto.</returns>
+    ProductCategoryDto IMappingService.Map(ProductCategory productCategory) => InternalMapper.Map(productCategory);
+
+    /// <summary>
+    /// Maps the specified product image dto.
+    /// </summary>
+    /// <param name="productImageDto">The product image dto.</param>
+    /// <returns>ProductImage.</returns>
+    ProductImage IMappingService.Map(ProductImageDto productImageDto) => InternalMapper.Map(productImageDto);
+
+    /// <summary>
+    /// Maps the specified product image.
+    /// </summary>
+    /// <param name="productImage">The product image.</param>
+    /// <returns>ProductImageDto.</returns>
+    ProductImageDto IMappingService.Map(ProductImage productImage) => InternalMapper.Map(productImage);
 }
 
 /// <summary>
@@ -154,4 +196,46 @@ internal static partial class InternalMapper
     /// <param name="productDto">The product dto.</param>
     /// <returns>Product.</returns>
     internal static partial Product Map(ProductDto productDto);
+
+    /// <summary>
+    /// Maps the specified product accessory.
+    /// </summary>
+    /// <param name="productAccessory">The product accessory.</param>
+    /// <returns>ProductAccessoryDto.</returns>
+    internal static partial ProductAccessoryDto Map(ProductAccessory productAccessory);
+
+    /// <summary>
+    /// Maps the specified product accessory dto.
+    /// </summary>
+    /// <param name="productAccessoryDto">The product accessory dto.</param>
+    /// <returns>ProductAccessory.</returns>
+    internal static partial ProductAccessory Map(ProductAccessoryDto productAccessoryDto);
+
+    /// <summary>
+    /// Maps the specified product category.
+    /// </summary>
+    /// <param name="productCategory">The product category.</param>
+    /// <returns>ProductCategoryDto.</returns>
+    internal static partial ProductCategoryDto Map(ProductCategory productCategory);
+
+    /// <summary>
+    /// Maps the specified product category dto.
+    /// </summary>
+    /// <param name="productCategoryDto">The product category dto.</param>
+    /// <returns>ProductCategory.</returns>
+    internal static partial ProductCategory Map(ProductCategoryDto productCategoryDto);
+
+    /// <summary>
+    /// Maps the specified product image.
+    /// </summary>
+    /// <param name="productImage">The product image.</param>
+    /// <returns>ProductImageDto.</returns>
+    internal static partial ProductImageDto Map(ProductImage productImage);
+
+    /// <summary>
+    /// Maps the specified product image dto.
+    /// </summary>
+    /// <param name="productImageDto">The product image dto.</param>
+    /// <returns>ProductImage.</returns>
+    internal static partial ProductImage Map(ProductImageDto productImageDto);
 }

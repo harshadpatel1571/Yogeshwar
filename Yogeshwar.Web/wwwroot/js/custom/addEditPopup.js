@@ -25,14 +25,15 @@
 function saveAccessories() {
     var formData = new FormData();
 
-    const file = $('#AccesoryFile')[0].files;
-
-    if (file.length > 0) {
-        formData.append("File", file[0])
+    if ($('#AccesoryFile').length > 0) {
+        const files = $('#AccesoryFile').prop('files');
+        formData.append("ImageFile", files[0])
     }
 
     formData.append("Name", $('#AccesoryName').val())
     formData.append("Quantity", $('#AccesoryQuantity').val())
+    formData.append("MeasurementType", $('#AccesoryMeasurementType').val())
+    formData.append("Price", $('#AccesoryPrice').val())
     formData.append("Description", document.getElementsByClassName('ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline ck-blurred')[1].innerHTML)
 
     $.ajax({
@@ -43,13 +44,12 @@ function saveAccessories() {
         cache: false,
         processData: false,
         success: function (obj) {
-            const dropDown = $('#Accessories');
+            const dropDown = $('#AccessoryIds');
             if (dropDown.length > 0) {
                 dropDown.append(new Option(obj.name, obj.id));
-                dataAccessories.push({ key: obj.id, name: obj.name })
             }
 
-            showToaster("success", "Created", "Accessory has been Created.");
+            showToaster("success", "Created", "Accessory has been created.");
 
             $('#showAccessoryModal').modal('hide');
         },
@@ -100,33 +100,31 @@ function showCategoryImage(input) {
     }
 }
 
-function saveAccessories() {
+function saveCategories() {
     var formData = new FormData();
 
-    const file = $('#CategoryFile')[0].files;
-
-    if (file.length > 0) {
-        formData.append("File", file[0])
+    if ($('#CategoryFile').length > 0) {
+        const files = $('#CategoryFile').prop('files');
+        formData.append("ImageFile", files[0])
     }
 
     formData.append("Name", $('#CategoryName').val())
-    formData.append("HsnNo", $('#CategoryHSN').val())
+    formData.append("HsnNo", $('#CategoryHsnNo').val())
 
     $.ajax({
         type: "POST",
-        url: "/Accessories/AddEditPopup/",
+        url: "/Categories/AddEditPopup/",
         contentType: false,
         data: formData,
         cache: false,
         processData: false,
         success: function (obj) {
-            const dropDown = $('#Accessories');
+            const dropDown = $('#CategoryIds');
             if (dropDown.length > 0) {
                 dropDown.append(new Option(obj.name, obj.id));
-                dataAccessories.push({ key: obj.id, name: obj.name })
             }
 
-            showToaster("success", "Created", "Categories has been Created.");
+            showToaster("success", "Created", "Category has been created.");
 
             $('#showCategoryModal').modal('hide');
         },
@@ -145,9 +143,7 @@ function openPopupForCategories() {
         type: "GET",
         url: "/partialview/categoryaddpopupview/",
         success: function (html) {
-            console.log(html);
             $("#categoryModalBody").html(html);
-            ckEditorInit("#categoryModalBody");
             $('#showCategoryModal').modal('show');
         }
     });

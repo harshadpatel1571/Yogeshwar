@@ -1,132 +1,36 @@
-﻿const list = [];
-const quantities = [];
-const dataAccessories = [];
-let time = 0;
+﻿function displayMenu() {
+    const selectedValue = $('#AccessoryIds option:selected');
 
-const html = "<li class=\"list-group-item\" id=\"replace_id\">\n" +
-    "                            <div class=\"d-flex align-items-center\">\n" +
-    "                                <div class=\"flex-shrink-0\">\n" +
-    "                                    <input type=\"hidden\" value=\"AccessoriesValue\" name=\"AccessoriesQuantity.AccessoriesId\" />\n" +
-    "                                </div>\n" +
-    "                                <div class=\"flex-grow-1 ms-2\">\n" +
-    "                                    replace_name\n" +
-    "                                </div>\n" +
-    "                                <div class=\"flex-grow-2 ms-2\" style='position:relative;right:40%;'>\n" +
-    "                                   <div class=\"input-group\">" +
-    "                                       <input class=\"form-control\" value='quantity_value' name='AccessoriesQuantity.Quantity' required type=\"number\" />" +
-    "                                       <span class=\"input-group-text\" id='AccessoriesQuantity.Quantity''>ExampleMasurement</span>\n" +
-    "                                   </div>" +
-    "                                </div>\n" +
-    "                            </div>\n" +
-    "                        </li>";
-
-$(document).ready(function () {
-    const url = window.location.pathname.split('/');
-
-    if (isEdit(url)) {
-        $.ajax({
-            url: '/Product/BindQuantity/' + url[url.length - 1],
-            type: 'POST',
-            success: function (response) {
-                for (let i = 0; i < response.length; i++) {
-                    quantities.push({ key: response[i].key, value: response[i].value });
-                }
-
-                displayMenu(true);
-            }
-        });
-    } else {
-        displayMenu(false);
-    }
-})
-
-function isEdit(url) {
-    return ($.isNumeric(url[url.length - 1]));
-}
-
-function displayMenu(edit) {
-    const selectedValue = $('#Accessories option:selected');
-
-    // If nothing is selected then hide the element and clear the list.
-    if (selectedValue.length === 0) {
+    if (selectedValue.length < 1) {
         $('#PAdiv').hide();
-
-        removeElementAndClearList();
-
-        return;
-    } else {
-        // If something is selected then show element.
-        $('#PAdiv').show();
+        $('#PAList').html('');
     }
-
-    // If it is fist time, then add element to list and html.
-    if (time === 0) {
-
-        const allValue = $('#Accessories option');
-
-        allValue.each(function (x, y) {
-            dataAccessories.push({ key: y.value, name: y.text })
-        });
+    else {
+        const ids = [];
 
         selectedValue.each(function (x, y) {
-            list.push(y.text);
-            $('#PAList').append(generateHtml(edit, y.text))
-        })
+            ids.push(y.value)
+        });
 
-        time++;
-
-        return;
+        $('#PAList').html(generateHtml(ids));
+        $('#PAdiv').show();
     }
-
-    selectedValue.each(function (x, y) {
-        // If not contains then add to html.
-        if (!list.includes(y.text)) {
-            $('#PAList').append(generateHtml(edit, y.text))
-        } else {
-            // If list contains element then remove it.
-            const index = list.indexOf(y.text);
-            if (index > -1) {
-                list.splice(index, 1);
-            }
-        }
-    })
-
-    removeElementAndClearList();
-
-    // Add new coming value to list.
-    selectedValue.each(function (x, y) {
-        list.push(y.text);
-    })
 }
 
-function removeElementAndClearList() {
-    // If any element is remaining, then remove.    
-    for (let i = 0; i < list.length; i++) {
-        $('#' + list[i].split(' ').join('')).remove();
-    }
+function generateHtml(ids) {
+    let newHtml;
 
-    // Empty list if there is any element.
-    if (list.length > 0)
-        list.splice(0, list.length);
-}
-
-function generateHtml(edit, text) {
-    let newHtml = html.replace('replace_name', text)
-        .replace('AccessoriesValue', dataAccessories.find(x => x.name === text).key);
-
-    if (edit) {
-        const obj = quantities.find(x => x.key === text);
-
-        if (obj != undefined || obj != null) {
-            newHtml = newHtml.replace('quantity_value', obj.value)
-        } else {
-            newHtml = newHtml.replace('quantity_value', '')
+    $.ajax({
+        async: false,
+        type: "POST",
+        url: "/partialview/accessoryquantityview/",
+        data: { accessoryIds: ids },
+        success: function (dataHtml) {
+            newHtml = dataHtml;
         }
-    } else {
-        newHtml = newHtml.replace('quantity_value', '')
-    }
+    });
 
-    return newHtml.replace('replace_id', text.split(' ').join(''));
+    return newHtml;
 }
 
 $("#ImageFiles").change(function () {
@@ -138,8 +42,6 @@ $("#VideoFile").change(function () {
     displayVideo(this);
 });
 
-
-let lastLength = 0
 
 function displayImage(input) {
 
@@ -282,12 +184,12 @@ function deleteImage(id) {
 }
 
 document.addEventListener("keydown", function (event) {
-    if (event.shiftKey && event.code === "KeyA") {
+    if (event.shiftKey && event.altKey && event.code === "KeyA") {
         event.preventDefault();
         openPopupForAccessories()
     }
 
-    else if (event.shiftKey && event.code === "KeyC") {
+    else if (event.shiftKey && event.altKey && event.code === "KeyC") {
         event.preventDefault();
         openPopupForCategories()
     }

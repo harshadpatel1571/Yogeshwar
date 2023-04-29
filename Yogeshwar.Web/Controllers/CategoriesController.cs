@@ -115,6 +115,22 @@ public class CategoriesController : Controller
         return RedirectToActionPermanent(nameof(Index));
     }
 
+    [HttpPost]
+    public async Task<IActionResult> AddEditPopup(CategoryDto categoryDto, CancellationToken cancellationToken)
+    {
+        ModelState.Remove("Id");
+
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.GetKeyErrors();
+            return BadRequest(errors);
+        }
+
+        await _categoryService.Value.CreateOrUpdateAsync(categoryDto, cancellationToken).ConfigureAwait(false);
+
+        return Ok(categoryDto);
+    }
+
     /// <summary>
     /// Deletes the specified identifier.
     /// </summary>

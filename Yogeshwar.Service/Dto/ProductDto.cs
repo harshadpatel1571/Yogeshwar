@@ -5,7 +5,7 @@
 /// Implements the <see cref="BaseDto" />
 /// </summary>
 /// <seealso cref="BaseDto" />
-public class ProductDto : BaseDto
+public sealed class ProductDto : BaseDto
 {
     /// <summary>
     /// Gets or sets the identifier.
@@ -44,36 +44,51 @@ public class ProductDto : BaseDto
     [StringLength(50, ErrorMessage = "Model no must be up to 50 character long.")]
     public string ModelNo { get; set; }
 
+    /// <summary>
+    /// Gets or sets the HSN no.
+    /// </summary>
+    /// <value>The HSN no.</value>
     [Required(ErrorMessage = "HsnNo is required.")]
     [StringLength(10, ErrorMessage = "HsnNo must be up to 10 character long.")]
     public string HsnNo { get; set; }
 
     /// <summary>
-    /// Gets or sets the accessories.
+    /// Gets or sets the GST.
     /// </summary>
-    /// <value>The accessories.</value>
+    /// <value>The GST.</value>
+    [Required(ErrorMessage = "Gst is required.")]
+    public decimal Gst { get; set; }
+
+    /// <summary>
+    /// Gets or sets the video.
+    /// </summary>
+    /// <value>The video.</value>
+    public string? Video { get; set; }
+
+    /// <summary>
+    /// Gets or sets the product accessories.
+    /// </summary>
+    /// <value>The product accessories.</value>
+    public IList<ProductAccessoryDto> ProductAccessories { get; set; }
+
+    /// <summary>
+    /// Gets or sets the product categories.
+    /// </summary>
+    /// <value>The product categories.</value>
+    public IList<ProductCategoryDto>? ProductCategories { get; set; }
+
+    /// <summary>
+    /// Gets or sets the product images.
+    /// </summary>
+    /// <value>The product images.</value>
+    public IList<ProductImageDto>? ProductImages { get; set; }
+
+    /// <summary>
+    /// Gets or sets the accessory ids.
+    /// </summary>
+    /// <value>The accessory ids.</value>
     [Required(ErrorMessage = "Accessories are required.")]
-    public IList<int> Accessories { get; set; }
-
-    /// <summary>
-    /// Gets or sets the categories.
-    /// </summary>
-    /// <value>The categories.</value>
-    [Required(ErrorMessage = "Categories are required.")]
-    public IList<int> Categories { get; set; }
-
-    /// <summary>
-    /// Gets or sets the accessories quantity.
-    /// </summary>
-    /// <value>The accessories quantity.</value>
-    [Required(ErrorMessage = "Accessories quantities are required.")]
-    public IList<AccessoriesQuantity> AccessoriesQuantity { get; set; }
-
-    /// <summary>
-    /// Gets the images.
-    /// </summary>
-    /// <value>The images.</value>
-    internal IList<ImageIds>? Images { get; set; }
+    public IList<int> AccessoryIds { get; set; }
 
     /// <summary>
     /// Gets or sets the select lists for accessories.
@@ -82,16 +97,17 @@ public class ProductDto : BaseDto
     public SelectList? SelectListsForAccessories { get; set; }
 
     /// <summary>
+    /// Gets or sets the categori ids.
+    /// </summary>
+    /// <value>The categori ids.</value>
+    [Required(ErrorMessage = "Categories are required.")]
+    public IList<int> CategoryIds { get; set; }
+
+    /// <summary>
     /// Gets or sets the select lists for categories.
     /// </summary>
     /// <value>The select lists for categories.</value>
     public SelectList? SelectListsForCategories { get; set; }
-
-    /// <summary>
-    /// Gets or sets the video.
-    /// </summary>
-    /// <value>The video.</value>
-    public string? Video { get; set; }
 
     /// <summary>
     /// Gets or sets the image files.
@@ -106,127 +122,4 @@ public class ProductDto : BaseDto
     /// <value>The video file.</value>
     [ValidateFile]
     public IFormFile? VideoFile { get; set; }
-}
-
-/// <summary>
-/// Class AccessoriesQuantity.
-/// </summary>
-public class AccessoriesQuantity
-{
-    /// <summary>
-    /// Gets or sets the accessories identifier.
-    /// </summary>
-    /// <value>The accessories identifier.</value>
-    public int AccessoriesId { get; set; }
-
-    /// <summary>
-    /// Gets or sets the quantity.
-    /// </summary>
-    /// <value>The quantity.</value>
-    public int Quantity { get; set; }
-
-    /// <summary>
-    /// Gets the image.
-    /// </summary>
-    /// <value>The image.</value>
-    internal string? Image { get; set; }
-}
-
-/// <summary>
-/// Class ImageIds.
-/// </summary>
-internal class ImageIds
-{
-    /// <summary>
-    /// Gets or sets the identifier.
-    /// </summary>
-    /// <value>The identifier.</value>
-    public int Id { get; set; }
-
-    /// <summary>
-    /// Gets or sets the image.
-    /// </summary>
-    /// <value>The image.</value>
-    public string Image { get; set; }
-}
-
-/// <summary>
-/// Class ProductAccessoriesDto.
-/// </summary>
-public class ProductAccessoriesDto
-{
-    /// <summary>
-    /// Gets or sets the identifier.
-    /// </summary>
-    /// <value>The identifier.</value>
-    public int Id { get; set; }
-
-    /// <summary>
-    /// Gets or sets the product identifier.
-    /// </summary>
-    /// <value>The product identifier.</value>
-    public int ProductId { get; set; }
-
-    /// <summary>
-    /// Gets or sets the name.
-    /// </summary>
-    /// <value>The name.</value>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Gets or sets the description.
-    /// </summary>
-    /// <value>The description.</value>
-    public string? Description { get; set; }
-
-    /// <summary>
-    /// Gets or sets the quantity.
-    /// </summary>
-    /// <value>The quantity.</value>
-    public int Quantity { get; set; }
-}
-
-/// <summary>
-/// Class ProductAccessoriesDetailDto.
-/// </summary>
-internal class ProductAccessoriesDetailDto
-{
-    /// <summary>
-    /// Gets or sets the image.
-    /// </summary>
-    /// <value>The image.</value>
-    public string? Image { get; set; }
-
-    /// <summary>
-    /// Gets or sets the accessories.
-    /// </summary>
-    /// <value>The accessories.</value>
-    public IList<AccessoriesDetailDto> Accessories { get; set; }
-
-    /// <summary>
-    /// Gets or sets the amount.
-    /// </summary>
-    /// <value>The amount.</value>
-    public decimal Amount { get; set; }
-}
-
-public record struct AccessoriesDetailDto
-{
-    /// <summary>
-    /// Gets or sets the identifier.
-    /// </summary>
-    /// <value>The identifier.</value>
-    public int Id { get; set; }
-
-    /// <summary>
-    /// Gets or sets the name.
-    /// </summary>
-    /// <value>The name.</value>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Gets or sets the image.
-    /// </summary>
-    /// <value>The image.</value>
-    public string? Image { get; set; }
 }

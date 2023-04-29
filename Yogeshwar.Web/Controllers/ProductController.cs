@@ -70,19 +70,6 @@ public class ProductController : Controller
     }
 
     /// <summary>
-    /// Binds the quantity.
-    /// </summary>
-    /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>IActionResult.</returns>
-    [HttpPost]
-    public async Task<IActionResult> BindQuantity(int id, CancellationToken cancellationToken)
-    {
-        var data = await _productService.Value.GetAccessoriesQuantity(id, cancellationToken).ConfigureAwait(false);
-        return Ok(data);
-    }
-
-    /// <summary>
     /// Add or edit.
     /// </summary>
     /// <param name="id">The identifier.</param>
@@ -93,7 +80,7 @@ public class ProductController : Controller
         CancellationToken cancellationToken)
     {
         using var _ = dropDownService;
-        
+
         var accessories = await dropDownService
             .BindDropDownForAccessoriesAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -128,7 +115,7 @@ public class ProductController : Controller
     }
 
     /// <summary>
-    /// Add or edit.
+    /// Adds the edit.
     /// </summary>
     /// <param name="productDto">The product dto.</param>
     /// <param name="dropDownService">The drop down service.</param>
@@ -140,17 +127,6 @@ public class ProductController : Controller
     {
         using var _ = dropDownService;
         ModelState.Remove("Id");
-
-        productDto.AccessoriesQuantity ??= new List<AccessoriesQuantity>();
-
-        for (var i = 0; i < Request.Form["AccessoriesQuantity.AccessoriesId"].Count; i++)
-        {
-            productDto.AccessoriesQuantity.Add(new AccessoriesQuantity
-            {
-                AccessoriesId = Convert.ToInt32(Request.Form["AccessoriesQuantity.AccessoriesId"][i]),
-                Quantity = Convert.ToInt32(Request.Form["AccessoriesQuantity.Quantity"][i])
-            });
-        }
 
         if (!ModelState.IsValid)
         {

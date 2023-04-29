@@ -108,6 +108,6 @@ public sealed class AccountController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme)
             .ConfigureAwait(false);
 
-        return RedirectToActionPermanent("SignIn");
+        return RedirectToActionPermanent(nameof(SignIn));
     }
 }

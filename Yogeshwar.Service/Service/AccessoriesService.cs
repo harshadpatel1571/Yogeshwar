@@ -106,6 +106,20 @@ internal sealed class AccessoriesService : IAccessoriesService
     }
 
     /// <summary>
+    /// Get by ids as an asynchronous operation.
+    /// </summary>
+    /// <param name="ids">The ids.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;IList`1&gt; representing the asynchronous operation.</returns>
+    public async Task<IList<AccessoriesDto>> GetByIdsAsync(IList<int> ids,
+        CancellationToken cancellationToken)
+    {
+        var data = await _cachingService.GetAccessoriesAsync(cancellationToken).ConfigureAwait(false);
+
+        return data.Where(x => ids.Contains(x.Id)).ToArray();
+    }
+
+    /// <summary>
     /// Gets the single asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
@@ -144,13 +158,13 @@ internal sealed class AccessoriesService : IAccessoriesService
     {
         var image = (string?)null;
 
-        if (accessory.File is not null)
+        if (accessory.ImageFile is not null)
         {
             image = PrefixPath +
                     Guid.NewGuid().ToString().Replace("-", "") +
-                    Path.GetExtension(accessory.File.FileName);
+                    Path.GetExtension(accessory.ImageFile.FileName);
 
-            await accessory.File.SaveAsync(_rootPath + image, cancellationToken)
+            await accessory.ImageFile.SaveAsync(_rootPath + image, cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -188,17 +202,17 @@ internal sealed class AccessoriesService : IAccessoriesService
             return 0;
         }
 
-        if (accessory.File is not null)
+        if (accessory.ImageFile is not null)
         {
             var image = PrefixPath +
                         Guid.NewGuid().ToString().Replace("-", "") +
-                        Path.GetExtension(accessory.File.FileName);
+                        Path.GetExtension(accessory.ImageFile.FileName);
 
-            await accessory.File.SaveAsync(_rootPath + image, cancellationToken).ConfigureAwait(false);
+            await accessory.ImageFile.SaveAsync(_rootPath + image, cancellationToken).ConfigureAwait(false);
 
             DeleteFileIfExist(_rootPath + dbModel.Image);
 
-            dbModel.Image = PrefixPath + image;
+            dbModel.Image = image;
         }
 
         dbModel.Name = accessory.Name;

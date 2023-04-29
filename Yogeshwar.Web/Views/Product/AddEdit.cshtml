@@ -73,20 +73,20 @@
                     <div class="col-md-2">
                         <label class="form-label">GST</label>
                         <span class="text-danger">*</span>
-                        <input class="form-control" asp-for="HsnNo">
-                        <span asp-validation-for="HsnNo" class="text-danger"></span>
+                        <input class="form-control" asp-for="Gst">
+                        <span asp-validation-for="Gst" class="text-danger"></span>
                     </div>
                     <div class="col-md-4" id="accessoriesDiv">
                         <label class="form-label">Select Accessories</label>
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
-                        <select class="js-example-basic-multiple" asp-for="Accessories"
-                                asp-items="Model.SelectListsForAccessories" onchange="displayMenu(isEdit(window.location.pathname.split('/')))" multiple="multiple">
+                        <select class="js-example-basic-multiple" asp-for="AccessoryIds"
+                                asp-items="Model.SelectListsForAccessories" onchange="displayMenu()" multiple="multiple">
                         </select>
-                        <span asp-validation-for="Accessories" class="text-danger"></span>
+                        <span asp-validation-for="AccessoryIds" class="text-danger"></span>
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForAccessories()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shift + A">
+                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForAccessories()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shift + Alt + A">
                             <div class="d-flex">
                                 <div class="flex-shrink-0" style="padding-left:6px">
                                     <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
@@ -98,13 +98,13 @@
                         <label class="form-label">Select Categories</label>
                         <span class="text-danger">*</span>
                         <span class="text-info">(Allow Multiple Selection)</span>
-                        <select class="js-example-basic-multiple" asp-for="Categories"
+                        <select class="js-example-basic-multiple" asp-for="CategoryIds"
                                 asp-items="Model.SelectListsForCategories" multiple="multiple">
                         </select>
-                        <span asp-validation-for="Categories" class="text-danger"></span>
+                        <span asp-validation-for="CategoryIds" class="text-danger"></span>
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForCategories()" title="Shift + C" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <button type="button" class="btn btn-primary mt-4" onclick="openPopupForCategories()" title="Shift + Alt + C" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <div class="d-flex">
                                 <div class="flex-shrink-0" style="padding-left:6px">
                                     <i class="ri-add-circle-line label-icon align-middle fs-16 me-2"></i>
@@ -123,6 +123,7 @@
                         <span class="text-info">(Fill Accessories quantity for stock management purpose.)</span>
                         <br />
                         <ul class="list-group" id="PAList">
+                            @await Html.PartialAsync("_AccessoryQuantity", Model)
                         </ul>
                     </div>
                     <div class="col-md-12">
@@ -137,13 +138,13 @@
                         @{
                             if (!isCreate)
                             {
-                                for (var i = 0; i < Model?.Images?.Count; i++)
+                                for (var i = 0; i < Model?.ProductImages?.Count; i++)
                                 {
-                                    var id = $"existingDiv{Model.Images[i].Id}";
+                                    var id = $"existingDiv{Model.ProductImages[i].Id}";
                                     <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="@id">
-                                        <img id="imageContainer" src="@Model.Images[i].Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                        <img id="imageContainer" src="@Model.ProductImages[i].Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
                                         <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                            <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(@Model.Images[i].Id)'>
+                                            <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(@Model.ProductImages[i].Id)'>
                                                 <span class="avatar-title rounded-circle bg-light text-body shadow">
                                                     <i class="ri-delete-bin-line"></i>
                                                 </span>
@@ -218,5 +219,5 @@
 
 @section Scripts{
     <script src="~/js/custom/productaddedit.js"></script>
-    <script src="~/js/custom/accessoriesaddeditpopup.js"></script>
+    <script src="~/js/custom/addeditpopup.js"></script>
 }

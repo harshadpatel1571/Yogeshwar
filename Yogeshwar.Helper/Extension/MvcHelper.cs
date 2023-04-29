@@ -11,14 +11,7 @@ internal static class MvcHelper
     /// <param name="modelState">State of the model.</param>
     public static void AddModelError(this ModelStateDictionary modelState)
     {
-        var keyError = modelState
-            .Where(x => x.Value?.ValidationState == ModelValidationState.Invalid)
-            .Select(x => new
-            {
-                x.Key,
-                Message = x.Value.Errors
-                    .Select(c => c.ErrorMessage).FirstOrDefault()
-            });
+        var keyError = GetKeyErrors(modelState);
 
         foreach (var item in keyError)
         {
@@ -31,7 +24,7 @@ internal static class MvcHelper
     /// </summary>
     /// <param name="modelState">State of the model.</param>
     /// <returns>System.Object.</returns>
-    public static object GetKeyErrors(this ModelStateDictionary modelState)
+    public static dynamic GetKeyErrors(this ModelStateDictionary modelState)
     {
         var keyError = modelState
             .Where(x => x.Value?.ValidationState == ModelValidationState.Invalid)

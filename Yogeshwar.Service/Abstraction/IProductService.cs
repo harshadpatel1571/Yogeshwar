@@ -24,14 +24,6 @@ public interface IProductService : IDisposable
     Task<ProductDto?> GetSingleAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the accessories quantity.
-    /// </summary>
-    /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Task&lt;System.Object&gt;.</returns>
-    Task<object> GetAccessoriesQuantity(int id, CancellationToken cancellationToken);
-
-    /// <summary>
     /// Creates or update asynchronous.
     /// </summary>
     /// <param name="productDto">The product dto.</param>

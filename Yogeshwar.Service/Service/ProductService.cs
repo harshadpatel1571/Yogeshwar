@@ -112,20 +112,6 @@ internal sealed class ProductService : IProductService
     }
 
     /// <summary>
-    /// Gets the accessories quantity.
-    /// </summary>
-    /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>object.</returns>
-    public async Task<object> GetAccessoriesQuantity(int id, CancellationToken cancellationToken)
-    {
-        return await _context.ProductAccessories
-            .Where(x => x.ProductId == id)
-            .Select(x => new { key = x.Accessories.Name, value = x.Quantity })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
     /// Gets the single asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
@@ -196,6 +182,13 @@ internal sealed class ProductService : IProductService
         dbModel.CreatedDate = DateTime.Now;
         dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
         dbModel.Video = video;
+
+        dbModel.ProductCategories = productDto.CategoryIds
+            .Select(x => new ProductCategory
+            {
+                CategoryId = x
+            }).ToArray();
+
         dbModel.ProductImages = images.Select(x => new ProductImage
         {
             Image = x
@@ -265,15 +258,15 @@ internal sealed class ProductService : IProductService
         dbModel.Price = productDto.Price!.Value;
         dbModel.HsnNo = productDto.HsnNo;
 
-        var newAccessories = productDto.AccessoriesQuantity
-            .Select(x => new ProductAccessory
+        var newAccessories = productDto.ProductAccessories
+            .Select(x=> new ProductAccessory
             {
+                AccessoryId = x.AccessoryId,
                 ProductId = dbModel.Id,
-                AccessoriesId = x.AccessoriesId,
                 Quantity = x.Quantity
             });
 
-        var newCategories = productDto.Categories
+        var newCategories = productDto.CategoryIds
             .Select(x => new ProductCategory
             {
                 ProductId = dbModel.Id,

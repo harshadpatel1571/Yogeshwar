@@ -44,7 +44,7 @@ internal sealed class NotificationService : INotificationService
         if (!string.IsNullOrEmpty(filterDto.SearchValue))
         {
             result = result.Where(x => x.ProductAccessories.Product.Name.Contains(filterDto.SearchValue) ||
-                                       x.ProductAccessories.Accessories.Name.Contains(filterDto.SearchValue) ||
+                                       x.ProductAccessories.Accessory.Name.Contains(filterDto.SearchValue) ||
                                        x.OrderId.ToString() == filterDto.SearchValue);
         }
 
@@ -63,7 +63,7 @@ internal sealed class NotificationService : INotificationService
         IList<NotificationDto> data = await result
             .Include(x => x.ProductAccessories)
             .ThenInclude(x => x.Product)
-            .Include(x => x.ProductAccessories.Accessories)
+            .Include(x => x.ProductAccessories.Accessory)
             .Select(x => DtoSelector(x))
             .ToListAsync().ConfigureAwait(false);
 
@@ -86,7 +86,7 @@ internal sealed class NotificationService : INotificationService
         ProductName = service.ProductAccessories.Product.Name,
         OrderId = service.OrderId,
         ProductAccessoriesId = service.ProductAccessoriesId,
-        ProductAccessoriesName = service.ProductAccessories.Accessories.Name,
+        ProductAccessoriesName = service.ProductAccessories.Accessory.Name,
         IsCompleted = service.IsCompleted,
         StrIsCompleted = service.IsCompleted ? "Completed" : "Pending"
     };

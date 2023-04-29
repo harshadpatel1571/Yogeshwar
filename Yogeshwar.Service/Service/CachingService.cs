@@ -89,12 +89,14 @@ internal class CachingService : ICachingService
         {
             var data = CachingQueryExpression.Accessories(_context, _mappingService);
 
-            x.SetValue(data);
+            var result = await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+
+            x.SetValue(result);
 
             x.SlidingExpiration = TimeSpan.MaxValue;
             x.AbsoluteExpiration = DateTimeOffset.MaxValue;
 
-            return await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+            return result;
         }
 
         return await _memoryCache.GetOrCreateAsync(AccessoriesCachingKey, FetchData).ConfigureAwait(false);
@@ -138,12 +140,14 @@ internal class CachingService : ICachingService
         {
             var data = CachingQueryExpression.Categories(_context, _mappingService);
 
-            x.SetValue(data);
+            var result = await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+
+            x.SetValue(result);
 
             x.SlidingExpiration = TimeSpan.MaxValue;
             x.AbsoluteExpiration = DateTimeOffset.MaxValue;
 
-            return await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+            return result;
         }
 
         return await _memoryCache.GetOrCreateAsync(CategoriesCachingKey, FetchData).ConfigureAwait(false);
@@ -185,14 +189,16 @@ internal class CachingService : ICachingService
     {
         async Task<List<ProductDto>> FetchData(ICacheEntry x)
         {
-            var data = CachingQueryExpression.Products(_context, _mappingService);
+            var data = CachingQueryExpression.Products(_context);
 
-            x.SetValue(data);
+            var result = await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+
+            x.SetValue(result);
 
             x.SlidingExpiration = TimeSpan.MaxValue;
             x.AbsoluteExpiration = DateTimeOffset.MaxValue;
 
-            return await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+            return result;
         }
 
         return await _memoryCache.GetOrCreateAsync(ProductsCachingKey, FetchData).ConfigureAwait(false);
@@ -239,16 +245,73 @@ file static class CachingQueryExpression
     /// <summary>
     /// The products
     /// </summary>
-    public static readonly Func<YogeshwarContext, IMappingService, IAsyncEnumerable<ProductDto>> Products =
+    public static readonly Func<YogeshwarContext, IAsyncEnumerable<ProductDto>> Products =
         EF.CompileAsyncQuery(
-            (YogeshwarContext context, IMappingService mappingService) =>
+            (YogeshwarContext context) =>
                 context.Products
                     .AsNoTracking()
                     .Where(c => !c.IsDeleted)
                     .Include(x => x.ProductCategories)
                     .ThenInclude(x => x.Category)
                     .Include(x => x.ProductAccessories)
-                    .ThenInclude(x => x.Accessories)
+                    .ThenInclude(x => x.Accessory)
                     .Include(x => x.ProductImages)
-                    .Select(c => mappingService.Map(c)));
+                    .Select(x => new ProductDto
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Description = x.Description,
+                        Price = x.Price,
+                        ModelNo = x.ModelNo,
+                        HsnNo = x.HsnNo,
+                        Gst = x.Gst,
+                        Video = x.Video,
+                        CreatedDate = x.CreatedDate,
+                        ModifiedDate = x.ModifiedDate,
+                        IsActive = x.IsActive,
+                        AccessoryIds = x.ProductAccessories.Select(c => c.AccessoryId).ToArray(),
+                        CategoryIds = x.ProductCategories.Select(c => c.CategoryId).ToArray(),
+                        ProductAccessories = x.ProductAccessories.Select(c => new ProductAccessoryDto
+                        {
+                            Id = c.Id,
+                            AccessoryId = c.AccessoryId,
+                            ProductId = c.ProductId,
+                            Quantity = c.Quantity,
+                            Accessory = new AccessoriesDto
+                            {
+                                Id = c.Accessory.Id,
+                                CreatedDate = c.Accessory.CreatedDate,
+                                ModifiedDate = c.Accessory.ModifiedDate,
+                                IsActive = c.Accessory.IsActive,
+                                Name = c.Accessory.Name,
+                                Image = c.Accessory.Image,
+                                Quantity = c.Accessory.Quantity,
+                                MeasurementType = c.Accessory.MeasurementType,
+                                Price = c.Accessory.Price,
+                                Description = c.Accessory.Description
+                            }
+                        }).ToArray(),
+                        ProductCategories = x.ProductCategories.Select(c => new ProductCategoryDto
+                        {
+                            ProductId = c.ProductId,
+                            CategoryId = c.CategoryId,
+                            Id = c.Id,
+                            Category = new CategoryDto
+                            {
+                                Id = c.Category.Id,
+                                Name = c.Category.Name,
+                                HsnNo = c.Category.HsnNo,
+                                Image = c.Category.Image,
+                                CreatedDate = c.Category.CreatedDate,
+                                ModifiedDate = c.Category.ModifiedDate,
+                                IsActive = c.Category.IsActive,
+                            }
+                        }).ToArray(),
+                        ProductImages = x.ProductImages.Select(c => new ProductImageDto
+                        {
+                            Id = c.Id,
+                            ProductId = c.ProductId,
+                            Image = c.Image
+                        }).ToArray()
+                    }));
 }

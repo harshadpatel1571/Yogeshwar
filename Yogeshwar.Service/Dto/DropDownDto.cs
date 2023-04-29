@@ -1,5 +1,9 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
+/// <summary>
+/// Struct DropDownDto
+/// </summary>
+/// <typeparam name="T"></typeparam>
 internal record struct DropDownDto<T>
 {
     /// <summary>

@@ -5,7 +5,7 @@
 /// Implements the <see cref="BaseDto" />
 /// </summary>
 /// <seealso cref="BaseDto" />
-public class ServiceDto : BaseDto
+public sealed class ServiceDto : BaseDto
 {
     /// <summary>
     /// Gets or sets the identifier.

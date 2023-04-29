@@ -75,19 +75,19 @@ public class OrderController : Controller
     /// <param name="productId">The product identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>IActionResult.</returns>
-    [HttpPost]
-    public async Task<IActionResult> GetAccessoriesDetail([FromQuery] int productId,
-        CancellationToken cancellationToken)
-    {
-        var detail = await _orderService.Value.GetAccessoriesAsync(productId, cancellationToken).ConfigureAwait(false);
+    //[HttpPost]
+    //public async Task<IActionResult> GetAccessoriesDetail([FromQuery] int productId,
+    //    CancellationToken cancellationToken)
+    //{
+    //    var detail = await _orderService.Value.GetAccessoriesAsync(productId, cancellationToken).ConfigureAwait(false);
 
-        if (detail is null)
-        {
-            return NotFound();
-        }
+    //    if (detail is null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        return Json(detail);
-    }
+    //    return Json(detail);
+    //}
 
 
     /// <summary>

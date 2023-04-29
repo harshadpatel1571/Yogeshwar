@@ -14,12 +14,18 @@ internal sealed class DropDownService : IDropDownService
     private readonly YogeshwarContext _context;
 
     /// <summary>
+    /// The caching service
+    /// </summary>
+    private readonly ICachingService _cachingService;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="DropDownService" /> class.
     /// </summary>
     /// <param name="context">The context.</param>
-    public DropDownService(YogeshwarContext context)
+    public DropDownService(YogeshwarContext context, ICachingService cachingService)
     {
         _context = context;
+        _cachingService = cachingService;
     }
 
     /// <summary>
@@ -39,13 +45,15 @@ internal sealed class DropDownService : IDropDownService
     async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForAccessoriesAsync(
         CancellationToken cancellationToken)
     {
-        return await _context.Accessories
-            .Where(x => x.IsActive && !x.IsDeleted)
-            .Select(x => new DropDownDto<int>
-            {
-                Key = x.Id,
-                Text = x.Name
-            }).ToListAsync(cancellationToken).ConfigureAwait(false);
+        var data = await _cachingService.GetAccessoriesAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return data.Where(x => x.IsActive)
+         .Select(x => new DropDownDto<int>
+         {
+             Key = x.Id,
+             Text = x.Name
+         }).ToArray();
     }
 
     /// <summary>
@@ -56,13 +64,15 @@ internal sealed class DropDownService : IDropDownService
     async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCategoriesAsync(
         CancellationToken cancellationToken)
     {
-        return await _context.Categories
-            .Where(x => !x.IsDeleted && x.IsActive)
+        var data = await _cachingService.GetCategoriesAsync(cancellationToken)
+           .ConfigureAwait(false);
+
+        return data.Where(x => x.IsActive)
             .Select(x => new DropDownDto<int>
             {
                 Key = x.Id,
                 Text = x.Name
-            }).ToListAsync(cancellationToken).ConfigureAwait(false);
+            }).ToArray();
     }
 
     /// <summary>
@@ -108,13 +118,15 @@ internal sealed class DropDownService : IDropDownService
     async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForProductsAsync(
         CancellationToken cancellationToken)
     {
-        return await _context.Products
-            .Where(x => x.IsActive && !x.IsDeleted)
+        var data = await _cachingService.GetProductsAsync(cancellationToken)
+          .ConfigureAwait(false);
+
+        return data.Where(x => x.IsActive)
             .Select(x => new DropDownDto<int>
             {
                 Key = x.Id,
                 Text = x.Name + " - " + x.ModelNo
-            }).ToListAsync(cancellationToken).ConfigureAwait(false);
+            }).ToArray();
     }
 
     /// <summary>

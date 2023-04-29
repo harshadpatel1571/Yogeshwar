@@ -110,7 +110,8 @@ internal sealed class CustomerService : ICustomerService
     public async Task<CustomerDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
     {
         return await _context.Customers.AsNoTracking()
-            .Where(x => x.Id == id)
+            .Where(x => x.Id == id && !x.IsDeleted)
+            .Include(x => x.CustomerAddresses)
             .Select(x => _mappingService.Map(x))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }

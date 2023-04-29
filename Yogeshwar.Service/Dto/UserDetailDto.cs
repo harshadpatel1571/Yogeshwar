@@ -42,10 +42,4 @@ public sealed class UserDetailDto : BaseDto
     /// </summary>
     /// <value>The type of the user.</value>
     public byte UserType { get; set; }
-
-    /// <summary>
-    /// Gets or sets the created date.
-    /// </summary>
-    /// <value>The created date.</value>
-    public string CreatedDate { get; set; }
 }

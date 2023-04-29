@@ -31,7 +31,7 @@ internal record struct DataTableResponseDto<T>
 /// Class DataTableResponseCarrier.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal class DataTableResponseCarrier<T>
+internal sealed class DataTableResponseCarrier<T>
 {
     /// <summary>
     /// Gets or sets the total count.

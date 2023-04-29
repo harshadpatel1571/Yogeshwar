@@ -17,6 +17,14 @@ public interface IAccessoriesService : IDisposable
         CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets the by ids asynchronous.
+    /// </summary>
+    /// <param name="ids">The ids.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;IList&lt;AccessoriesDto&gt;&gt;.</returns>
+    Task<IList<AccessoriesDto>> GetByIdsAsync(IList<int> ids, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets the single asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>

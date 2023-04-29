@@ -232,7 +232,7 @@ internal sealed class OrderService : IOrderService
                 AccessoriesDetails = x.ProductAccessories
                     .Select(c => new AccessoriesDetailDto2
                     {
-                        Id = c.AccessoriesId,
+                        Id = c.AccessoryId,
                         Quantity = c.Quantity
                     }).ToArray(),
                 Name = x.Name + "-" + x.ModelNo,
@@ -289,24 +289,24 @@ internal sealed class OrderService : IOrderService
     /// <param name="productId">The product identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;System.Nullable&lt;ProductAccessoriesDetailDto&gt;&gt;.</returns>
-    async Task<ProductAccessoriesDetailDto?> IOrderService.GetAccessoriesAsync(int productId,
-        CancellationToken cancellationToken)
-    {
-        return await _context.Products.Where(x => x.Id == productId)
-            .Select(x => new ProductAccessoriesDetailDto
-            {
-                Image = x.ProductImages.Count < 1
-                    ? null
-                    : $"{_productImageReadPath}/{x.ProductImages.FirstOrDefault().Image}",
-                Amount = x.Price,
-                Accessories = x.ProductAccessories.Select(c => new AccessoriesDetailDto
-                {
-                    Id = c.AccessoriesId,
-                    Name = c.Accessories.Name,
-                    Image = c.Accessories.Image == null ? null : $"{_accessoriesImageReadPath}/{c.Accessories.Image}"
-                }).ToArray()
-            }).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-    }
+    //async Task<ProductAccessoriesDetailDto?> IOrderService.GetAccessoriesAsync(int productId,
+    //    CancellationToken cancellationToken)
+    //{
+    //    return await _context.Products.Where(x => x.Id == productId)
+    //        .Select(x => new ProductAccessoriesDetailDto
+    //        {
+    //            Image = x.ProductImages.Count < 1
+    //                ? null
+    //                : $"{_productImageReadPath}/{x.ProductImages.FirstOrDefault().Image}",
+    //            Amount = x.Price,
+    //            Accessories = x.ProductAccessories.Select(c => new AccessoriesDetailDto
+    //            {
+    //                Id = c.AccessoriesId,
+    //                Name = c.Accessories.Name,
+    //                Image = c.Accessories.Image == null ? null : $"{_accessoriesImageReadPath}/{c.Accessories.Image}"
+    //            }).ToArray()
+    //        }).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    //}
 
     /// <summary>
     /// Delete as an asynchronous operation.

@@ -23,4 +23,34 @@ internal static class LinqExtension
 
         return list;
     }
+
+    /// <summary>
+    /// Ases the list.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="values">The values.</param>
+    /// <returns>List&lt;T&gt;.</returns>
+    internal static List<T> AsList<T>(this IEnumerable<T> values)
+    {
+        if (values is List<T> list)
+        {
+            return list;
+        }
+
+        return values.ToList();
+    }
+
+    /// <summary>
+    /// Performs action for each record.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list">The list.</param>
+    /// <param name="action">The action.</param>
+    internal static void ForEach<T>(this IList<T> list, Action<T> action)
+    {
+        for (var i = 0; i < list.Count; i++)
+        {
+            action(list[i]);
+        }
+    }
 }

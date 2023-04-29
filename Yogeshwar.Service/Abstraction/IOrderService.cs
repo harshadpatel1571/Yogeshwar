@@ -39,7 +39,7 @@ public interface IOrderService : IDisposable
     /// <param name="productId">The product identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;System.Nullable&lt;ProductAccessoriesDetailDto&gt;&gt;.</returns>
-    internal Task<ProductAccessoriesDetailDto?> GetAccessoriesAsync(int productId, CancellationToken cancellationToken);
+    //internal Task<ProductAccessoriesDetailDto?> GetAccessoriesAsync(int productId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the asynchronous.
