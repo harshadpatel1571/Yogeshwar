@@ -40,16 +40,48 @@
                 </div>
             </div>
             <div class="card-body">
+                <ul class="nav nav-tabs nav-tabs-custom nav-success mb-3" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link All py-3 active" data-bs-toggle="tab" id="All" href="#home1" role="tab" aria-selected="false" tabindex="-1">
+                            <i class="ri-store-2-fill me-1 align-bottom"></i> All Orders
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link py-3 Pending" data-bs-toggle="tab" id="Pending" href="#pending" role="tab" aria-selected="false" tabindex="-1">
+                            <i class="ri-checkbox-circle-line me-1 align-bottom"></i> Pending
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link py-3 InProgress" data-bs-toggle="tab" id="InProgress" href="#inProgress" role="tab" aria-selected="false" tabindex="-1">
+                            <i class="ri-truck-line me-1 align-bottom"></i> In Progress
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link py-3 Cancelled" data-bs-toggle="tab" id="Cancelled" href="#cancelled" role="tab" aria-selected="true">
+                            <i class="ri-close-circle-line me-1 align-bottom"></i> Cancelled
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link py-3 Returns" data-bs-toggle="tab" id="Returns" href="#returns" role="tab" aria-selected="false" tabindex="-1">
+                            <i class="ri-arrow-left-right-fill me-1 align-bottom"></i> Returns
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link py-3 Delivered" data-bs-toggle="tab" id="Delivered" href="#delivered" role="tab" aria-selected="false" tabindex="-1">
+                            <i class="ri-checkbox-circle-line me-1 align-bottom"></i> Delivered
+                        </a>
+                    </li>
+                </ul>
                 <table id="grid" class="display table caption-top table-nowrap" style="width:100%">
                     <thead class="table-light">
-                    <tr>
-                        <th>Id</th>
-                        <th>Customer Name</th>
-                        <th>Amount</th>
-                        <th>Order Date</th>
-                        <th>Order Items</th>
-                        <th>Action</th>
-                    </tr>
+                        <tr>
+                            <th>Id</th>
+                            <th>Customer Name</th>
+                            <th>Amount</th>
+                            <th>Order Date</th>
+                            <th>Order Items</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                 </table>
             </div>
