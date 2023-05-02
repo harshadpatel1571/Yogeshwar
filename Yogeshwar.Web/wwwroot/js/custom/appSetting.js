@@ -13,7 +13,15 @@
         $('body').addClass(view);
     }  
 
-    
+    var uri = window.location.href.toString();
+    var msg = getParameterByName("msg", uri);
+    if (msg != undefined && msg == "success") {
+        showToaster("success", "Saved","Record have been saved successfully.")
+    }
+    else if (msg != undefined && msg == "error") {
+        showToaster("error", "Opps !!", "Something whent wrong. Try again.")
+    }
+    RemoveQueryParameter(uri);
 });
 
 var ckClassicEditor = document.querySelectorAll(".ckeditor-classic"),
@@ -35,23 +43,31 @@ var ckClassicEditor = document.querySelectorAll(".ckeditor-classic"),
 document.addEventListener("keydown", function (event) {
     if (event.altKey && event.code === "KeyC") {
         event.preventDefault();
-        navigateToUrl("/customer")
+        navigateToUrl("/customer");
     }
     else if (event.altKey && event.code === "KeyP") {
         event.preventDefault();
-        navigateToUrl("/product")
+        navigateToUrl("/product");
     }
     else if (event.altKey && event.code === "KeyO") {
         event.preventDefault();
-        navigateToUrl("/order")
+        navigateToUrl("/order");
     }
     else if (event.altKey && event.code === "KeyA") {
         event.preventDefault();
-        navigateToUrl("/accessories")
+        navigateToUrl("/accessories");
     }
     else if (event.altKey && event.code === "KeyG") {
         event.preventDefault();
-        navigateToUrl("/categories")
+        navigateToUrl("/categories");
+    }
+    else if (event.altKey && event.code === "KeyF") {
+        event.preventDefault();
+        navigateToUrl("/configuration");
+    }
+    else if (event.altKey && event.code === "KeyD") {
+        event.preventDefault();
+        navigateToUrl("/");
     }
 });
 
@@ -330,4 +346,20 @@ function ckEditorInit(id) {
                     });
             })
         );
+}
+
+function RemoveQueryParameter(uri) {
+    if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+}
+
+function getParameterByName(name, url) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }

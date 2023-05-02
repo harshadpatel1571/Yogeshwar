@@ -42,4 +42,7 @@ internal interface ICachingService : IDisposable
     /// Removes the products.
     /// </summary>
     internal void RemoveProducts();
+
+    internal Task<ConfigurationDto> GetConfigurationSingleAsync(CancellationToken cancellationToken);
+    internal void RemoveConfiguration();
 }

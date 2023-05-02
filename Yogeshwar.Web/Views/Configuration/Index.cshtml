@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ConfigurationDto
+@{
     ViewData["Title"] = "Configuration";
     Layout = "_Layout";
 }
@@ -25,15 +26,60 @@
             </div>
             <div class="card-body">
                 <form class="row g-3 needs-validation" asp-action="AddEdit" enctype="multipart/form-data">
-                    <div class="col-md-6">
-                        @*<input asp-for="Id" type="hidden">
-                        <input asp-for="Image" type="hidden">*@
+                    <div class="col-md-4">
+                        <input asp-for="Id" type="hidden">
                         <label class="form-label">Company Name</label>
                         <span class="text-danger">*</span>
-                       @* <input class="form-control" asp-for="Name" maxlength="100" required>
-                        <span asp-validation-for="Name" class="text-danger"></span>*@
+                        <input class="form-control" asp-for="CompanyName">
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
                     </div>
-                    
+
+                    <div class="col-md-4">
+                        <label class="form-label">Gst Number</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" asp-for="GstNumber">
+                        <span asp-validation-for="GstNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Gst</label>
+                        <span class="text-danger">*</span>
+                        <div class="input-group">
+                            <input class="form-control" asp-for="Gst">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <span asp-validation-for="Gst" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Term And Conditions</label>
+                        <span class="text-danger">*</span>
+                        <textarea class="form-control ckeditor-classic" asp-for="TermAndCondition" rows="2" maxlength="250" required></textarea>
+                        <span asp-validation-for="TermAndCondition" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6" id="ImageApped">
+                        <label class="form-label">Upload Image <span class="text-info">(Only images are allowed.)</span></label>
+                        <input class="form-control md-2" asp-for="ImageFile" accept="image/*" multiple>
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        <div class="profile-user position-relative d-inline-block mx-auto mt-3" id="ImageDiv">
+                            @{
+                                if (Model?.CompanyLogo is not null)
+                                {
+                                    <div class="profile-user position-relative d-inline-block mx-auto mt-3">
+                                        <img id="imageContainer" src="@Model.CompanyLogo" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                        <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                            <label for="profile-img-file-input" class="profile-photo-edit avatar-xs" onclick='deleteImage(@Model.Id)'>
+                                                <span class="avatar-title rounded-circle bg-light text-body shadow">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
                     
                     <div class="col-12">
                         <button type="submit" class="btn btn-secondary btn-label waves-effect waves-light">

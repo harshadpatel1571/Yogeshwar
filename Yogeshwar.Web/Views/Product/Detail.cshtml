@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="card-body row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Product Name</label>
                     <label class="form-control">@Model.Name</label>
                 </div>
@@ -52,6 +52,36 @@
                     <label class="form-control">@Model.Price</label>
                 </div>
 
+                <div class="col-md-4">
+                    <label class="form-label">HSN Number</label>
+                    <label class="form-control">@Model.HsnNo</label>
+                </div>
+
+                <div class="col-md-8">
+                    <label class="form-label">Categories</label>
+                    @{
+                        var catagoriesNameList = Model.ProductCategories.Select(x => x.Category.Name).ToList();
+                    }
+                    <label class="form-control item-group">
+                        @{
+                            foreach (var item in catagoriesNameList)
+                            {
+                                <span class="badge badge-soft-secondary">@item</span>
+                            }
+                        }
+                    </label>
+                </div>
+
+                <div class="col-md-12" id="PAdiv">
+                    <label class="form-label">Product Accessories</label>
+                    <span class="text-danger">*</span>
+                    <span class="text-info">(Fill Accessories quantity for stock management purpose.)</span>
+                    <br />
+                    <ul class="list-group" id="PAList">
+                        @await Html.PartialAsync("_AccessoryQuantity", Model)
+                    </ul>
+                </div>
+
                 <div class="col-md-12">
                     <label class="form-label">Description</label>
                     <div class="ck ck-content ck-rounded-corners ck-editor__editable_inline">
@@ -59,43 +89,19 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
-                    <label class="form-label">Product Accessories</label> <br />
-                    <ul class="list-group">
-                       @* @foreach (var item in Model.ProductImages)
-                        {
-                            <li class="list-group-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        @if (item.Image is not null)
-                                        {
-                                            <img src="@item.Image" alt="" class="avatar-xs rounded-circle">
-                                        }
-                                    </div>
-                                    <div class="flex-grow-1 ms-2">
-                                        @Model.SelectListsForAccessories.Where(x => x.Value == item.AccessoriesId.ToString()).FirstOrDefault()?.Text
-                                    </div>
-                                    <div class="flex-grow-2 ms-2" style="position:relative;right:60%;">
-                                        @item.Quantity
-                                    </div>
-                                </div>
-                            </li>
-                        }*@
-                    </ul>
-                </div>
                 @{
-                    //if (Model.Images is { Count: > 0 })
-                    //{
-                    //    <div class="col-md-6">
-                    //        <label class="form-label">Product Image</label><br />
-                    //        @for (var i = 0; i < Model.Images.Count; i++)
-                    //        {
-                    //            <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                    //                <img src="@Model.Images[i].Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
-                    //            </div>
-                    //        }
-                    //    </div>
-                    //}
+                    if (Model.ProductImages is { Count: > 0 })
+                    {
+                        <div class="col-md-6">
+                            <label class="form-label">Product Image</label><br />
+                            @for (var i = 0; i < Model.ProductImages.Count; i++)
+                            {
+                                <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
+                                    <img src="@Model.ProductImages[i].Image" class="rounded-squre avatar-xl img-thumbnail shadow" alt="accessories-image">
+                                </div>
+                            }
+                        </div>
+                    }
 
                     if (Model.Video is not null)
                     {

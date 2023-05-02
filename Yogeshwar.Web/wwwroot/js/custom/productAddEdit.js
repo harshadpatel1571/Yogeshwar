@@ -184,12 +184,12 @@ function deleteImage(id) {
 }
 
 document.addEventListener("keydown", function (event) {
-    if (event.shiftKey && event.altKey && event.code === "KeyA") {
+    if (event.shiftKey && event.code === "KeyA") {
         event.preventDefault();
         openPopupForAccessories()
     }
 
-    else if (event.shiftKey && event.altKey && event.code === "KeyC") {
+    else if (event.shiftKey && event.code === "KeyC") {
         event.preventDefault();
         openPopupForCategories()
     }

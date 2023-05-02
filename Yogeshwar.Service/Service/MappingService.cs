@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Service;
+﻿using Yogeshwar.DB.DbModels;
+
+namespace Yogeshwar.Service.Service;
 
 /// <summary>
 /// Class MappingService.
@@ -119,6 +121,9 @@ internal class MappingService : IMappingService
     /// <param name="productImage">The product image.</param>
     /// <returns>ProductImageDto.</returns>
     ProductImageDto IMappingService.Map(ProductImage productImage) => InternalMapper.Map(productImage);
+
+    ConfigurationDto IMappingService.Map(Configuration configuration) => InternalMapper.Map(configuration);
+
 }
 
 /// <summary>
@@ -238,4 +243,6 @@ internal static partial class InternalMapper
     /// <param name="productImageDto">The product image dto.</param>
     /// <returns>ProductImage.</returns>
     internal static partial ProductImage Map(ProductImageDto productImageDto);
+
+    internal static partial ConfigurationDto Map(Configuration configuration);
 }

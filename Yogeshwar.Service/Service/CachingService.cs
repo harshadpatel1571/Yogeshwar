@@ -28,10 +28,16 @@ internal class CachingService : ICachingService
     /// </summary>
     private const string CategoriesCachingKey = "Categories";
 
+
+    /// <summary>
+    /// The configuration caching key
+    /// </summary>
+    private const string ConfigurationCachingKey = "Configuration";
+
     /// <summary>
     /// The products caching key
     /// </summary>
-    private const string ProductsCachingKey = "Products";
+    private const string ProductsCachingKey = "Products";    
 
     /// <summary>
     /// The mapping service
@@ -213,6 +219,42 @@ internal class CachingService : ICachingService
     }
 
     #endregion
+
+    #region Configuration
+    async Task<ConfigurationDto> ICachingService.GetConfigurationSingleAsync(CancellationToken cancellationToken)
+    {
+        if (_memoryCache.TryGetValue(ConfigurationCachingKey, out var value))
+        {
+            return await Task.FromResult((ConfigurationDto)value).ConfigureAwait(false);
+        }
+
+        return await GetConfigurationInternalAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<ConfigurationDto> GetConfigurationInternalAsync(CancellationToken cancellationToken)
+    {
+        async Task<ConfigurationDto> FetchData(ICacheEntry x)
+        {
+            var data = CachingQueryExpression.configuration(_context, _mappingService);
+
+            var result = await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+
+            x.SetValue(result);
+
+            x.SlidingExpiration = TimeSpan.MaxValue;
+            x.AbsoluteExpiration = DateTimeOffset.MaxValue;
+
+            return result.FirstOrDefault();
+        }
+
+        return await _memoryCache.GetOrCreateAsync(ConfigurationCachingKey, FetchData).ConfigureAwait(false);
+    }
+
+    void ICachingService.RemoveConfiguration()
+    {
+        _memoryCache.Remove(ConfigurationCachingKey);
+    }
+    #endregion
 }
 
 /// <summary>
@@ -314,4 +356,11 @@ file static class CachingQueryExpression
                             Image = c.Image
                         }).ToArray()
                     }));
+
+    public static readonly Func<YogeshwarContext, IMappingService, IAsyncEnumerable<ConfigurationDto>> configuration =
+        EF.CompileAsyncQuery(
+            (YogeshwarContext context, IMappingService mappingService) =>
+                context.Configurations
+                    .AsNoTracking()
+                    .Select(c => mappingService.Map(c)));
 }
