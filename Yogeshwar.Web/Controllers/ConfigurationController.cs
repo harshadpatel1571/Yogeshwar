@@ -48,6 +48,6 @@ public class ConfigurationController : Controller
 
         await _configurationService.Value.UpdateAsync(configurationDto, cancellationToken).ConfigureAwait(false);
 
-        return RedirectToAction("Index", new { msg = "success" });
+        return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
     }
 }

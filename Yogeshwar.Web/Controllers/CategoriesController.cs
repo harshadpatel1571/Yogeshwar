@@ -112,7 +112,7 @@ public class CategoriesController : Controller
 
         await _categoryService.Value.CreateOrUpdateAsync(category, cancellationToken).ConfigureAwait(false);
 
-        return RedirectToActionPermanent(nameof(Index));
+        return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
     }
 
     [HttpPost]

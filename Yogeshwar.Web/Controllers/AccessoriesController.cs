@@ -57,7 +57,7 @@ public class AccessoriesController : Controller
         var filters = DataExtractor.Extract(Request);
 
         var data = await _accessoriesService.Value
-            .GetByFilterAsync(filters,cancellationToken)
+            .GetByFilterAsync(filters, cancellationToken)
             .ConfigureAwait(false);
 
         var responseModel = new DataTableResponseDto<AccessoriesDto>
@@ -86,7 +86,7 @@ public class AccessoriesController : Controller
         }
 
         var model = await _accessoriesService.Value
-            .GetSingleAsync(id,cancellationToken)
+            .GetSingleAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (model is null)
@@ -114,9 +114,9 @@ public class AccessoriesController : Controller
             return View();
         }
 
-        await _accessoriesService.Value.CreateOrUpdateAsync(accessory,cancellationToken).ConfigureAwait(false);
+        await _accessoriesService.Value.CreateOrUpdateAsync(accessory, cancellationToken).ConfigureAwait(false);
 
-        return RedirectToActionPermanent(nameof(Index));
+        return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public class AccessoriesController : Controller
         try
         {
             var count = await _accessoriesService.Value
-                .DeleteAsync(id,cancellationToken)
+                .DeleteAsync(id, cancellationToken)
                 .ConfigureAwait(false);
 
             if (count == 0)
@@ -179,7 +179,7 @@ public class AccessoriesController : Controller
     public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
         var isDeleted = await _accessoriesService.Value
-            .DeleteImageAsync(id,cancellationToken)
+            .DeleteImageAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (isDeleted)
@@ -199,7 +199,7 @@ public class AccessoriesController : Controller
     public async Task<IActionResult> Detail(int id, CancellationToken cancellationToken)
     {
         var model = await _accessoriesService.Value
-            .GetSingleAsync(id,cancellationToken)
+            .GetSingleAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (model is null)

@@ -117,7 +117,7 @@ public sealed class CustomerController : Controller
             .CreateOrUpdateAsync(customer, cancellationToken)
             .ConfigureAwait(false);
 
-        return RedirectToActionPermanent(nameof(Index));
+        return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
     }
 
     /// <summary>

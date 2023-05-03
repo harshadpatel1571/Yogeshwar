@@ -145,7 +145,7 @@ public class ProductController : Controller
 
         await _productService.Value.CreateOrUpdateAsync(productDto, cancellationToken).ConfigureAwait(false);
 
-        return RedirectToActionPermanent(nameof(Index));
+        return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
     }
 
     /// <summary>

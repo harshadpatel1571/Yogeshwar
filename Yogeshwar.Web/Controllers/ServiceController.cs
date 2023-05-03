@@ -132,7 +132,7 @@ public sealed class ServiceController : Controller
 
         await _serviceService.Value.CreateOrUpdateAsync(service, cancellationToken).ConfigureAwait(false);
 
-        return RedirectToActionPermanent(nameof(Index));
+        return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
     }
 
     /// <summary>
