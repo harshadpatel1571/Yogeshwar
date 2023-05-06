@@ -72,27 +72,6 @@
                         <span asp-validation-for="PhoneNo" class="text-danger"></span>
                     </div>
 
-                    @*<div class="col-md-12">
-                        <label class="form-label">Address</label>
-                        <span class="text-danger">*</span>
-                        <textarea class="form-control" rows="4" asp-for="Address" maxlength="250" required></textarea>
-                        <span asp-validation-for="Address" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">City</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" asp-for="City" maxlength="25" required>
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Pincode</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" asp-for="PinCode" required>
-                        <span asp-validation-for="PinCode" class="text-danger"></span>
-                    </div>*@
-
                     <div class="col-md-6">
                         <label class="form-label">GST Number</label>
                         <input class="form-control" asp-for="GstNumber" maxlength="15" required>
@@ -158,7 +137,18 @@
                                 <td>Jamnagar</td>
                                 <td>Gujrat</td>
                                 <td>360531</td>
-                                <td>Edit || Delete</td>
+                                <td>
+                                    <div class="hstack gap-3 flex-wrap">
+
+                                        <a href="javascript:void(0);" class="link-success fs-20">
+                                            <i class="ri-edit-2-line" title="Edit Address"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="link-danger fs-20 sa-warning" onclick='deleteRecord(0)'>
+                                            <i class="ri-delete-bin-line" title="Delete Address"></i>
+                                        </a>
+
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -210,9 +200,62 @@
                 </div>
             </div>
         </form>
-
     </div>
 </div>
+
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-3">
+                <h5 class="modal-title" id="addressModalModalLabel">Add Customer Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+            </div>
+
+            <div class="modal-body" id="addressModalBody">
+                <div class="row g-3 needs-validation">
+                    <div class="col-md-12">
+                        <label class="form-label">Full Address</label>
+                        <textarea class="form-control" id="FullAddress" rows="2" maxlength="250"></textarea>
+                        <span id="ValidationFullAddress" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">City</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="City">
+                        <span id="ValidationCity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Distic</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="Distic">
+                        <span id="ValidationDistic" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">State</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="AccesoryState">
+                        <span id="ValidationState" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Pincode</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="Pincode" type="number" maxlength="6">
+                        <span id="ValidationPincode" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="saveAccessories()">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script src="~/js/custom/customerAddEdit.js"></script>
 }
