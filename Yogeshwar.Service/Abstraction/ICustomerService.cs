@@ -21,7 +21,7 @@ public interface ICustomerService : IDisposable
     /// <param name="customer">The customer.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;System.Int32&gt;.</returns>
-    Task<int> CreateOrUpdateAsync(CustomerDto customer, CancellationToken cancellationToken);
+    Task<int> UpsertAsync(CustomerDto customer, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the single asynchronous.

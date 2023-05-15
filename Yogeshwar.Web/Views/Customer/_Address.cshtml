@@ -1,0 +1,45 @@
+﻿@model CustomerDto
+
+<table id="grid" class="display table caption-top table-nowrap" style="width:100%">
+    <thead class="table-light">
+        <tr>
+            <th class="col-3">Full Address</th>
+            <th class="col-2">District</th>
+            <th class="col-2">State</th>
+            <th class="col-2">Phone Number</th>
+            <th class="col-1">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < Model.CustomerAddresses.Count; i++)
+        {
+            var item = Model.CustomerAddresses[i];
+
+            <tr>
+                @*<td style="display: none"><input asp-for="CustomerAddresses[i].Id" hidden /></td>*@
+                <td style="display: none"><input asp-for="CustomerAddresses[i].CustomerId" hidden /></td>
+                <td style="display: none"><input asp-for="CustomerAddresses[i].Address" hidden /></td>
+                <td style="display: none"><input asp-for="CustomerAddresses[i].City" hidden /></td>
+                <td style="display: none"><input asp-for="CustomerAddresses[i].District" hidden /></td>
+                <td style="display: none"><input asp-for="CustomerAddresses[i].PinCode" hidden /></td>
+                <td style="display: none"><input asp-for="CustomerAddresses[i].State" hidden /></td>
+                <td style="display: none"><input asp-for="CustomerAddresses[i].PhoneNo" hidden /></td>
+
+                <td>@item.Address, @item.City - @item.PinCode</td>
+                <td>@item.District</td>
+                <td>@item.State</td>
+                <td>@item.PhoneNo</td>
+                <td>
+                    <div class="hstack gap-3 flex-wrap">
+                        <a class="link-success fs-20" onclick="openEditPopup(@i)">
+                            <i class="ri-edit-2-line" title="Edit Address"></i>
+                        </a>
+                        <a class="link-danger fs-20 sa-warning" onclick="removeAddress(@i)">
+                            <i class="ri-delete-bin-line" title="Delete Address"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

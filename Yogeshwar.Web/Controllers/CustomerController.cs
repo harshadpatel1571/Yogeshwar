@@ -114,7 +114,7 @@ public sealed class CustomerController : Controller
         }
 
         await _customerService.Value
-            .CreateOrUpdateAsync(customer, cancellationToken)
+            .UpsertAsync(customer, cancellationToken)
             .ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index), new { msg = "success" });

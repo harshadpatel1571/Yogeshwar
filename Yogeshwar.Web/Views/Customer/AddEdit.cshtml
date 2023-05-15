@@ -1,8 +1,9 @@
-﻿@model CustomerDto
+﻿@using System.Text.Json
+@model CustomerDto
 @{
     var addOrEdit = Model is null
-                    ? "Add"
-                    : "Edit";
+        ? "Add"
+        : "Edit";
 
     ViewData["Title"] = $"{addOrEdit} Customer";
 
@@ -118,40 +119,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body row g-3">
-                    <table id="grid" class="display table caption-top table-nowrap" style="width:100%">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="col-3">Full Address</th>
-                                <th class="col-2">City</th>
-                                <th class="col-2">Distic</th>
-                                <th class="col-2">State</th>
-                                <th class="col-2">PinCode</th>
-                                <th class="col-1">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Satapar Road, Jinmil Ploat, Near BOI, Vansjaliya</td>
-                                <td>Vansjaliya</td>
-                                <td>Jamnagar</td>
-                                <td>Gujrat</td>
-                                <td>360531</td>
-                                <td>
-                                    <div class="hstack gap-3 flex-wrap">
-
-                                        <a href="javascript:void(0);" class="link-success fs-20">
-                                            <i class="ri-edit-2-line" title="Edit Address"></i>
-                                        </a>
-                                        <a href="javascript:void(0);" class="link-danger fs-20 sa-warning" onclick='deleteRecord(0)'>
-                                            <i class="ri-delete-bin-line" title="Delete Address"></i>
-                                        </a>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="card-body row g-3" id="addressDiv">
+                    @if (Model?.CustomerAddresses is { Count: > 0 })
+                    {
+                        <input type="hidden" id="jsonDataHolder" disabled value="@JsonSerializer.Serialize(Model.CustomerAddresses, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })"/>
+                        @await Html.PartialAsync("_Address", Model)
+                    }
                 </div>
             </div>
 
@@ -203,59 +176,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="addressModalModalLabel">Add Customer Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
-            </div>
-
-            <div class="modal-body" id="addressModalBody">
-                <div class="row g-3 needs-validation">
-                    <div class="col-md-12">
-                        <label class="form-label">Full Address</label>
-                        <textarea class="form-control" id="FullAddress" rows="2" maxlength="250"></textarea>
-                        <span id="ValidationFullAddress" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">City</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="City">
-                        <span id="ValidationCity" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Distic</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="Distic">
-                        <span id="ValidationDistic" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">State</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="AccesoryState">
-                        <span id="ValidationState" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Pincode</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="Pincode" type="number" maxlength="6">
-                        <span id="ValidationPincode" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-12">
-                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="saveAccessories()">
-                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
-                            Save
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@await Html.PartialAsync("_AddressPopup")
 
 @section Scripts {
-    <script src="~/js/custom/customerAddEdit.js"></script>
+    <script src="~/js/custom/customeraddedit.js"></script>
 }

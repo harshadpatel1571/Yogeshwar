@@ -1,7 +1,4 @@
-﻿using OneOf;
-using System.Threading;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 /// <summary>
 /// Class PartialViewController.
@@ -23,7 +20,7 @@ public class PartialViewController : Controller
     }
 
     /// <summary>
-    /// Accessorieses the add popup view.
+    /// Accessories the add popup view.
     /// </summary>
     /// <returns>IActionResult.</returns>
     public IActionResult AccessoriesAddPopupView()
@@ -51,7 +48,7 @@ public class PartialViewController : Controller
     {
         var data = await _accessoriesService.GetByIdsAsync(accessoryIds, cancellationToken);
 
-        var poroductAccessories = data.Select(x => new ProductAccessoryDto
+        var productAccessories = data.Select(x => new ProductAccessoryDto
         {
             AccessoryId = x.Id,
             Accessory = x
@@ -59,9 +56,18 @@ public class PartialViewController : Controller
 
         var model = new ProductDto
         {
-            ProductAccessories = poroductAccessories
+            ProductAccessories = productAccessories
         };
 
         return PartialView("~/Views/Product/_AccessoryQuantity.cshtml", model);
+    }
+
+    [HttpPost]
+    public IActionResult CustomerAddressView(CustomerAddressDto[] customerAddresses)
+    {
+        return PartialView("~/Views/Customer/_Address.cshtml", new CustomerDto
+        {
+            CustomerAddresses = customerAddresses
+        });
     }
 }

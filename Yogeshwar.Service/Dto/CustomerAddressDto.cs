@@ -61,6 +61,6 @@ public sealed class CustomerAddressDto
     /// Gets or sets the phone no.
     /// </summary>
     /// <value>The phone no.</value>
-    [StringLength(13, MinimumLength = 10, ErrorMessage = "PinCode must be 10 to 13 character long.")]
+    [StringLength(13, MinimumLength = 10, ErrorMessage = "Phone no must be 10 to 13 character long.")]
     public string? PhoneNo { get; set; }
 }

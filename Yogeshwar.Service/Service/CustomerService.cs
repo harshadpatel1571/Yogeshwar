@@ -122,7 +122,7 @@ internal sealed class CustomerService : ICustomerService
     /// <param name="customer">The customer.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async Task<int> CreateOrUpdateAsync(CustomerDto customer, CancellationToken cancellationToken)
+    public async Task<int> UpsertAsync(CustomerDto customer, CancellationToken cancellationToken)
     {
         if (customer.Id < 1)
         {
@@ -206,13 +206,15 @@ internal sealed class CustomerService : ICustomerService
         dbModel.IfscCode = customerDto.IfscCode;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
-        dbModel.CustomerAddresses = customerDto.CustomerAddresses
-            .Select(_mappingService.Map).ToArray();
 
         await _context.CustomerAddresses
             .Where(x => x.CustomerId == customerDto.Id)
             .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
+
+        var newAddresses = customerDto.CustomerAddresses.Select(_mappingService.Map);
+
+        _context.CustomerAddresses.AddRange(newAddresses);
 
         _context.Customers.Update(dbModel);
 

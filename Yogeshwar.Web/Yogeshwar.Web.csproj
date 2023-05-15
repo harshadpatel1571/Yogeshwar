@@ -8,8 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="Views\Customer\_AddressPopup.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Dapper" Version="2.0.123" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0-rc.2.22472.11">
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -20,21 +25,26 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\DataImages\Accessories\" />
-	  <Folder Include="wwwroot\DataImages\Accessories\" />
-	  <Folder Include="wwwroot\DataImages\Category" />
-	  <Folder Include="wwwroot\DataImages\Customer\" />
-	  <Folder Include="wwwroot\DataImages\CompanyLogo\" />
-	  <Folder Include="wwwroot\DataImages\Product\Video\" />
-	  <Folder Include="wwwroot\lib\node-waves\" />
-	  <Folder Include="wwwroot\lib\particles.js\" />
+		<Folder Include="wwwroot\DataImages\Accessories\" />
+		<Folder Include="wwwroot\DataImages\Accessories\" />
+		<Folder Include="wwwroot\DataImages\Category" />
+		<Folder Include="wwwroot\DataImages\Customer\" />
+		<Folder Include="wwwroot\DataImages\CompanyLogo\" />
+		<Folder Include="wwwroot\DataImages\Product\Video\" />
+		<Folder Include="wwwroot\lib\node-waves\" />
+		<Folder Include="wwwroot\lib\particles.js\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Update="wwwroot\js\custom\serviceDatatable.js">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
+		<Content Update="wwwroot\js\custom\serviceDatatable.js">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Views\Customer\_AddressPopup.cshtml" />
+		<None Include="Views\Customer\_Address.cshtml" />
 	</ItemGroup>
 
 </Project>

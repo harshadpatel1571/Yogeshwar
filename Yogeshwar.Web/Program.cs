@@ -7,11 +7,13 @@ var services = builder.Services;
 
 #region Built-In
 
-services.AddControllersWithViews().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
-});
+services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+    });
 
 services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
@@ -30,7 +32,7 @@ services.AddMemoryCache();
 
 services.AddDbContextPool<YogeshwarContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("Server"));
+    option.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 services.AddCustomServices(typeof(IUserService));
 services.AddHttpContextAccessor();

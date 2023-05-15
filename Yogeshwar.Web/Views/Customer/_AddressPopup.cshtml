@@ -1,0 +1,62 @@
+﻿<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-3">
+                <h5 class="modal-title" id="addressModalModalLabel">Add Customer Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal" onclick="closePopup()"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" disabled id="updateListId">
+                <div class="row g-3 needs-validation">
+                    <div class="col-md-12">
+                        <label class="form-label">Full Address</label>
+                        <textarea class="form-control" id="fullAddress" rows="2" maxlength="250"></textarea>
+                        <span id="ValidationFullAddress" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">City</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="city" maxlength="25">
+                        <span id="ValidationCity" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">District</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="district" maxlength="25">
+                        <span id="ValidationDistrict" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">State</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="state" maxlength="25">
+                        <span id="ValidationState" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Pincode</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="pincode" maxlength="6">
+                        <span id="ValidationPincode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Phone No</label>
+                        <span class="text-danger">*</span>
+                        <input class="form-control" id="phoneNo" maxlength="13">
+                        <span id="ValidationPhoneNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-12" id="addAddressDiv">
+                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="addAddress()">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Save
+                        </button>
+                    </div>
+                    <div class="col-12" id="updateAddressDiv" style="display: none">
+                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="updateAddress()">
+                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
