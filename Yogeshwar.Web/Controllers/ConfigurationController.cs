@@ -30,16 +30,12 @@ public class ConfigurationController : Controller
             .GetSingleAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        if (model is null)
-        {
-            return NotFound();
-        }
-
         return View(model);
     }
 
     public async Task<IActionResult> AddEdit(ConfigurationDto configurationDto, CancellationToken cancellationToken)
     {
+        ModelState.Remove("Id");
         if (!ModelState.IsValid)
         {
             ModelState.AddModelError();

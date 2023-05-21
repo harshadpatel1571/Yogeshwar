@@ -62,7 +62,7 @@ internal class ConfigurationService : IConfigurationService
 
         if (dbModel == null)
         {
-            return 0;
+            dbModel = new Configuration();
         }
 
         if (configurationDto.ImageFile is not null)
@@ -73,7 +73,10 @@ internal class ConfigurationService : IConfigurationService
 
             await configurationDto.ImageFile.SaveAsync(_rootPath + image, cancellationToken).ConfigureAwait(false);
 
-            DeleteFileIfExist(_rootPath + dbModel.CompanyLogo);
+            if(dbModel != null)
+            {
+                DeleteFileIfExist(_rootPath + dbModel.CompanyLogo);
+            }
 
             dbModel.CompanyLogo = image;
         }
@@ -83,9 +86,16 @@ internal class ConfigurationService : IConfigurationService
         dbModel.TermAndCondition = configurationDto.TermAndCondition;
         dbModel.Gst = configurationDto.Gst;
 
-        _context.Configurations.Update(dbModel);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        if (dbModel.Id > 0)
+        {
+            _context.Configurations.Update(dbModel);
+        }
+        else
+        {
+            _context.Configurations.Add(dbModel);
+        }
 
+        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         _cachingService.RemoveConfiguration();
 
         return count;

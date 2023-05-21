@@ -1,4 +1,5 @@
-﻿@model CustomerDto
+﻿@using System.Text.Json
+@model CustomerDto
 @{
     ViewData["Title"] = "Detail Customer";
     Layout = "_Layout";
@@ -58,18 +59,18 @@
                 </div>
 
                 @*<div class="col-md-12">
-                    <label class="form-label">Address</label>
-                    <label class="form-control">@Model.Address</label>
+                <label class="form-label">Address</label>
+                <label class="form-control">@Model.Address</label>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">City</label>
-                    <label class="form-control">@Model.City</label>
+                <label class="form-label">City</label>
+                <label class="form-control">@Model.City</label>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Pincode</label>
-                    <label class="form-control">@Model.PinCode</label>
+                <label class="form-label">Pincode</label>
+                <label class="form-control">@Model.PinCode</label>
                 </div>*@
 
                 <div class="col-md-6">
@@ -86,6 +87,47 @@
                         </div>
                     </div>
                 }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Customer Address</h5>
+            </div>
+            <div class="card-body row g-3" id="addressDiv">
+                <table id="grid" class="display table caption-top table-nowrap" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="col-3">Full Address</th>
+                            <th class="col-2">District</th>
+                            <th class="col-2">State</th>
+                            <th class="col-2">Phone Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.CustomerAddresses is { Count: > 0 })
+                        {
+                            @for (var i = 0; i < Model.CustomerAddresses.Count; i++)
+                            {
+                                var item = Model.CustomerAddresses[i];
+                                <tr>
+                                    <td style="display: none"><input asp-for="CustomerAddresses[i].CustomerId" hidden /></td>
+                                    <td style="display: none"><input asp-for="CustomerAddresses[i].Address" hidden /></td>
+                                    <td style="display: none"><input asp-for="CustomerAddresses[i].City" hidden /></td>
+                                    <td style="display: none"><input asp-for="CustomerAddresses[i].District" hidden /></td>
+                                    <td style="display: none"><input asp-for="CustomerAddresses[i].PinCode" hidden /></td>
+                                    <td style="display: none"><input asp-for="CustomerAddresses[i].State" hidden /></td>
+                                    <td style="display: none"><input asp-for="CustomerAddresses[i].PhoneNo" hidden /></td>
+
+                                    <td>@item.Address, @item.City - @item.PinCode</td>
+                                    <td>@item.District</td>
+                                    <td>@item.State</td>
+                                    <td>@item.PhoneNo</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
 
