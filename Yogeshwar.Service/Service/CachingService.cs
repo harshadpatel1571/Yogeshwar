@@ -235,16 +235,14 @@ internal class CachingService : ICachingService
     {
         async Task<ConfigurationDto> FetchData(ICacheEntry x)
         {
-            var data = CachingQueryExpression.configuration(_context, _mappingService);
-
-            var result = await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+            var result = await CachingQueryExpression.configuration(_context, _mappingService);
 
             x.SetValue(result);
 
             x.SlidingExpiration = TimeSpan.MaxValue;
             x.AbsoluteExpiration = DateTimeOffset.MaxValue;
 
-            return result.FirstOrDefault();
+            return result;
         }
 
         return await _memoryCache.GetOrCreateAsync(ConfigurationCachingKey, FetchData).ConfigureAwait(false);
@@ -357,10 +355,11 @@ file static class CachingQueryExpression
                         }).ToArray()
                     }));
 
-    public static readonly Func<YogeshwarContext, IMappingService, IAsyncEnumerable<ConfigurationDto>> configuration =
+    public static readonly Func<YogeshwarContext, IMappingService, Task<ConfigurationDto>> configuration =
         EF.CompileAsyncQuery(
             (YogeshwarContext context, IMappingService mappingService) =>
                 context.Configurations
                     .AsNoTracking()
-                    .Select(c => mappingService.Map(c)));
+                    .Select(c => mappingService.Map(c))
+                    .FirstOrDefault());
 }

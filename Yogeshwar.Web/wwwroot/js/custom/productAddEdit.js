@@ -194,3 +194,27 @@ document.addEventListener("keydown", function (event) {
         openPopupForCategories()
     }
 });
+
+let categoryHsnNumberList;
+
+$(document).ready(function () {
+    const jsonString = $('#categoryHsnNumberListJson').val();
+    categoryHsnNumberList = JSON.parse(jsonString);
+});
+
+$("#CategoryIds").change(function () {
+    const selectedValue = $('#CategoryIds option:selected');
+
+    const ids = [];
+    selectedValue.each(function (x, y) {
+        ids.push(y.value)
+    });
+
+    if (ids.length == 0) {
+        $('#HsnNo').val('')
+    }
+
+    if (ids.length == 1) {
+        $('#HsnNo').val(categoryHsnNumberList.filter(x => x.id == ids[0])[0].hsnNo)
+    }
+});

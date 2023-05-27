@@ -216,6 +216,14 @@
         </div>
     </div>
 </div>
+@{
+    var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Categories as ICollection<CategoryDto>, new System.Text.Json.JsonSerializerOptions
+    {
+        WriteIndented = false,
+        PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+    });
+}
+<input type="hidden" id="categoryHsnNumberListJson" value="@json"/>
 
 @section Scripts{
     <script src="~/js/custom/productaddedit.js"></script>

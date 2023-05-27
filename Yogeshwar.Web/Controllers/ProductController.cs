@@ -77,6 +77,8 @@ public class ProductController : Controller
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>IActionResult.</returns>
     public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService,
+        [FromServices] IConfigurationService configurationService,
+        [FromServices] ICategoryService categoryService,
         CancellationToken cancellationToken)
     {
         using var _ = dropDownService;
@@ -88,6 +90,15 @@ public class ProductController : Controller
             .BindDropDownForCategoriesAsync(cancellationToken)
             .ConfigureAwait(false);
 
+        ViewBag.Categories = (await categoryService.GetByFilterAsync(new DataTableFilterDto
+        {
+            Skip = 0,
+            Take = int.MaxValue,
+            SortColumn = "Name",
+            SortOrder = "Asc"
+
+        }, cancellationToken)).Data;
+
         ProductDto model;
 
         if (id < 1)
@@ -95,7 +106,8 @@ public class ProductController : Controller
             model = new ProductDto
             {
                 SelectListsForAccessories = new SelectList(accessories, "Key", "Text"),
-                SelectListsForCategories = new SelectList(categories, "Key", "Text")
+                SelectListsForCategories = new SelectList(categories, "Key", "Text"),
+                Gst = ((await configurationService.GetSingleAsync(cancellationToken))?.Gst) ?? 0
             };
 
             return View(model);
