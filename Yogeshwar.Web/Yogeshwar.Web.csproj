@@ -8,10 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="Views\Customer\_AddressPopup.cshtml" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Dapper" Version="2.0.123" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
@@ -43,8 +39,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="Views\Shared\_AddressPopup.cshtml" />
-		<None Include="Views\Shared\_Address.cshtml" />
+		<None Include="Views\Customer\_AddressPopup.cshtml" />
+		<None Include="Views\Customer\_Address.cshtml" />
 	</ItemGroup>
 
 </Project>
