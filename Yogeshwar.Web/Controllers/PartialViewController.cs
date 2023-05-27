@@ -62,6 +62,11 @@ public class PartialViewController : Controller
         return PartialView("~/Views/Product/_AccessoryQuantity.cshtml", model);
     }
 
+    /// <summary>
+    /// Customers the address view.
+    /// </summary>
+    /// <param name="customerAddresses">The customer addresses.</param>
+    /// <returns>IActionResult.</returns>
     [HttpPost]
     public IActionResult CustomerAddressView(CustomerAddressDto[] customerAddresses)
     {

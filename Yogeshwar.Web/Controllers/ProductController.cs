@@ -74,6 +74,8 @@ public class ProductController : Controller
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="dropDownService">The drop down service.</param>
+    /// <param name="configurationService">The configuration service.</param>
+    /// <param name="categoryService">The category service.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>IActionResult.</returns>
     public async ValueTask<IActionResult> AddEdit(int id, [FromServices] IDropDownService dropDownService,
