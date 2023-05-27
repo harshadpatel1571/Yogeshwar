@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Web.Controllers;
+﻿using Microsoft.AspNetCore.Diagnostics;
+
+namespace Yogeshwar.Web.Controllers;
 
 /// <summary>
 /// Class HomeController. This class cannot be inherited.
@@ -40,7 +42,11 @@ public sealed class HomeController : Controller
     /// <returns>IActionResult.</returns>
     public IActionResult Error()
     {
-        //var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+        var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+        LogHelper.Logs("Error Function Call ");
+        LogHelper.Logs("With Error :" + exception.Error.Message);
+        LogHelper.Logs("With EndPoint :" + exception.Endpoint);
+        LogHelper.Logs("With Path :" + exception.Path);
         return View("500");
     }
 }

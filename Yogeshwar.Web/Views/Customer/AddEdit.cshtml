@@ -123,7 +123,8 @@
                     @if (Model?.CustomerAddresses is { Count: > 0 })
                     {
                         <input type="hidden" id="jsonDataHolder" disabled value="@JsonSerializer.Serialize(Model.CustomerAddresses, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })"/>
-                        @await Html.PartialAsync("_Address", Model)
+                        @*@await Html.PartialAsync("_Address.cshtml", Model)*@
+                        <partial name="~/Views/Shared/_Address.cshtml" model="@Model"></partial>
                     }
                 </div>
             </div>
@@ -176,7 +177,8 @@
     </div>
 </div>
 
-@await Html.PartialAsync("_AddressPopup")
+@*@await Html.PartialAsync("_AddressPopup.cshtml")*@
+<partial name="~/Views/Shared/_AddressPopup.cshtml"></partial>
 
 @section Scripts {
     <script src="~/js/custom/customeraddedit.js"></script>
