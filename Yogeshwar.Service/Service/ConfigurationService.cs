@@ -1,7 +1,10 @@
-﻿using Yogeshwar.Service.Abstraction;
+﻿namespace Yogeshwar.Service.Service;
 
-namespace Yogeshwar.Service.Service;
-
+/// <summary>
+/// Class ConfigurationService.
+/// Implements the <see cref="IConfigurationService" />
+/// </summary>
+/// <seealso cref="IConfigurationService" />
 [RegisterService(ServiceLifetime.Scoped, typeof(IConfigurationService))]
 internal class ConfigurationService : IConfigurationService
 {
@@ -16,6 +19,7 @@ internal class ConfigurationService : IConfigurationService
     private readonly ICachingService _cachingService;
 
     /// <summary>
+    /// The mapping service
     /// </summary>
     private readonly IMappingService _mappingService;
 
@@ -29,10 +33,16 @@ internal class ConfigurationService : IConfigurationService
     /// </summary>
     private const string PrefixPath = "/DataImages/CompanyLogo/";
 
-   
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConfigurationService"/> class.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="hostEnvironment">The host environment.</param>
+    /// <param name="cachingService">The caching service.</param>
+    /// <param name="mappingService">The mapping service.</param>
     public ConfigurationService(YogeshwarContext context, IWebHostEnvironment hostEnvironment,
-        ICachingService cachingService,
-        IMappingService mappingService)
+        ICachingService cachingService, IMappingService mappingService)
     {
         _context = context;
         _cachingService = cachingService;
@@ -49,11 +59,22 @@ internal class ConfigurationService : IConfigurationService
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Get single as an asynchronous operation.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;ConfigurationDto&gt; representing the asynchronous operation.</returns>
     public async Task<ConfigurationDto?> GetSingleAsync(CancellationToken cancellationToken)
     {
         return await _cachingService.GetConfigurationSingleAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Update as an asynchronous operation.
+    /// </summary>
+    /// <param name="configurationDto">The configuration dto.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
     public async Task<int> UpdateAsync(ConfigurationDto configurationDto, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Configurations
@@ -73,7 +94,7 @@ internal class ConfigurationService : IConfigurationService
 
             await configurationDto.ImageFile.SaveAsync(_rootPath + image, cancellationToken).ConfigureAwait(false);
 
-            if(dbModel != null)
+            if (dbModel != null)
             {
                 DeleteFileIfExist(_rootPath + dbModel.CompanyLogo);
             }
@@ -101,6 +122,10 @@ internal class ConfigurationService : IConfigurationService
         return count;
     }
 
+    /// <summary>
+    /// Deletes the file if exist.
+    /// </summary>
+    /// <param name="name">The name.</param>
     private static void DeleteFileIfExist(string name)
     {
         if (File.Exists(name))

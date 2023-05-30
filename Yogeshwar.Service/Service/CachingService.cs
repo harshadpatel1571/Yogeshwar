@@ -28,7 +28,6 @@ internal class CachingService : ICachingService
     /// </summary>
     private const string CategoriesCachingKey = "Categories";
 
-
     /// <summary>
     /// The configuration caching key
     /// </summary>
@@ -355,6 +354,9 @@ file static class CachingQueryExpression
                         }).ToArray()
                     }));
 
+    /// <summary>
+    /// The configuration
+    /// </summary>
     public static readonly Func<YogeshwarContext, IMappingService, Task<ConfigurationDto>> configuration =
         EF.CompileAsyncQuery(
             (YogeshwarContext context, IMappingService mappingService) =>

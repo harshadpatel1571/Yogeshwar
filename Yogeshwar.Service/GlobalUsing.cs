@@ -22,4 +22,3 @@ global using System.Security.Claims;
 global using Yogeshwar.DB.Context;
 global using Microsoft.Extensions.Caching.Memory;
 global using Riok.Mapperly.Abstractions;
-

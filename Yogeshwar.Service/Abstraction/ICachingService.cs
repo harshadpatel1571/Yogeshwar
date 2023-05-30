@@ -43,6 +43,15 @@ internal interface ICachingService : IDisposable
     /// </summary>
     internal void RemoveProducts();
 
+    /// <summary>
+    /// Gets the configuration single asynchronous.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;ConfigurationDto&gt;.</returns>
     internal Task<ConfigurationDto> GetConfigurationSingleAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Removes the configuration.
+    /// </summary>
     internal void RemoveConfiguration();
 }

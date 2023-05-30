@@ -1,6 +1,4 @@
-﻿using Yogeshwar.DB.DbModels;
-
-namespace Yogeshwar.Service.Service;
+﻿namespace Yogeshwar.Service.Service;
 
 /// <summary>
 /// Class MappingService.
@@ -122,6 +120,11 @@ internal class MappingService : IMappingService
     /// <returns>ProductImageDto.</returns>
     ProductImageDto IMappingService.Map(ProductImage productImage) => InternalMapper.Map(productImage);
 
+    /// <summary>
+    /// Maps the specified configuration.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>ConfigurationDto.</returns>
     ConfigurationDto IMappingService.Map(Configuration configuration) => InternalMapper.Map(configuration);
 
 }
@@ -137,8 +140,18 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="accessory">The accessory.</param>
     /// <returns>AccessoriesDto.</returns>
+    /// <summary>
+    /// Maps the specified accessory.
+    /// </summary>
+    /// <param name="accessory">The accessory.</param>
+    /// <returns>AccessoriesDto.</returns>
     internal static partial AccessoriesDto Map(Accessory accessory);
 
+    /// <summary>
+    /// Maps the specified accessory.
+    /// </summary>
+    /// <param name="accessory">The accessory.</param>
+    /// <returns>Accessory.</returns>
     /// <summary>
     /// Maps the specified accessory.
     /// </summary>
@@ -151,8 +164,18 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="customer">The customer.</param>
     /// <returns>CustomerDto.</returns>
+    /// <summary>
+    /// Maps the specified customer.
+    /// </summary>
+    /// <param name="customer">The customer.</param>
+    /// <returns>CustomerDto.</returns>
     internal static partial CustomerDto Map(Customer customer);
 
+    /// <summary>
+    /// Maps the specified customer dto.
+    /// </summary>
+    /// <param name="customerDto">The customer dto.</param>
+    /// <returns>Customer.</returns>
     /// <summary>
     /// Maps the specified customer dto.
     /// </summary>
@@ -165,8 +188,18 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="customerAddress">The customer address.</param>
     /// <returns>CustomerAddressDto.</returns>
+    /// <summary>
+    /// Maps the specified customer address.
+    /// </summary>
+    /// <param name="customerAddress">The customer address.</param>
+    /// <returns>CustomerAddressDto.</returns>
     internal static partial CustomerAddressDto Map(CustomerAddress customerAddress);
 
+    /// <summary>
+    /// Maps the specified customer address dto.
+    /// </summary>
+    /// <param name="customerAddressDto">The customer address dto.</param>
+    /// <returns>CustomerAddress.</returns>
     /// <summary>
     /// Maps the specified customer address dto.
     /// </summary>
@@ -179,8 +212,18 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="category">The category.</param>
     /// <returns>CategoryDto.</returns>
+    /// <summary>
+    /// Maps the specified category.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <returns>CategoryDto.</returns>
     internal static partial CategoryDto Map(Category category);
 
+    /// <summary>
+    /// Maps the specified category dto.
+    /// </summary>
+    /// <param name="categoryDto">The category dto.</param>
+    /// <returns>Category.</returns>
     /// <summary>
     /// Maps the specified category dto.
     /// </summary>
@@ -193,8 +236,18 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="product">The product.</param>
     /// <returns>ProductDto.</returns>
+    /// <summary>
+    /// Maps the specified product.
+    /// </summary>
+    /// <param name="product">The product.</param>
+    /// <returns>ProductDto.</returns>
     internal static partial ProductDto Map(Product product);
 
+    /// <summary>
+    /// Maps the specified product dto.
+    /// </summary>
+    /// <param name="productDto">The product dto.</param>
+    /// <returns>Product.</returns>
     /// <summary>
     /// Maps the specified product dto.
     /// </summary>
@@ -207,8 +260,18 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="productAccessory">The product accessory.</param>
     /// <returns>ProductAccessoryDto.</returns>
+    /// <summary>
+    /// Maps the specified product accessory.
+    /// </summary>
+    /// <param name="productAccessory">The product accessory.</param>
+    /// <returns>ProductAccessoryDto.</returns>
     internal static partial ProductAccessoryDto Map(ProductAccessory productAccessory);
 
+    /// <summary>
+    /// Maps the specified product accessory dto.
+    /// </summary>
+    /// <param name="productAccessoryDto">The product accessory dto.</param>
+    /// <returns>ProductAccessory.</returns>
     /// <summary>
     /// Maps the specified product accessory dto.
     /// </summary>
@@ -221,8 +284,18 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="productCategory">The product category.</param>
     /// <returns>ProductCategoryDto.</returns>
+    /// <summary>
+    /// Maps the specified product category.
+    /// </summary>
+    /// <param name="productCategory">The product category.</param>
+    /// <returns>ProductCategoryDto.</returns>
     internal static partial ProductCategoryDto Map(ProductCategory productCategory);
 
+    /// <summary>
+    /// Maps the specified product category dto.
+    /// </summary>
+    /// <param name="productCategoryDto">The product category dto.</param>
+    /// <returns>ProductCategory.</returns>
     /// <summary>
     /// Maps the specified product category dto.
     /// </summary>
@@ -235,6 +308,11 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="productImage">The product image.</param>
     /// <returns>ProductImageDto.</returns>
+    /// <summary>
+    /// Maps the specified product image.
+    /// </summary>
+    /// <param name="productImage">The product image.</param>
+    /// <returns>ProductImageDto.</returns>
     internal static partial ProductImageDto Map(ProductImage productImage);
 
     /// <summary>
@@ -242,7 +320,17 @@ internal static partial class InternalMapper
     /// </summary>
     /// <param name="productImageDto">The product image dto.</param>
     /// <returns>ProductImage.</returns>
+    /// <summary>
+    /// Maps the specified product image dto.
+    /// </summary>
+    /// <param name="productImageDto">The product image dto.</param>
+    /// <returns>ProductImage.</returns>
     internal static partial ProductImage Map(ProductImageDto productImageDto);
 
+    /// <summary>
+    /// Maps the specified configuration.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>ConfigurationDto.</returns>
     internal static partial ConfigurationDto Map(Configuration configuration);
 }

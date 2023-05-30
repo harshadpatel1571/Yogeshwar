@@ -117,5 +117,10 @@ internal interface IMappingService
     /// <returns>ProductImageDto.</returns>
     internal ProductImageDto Map(ProductImage productImage);
 
+    /// <summary>
+    /// Maps the specified configuration.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>ConfigurationDto.</returns>
     internal ConfigurationDto Map(Configuration configuration);
 }
