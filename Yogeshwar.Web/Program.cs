@@ -32,7 +32,7 @@ services.AddMemoryCache();
 
 services.AddDbContextPool<YogeshwarContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("Server"));
+    option.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 services.AddCustomServices(typeof(IUserService));
 services.AddHttpContextAccessor();

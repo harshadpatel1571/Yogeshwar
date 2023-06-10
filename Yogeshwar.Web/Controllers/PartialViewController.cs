@@ -13,7 +13,6 @@ public class PartialViewController : Controller
     /// </summary>
     private readonly IAccessoriesService _accessoriesService;
 
-
     public PartialViewController(IAccessoriesService accessoriesService)
     {
         _accessoriesService = accessoriesService;

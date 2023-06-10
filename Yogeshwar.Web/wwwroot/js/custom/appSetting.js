@@ -252,9 +252,8 @@ function changeRecordStatus(id, url) {
 
 function deleteRecord(pURL) {
     Swal.fire({
-        title: "Are you sure?",
+        html:"<div class=\"mt-3\"><lord-icon src=\"https://cdn.lordicon.com/gsqxdxog.json\" trigger=\"loop\" colors=\"primary:#f7b84b,secondary:#f06548\" style=\"width:100px;height:100px\"></lord-icon><div class=\"mt-4 pt-2 fs-15 mx-5\"><h4>Are you Sure ?</h4><p class=\"text-muted mx-4 mb-0\">Are you Sure You want to Delete this Account ?</p></div></div>",
         text: "You won't be able to revert this!",
-        icon: "warning",
         showCancelButton: !0,
         confirmButtonClass: "btn btn-primary w-xs me-2 mt-2",
         cancelButtonClass: "btn btn-danger w-xs mt-2",

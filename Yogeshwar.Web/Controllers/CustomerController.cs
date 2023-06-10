@@ -1,6 +1,4 @@
-﻿using Yogeshwar.Helper.Extension;
-
-namespace Yogeshwar.Web.Controllers;
+﻿namespace Yogeshwar.Web.Controllers;
 
 /// <summary>
 /// Class CustomerController. This class cannot be inherited.
