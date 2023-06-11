@@ -11,12 +11,12 @@
 
     if (view !== undefined && view !== '') {
         $('body').addClass(view);
-    }  
+    }
 
     var uri = window.location.href.toString();
     var msg = getParameterByName("msg", uri);
     if (msg != undefined && msg == "success") {
-        showToaster("success", "Saved","Record have been saved successfully.")
+        showToaster("success", "Saved", "Record have been saved successfully.")
     }
     else if (msg != undefined && msg == "error") {
         showToaster("error", "Opps !!", "Something whent wrong. Try again.")
@@ -217,15 +217,53 @@ function restrictSearchFilter() {
 }
 
 function getActiveInActiveHTML(flag, id, url) {
-    if (flag) {
-        return "                                   <div class='form-check form-switch form-switch-custom form-switch-success'>" +
-            `                                       <input type ='checkbox' class='form-check-input' Title='Active And Inactive Record.' onclick='changeRecordStatus(\"btnActive_${id}\", \"${url}\")' active='${flag}' checked id='btnActive_${id}'>` +
-            "                                   </div>"
-    }
+    if (url != '') {
+        if (flag) {
+            return "<div class='form-check form-switch form-switch-custom form-switch-success'>" +
+                `       <input type ='checkbox' class='form-check-input' Title='Active And Inactive Record.' onclick='changeRecordStatus(\"btnActive_${id}\", \"${url}\")' active='${flag}' checked id='btnActive_${id}'>` +
+                "   </div>"
+        }
 
-    return "                                   <div class='form-check form-switch form-switch-custom form-switch-success'>" +
-        `                                       <input type ='checkbox' class='form-check-input' Title='Active And Inactive Record.' onclick='changeRecordStatus(\"btnActive_${id}\", \"${url}\")' active='${flag}' id='btnActive_${id}'>` +
-        "                                   </div>"
+        return "<div class='form-check form-switch form-switch-custom form-switch-success'>" +
+            `       <input type ='checkbox' class='form-check-input' Title='Active And Inactive Record.' onclick='changeRecordStatus(\"btnActive_${id}\", \"${url}\")' active='${flag}' id='btnActive_${id}'>` +
+            "   </div>"
+    }
+    else {
+        return '';
+    }
+}
+
+function getExtraButtonsHTML(row, url) {
+    if (url != '' && url != undefined) {
+        return "<a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick=\"addOrder('/order/addedit/" + row.id + "')\">\n" +
+            "   <i class=\"ri-shopping-cart-2-fill fs-20\" Title=\"Add Order to this customer.\"></i>\n" +
+            "</a> "
+    }
+    else {
+        return '';
+    }
+}
+
+function renderAction(row, editUrl, deleteUrl, activeUrl, orderUrl) {
+    return "<div class=\"hstack gap-3 flex-wrap\">\n" +
+        "   <a href='" + editUrl + "' class=\"link-success fs-20\">\n" +
+        "       <i class=\"ri-pencil-fill fs-20\" Title=\"Edit Record.\"></i>\n" +
+        "   </a>\n" +
+        "   <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('" + deleteUrl + "')\">\n" +
+        "       <i class=\"ri-delete-bin-5-fill fs-20\" Title=\"Delete Record.\"></i>\n" +
+        "   </a>\n" + getActiveInActiveHTML(row.isActive, row.id, activeUrl) + getExtraButtonsHTML(row,orderUrl);
+        "</div>";
+}
+
+function renderDefaultAction() {
+    return "<div class=\"hstack gap-3 flex-wrap\">\n" +
+        "                                    <a href=\"javascript:void(0);\" class=\"link-success fs-20\">\n" +
+        "                                        <i class=\"ri-edit-2-line\"></i>\n" +
+        "                                    </a>\n" +
+        "                                    <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick='deleteRecord(0)'>\n" +
+        "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
+        "                                    </a>\n" +
+        "                                </div>";
 }
 
 function changeRecordStatus(id, url) {
@@ -252,7 +290,7 @@ function changeRecordStatus(id, url) {
 
 function deleteRecord(pURL) {
     Swal.fire({
-        html:"<div class=\"mt-3\"><lord-icon src=\"https://cdn.lordicon.com/gsqxdxog.json\" trigger=\"loop\" colors=\"primary:#f7b84b,secondary:#f06548\" style=\"width:100px;height:100px\"></lord-icon><div class=\"mt-4 pt-2 fs-15 mx-5\"><h4>Are you Sure ?</h4><p class=\"text-muted mx-4 mb-0\">Are you Sure You want to Delete this Account ?</p></div></div>",
+        html: "<div class=\"mt-3\"><lord-icon src=\"https://cdn.lordicon.com/gsqxdxog.json\" trigger=\"loop\" colors=\"primary:#f7b84b,secondary:#f06548\" style=\"width:100px;height:100px\"></lord-icon><div class=\"mt-4 pt-2 fs-15 mx-5\"><h4>Are you Sure ?</h4><p class=\"text-muted mx-4 mb-0\">Are you Sure You want to Delete this Account ?</p></div></div>",
         text: "You won't be able to revert this!",
         showCancelButton: !0,
         confirmButtonClass: "btn btn-primary w-xs me-2 mt-2",
