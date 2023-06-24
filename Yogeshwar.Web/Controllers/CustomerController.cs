@@ -110,7 +110,7 @@ public sealed class CustomerController : Controller
         if (!ModelState.IsValid)
         {
             ModelState.AddModelError();
-            return View();
+            return View(customer);
         }
 
         await _customerService.Value

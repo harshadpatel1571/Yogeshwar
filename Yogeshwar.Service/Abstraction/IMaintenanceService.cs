@@ -13,7 +13,8 @@ public interface IMaintenanceService : IDisposable
     /// <param name="filterDto">The filter dto.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;DataTableResponseCarrier&lt;ServiceDto&gt;&gt;.</returns>
-    internal Task<DataTableResponseCarrier<ServiceDto>> GetByFilterAsync(DataTableFilterDto filterDto, CancellationToken cancellationToken);
+    internal Task<DataTableResponseCarrier<ServiceDto>> GetByFilterAsync(DataTableFilterDto filterDto,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates or update asynchronous.

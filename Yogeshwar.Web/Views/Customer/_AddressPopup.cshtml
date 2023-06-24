@@ -1,4 +1,6 @@
-﻿<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalModalLabel" aria-hidden="true">
+﻿@model CustomerAddressDto
+
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-light p-3">
@@ -6,56 +8,64 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal" onclick="closePopup()"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" disabled id="updateListId">
-                <div class="row g-3 needs-validation">
-                    <div class="col-md-12">
-                        <label class="form-label">Full Address</label>
-                        <textarea class="form-control" id="fullAddress" rows="2" maxlength="250"></textarea>
-                        <span id="ValidationFullAddress" class="text-danger"></span>
+                <form id="customerAddressForm">
+                    <input type="hidden" disabled id="updateListId">
+                    <div class="row g-3 needs-validation">
+                        <div class="col-md-12">
+                            <label class="form-label">Full Address</label>
+                            <span class="text-danger">*</span>
+                            <textarea class="form-control" asp-for="Address" rows="2"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">City</label>
+                            <span class="text-danger">*</span>
+                            <input class="form-control" asp-for="City">
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">District</label>
+                            <span class="text-danger">*</span>
+                            <input class="form-control" asp-for="District">
+                            <span asp-validation-for="District" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">State</label>
+                            <span class="text-danger">*</span>
+                            <input class="form-control" asp-for="State">
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Pincode</label>
+                            <span class="text-danger">*</span>
+                            <input class="form-control" asp-for="PinCode" maxlength="6">
+                            <span asp-validation-for="PinCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Phone No</label>
+                            <input class="form-control" asp-for="PhoneNo" maxlength="13">
+                            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                        </div>
+                        @if (Model is null)
+                        {
+                            <div class="col-12" id="addAddressDiv">
+                                <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="addAddress()">
+                                    <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                                    Save
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-12" id="updateAddressDiv">
+                                <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="updateAddress()">
+                                    <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                                    Update
+                                </button>
+                            </div>
+                        }
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">City</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="city" maxlength="25">
-                        <span id="ValidationCity" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">District</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="district" maxlength="25">
-                        <span id="ValidationDistrict" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">State</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="state" maxlength="25">
-                        <span id="ValidationState" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Pincode</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="pincode" maxlength="6">
-                        <span id="ValidationPincode" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Phone No</label>
-                        <span class="text-danger">*</span>
-                        <input class="form-control" id="phoneNo" maxlength="13">
-                        <span id="ValidationPhoneNo" class="text-danger"></span>
-                    </div>
-                    <div class="col-12" id="addAddressDiv">
-                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="addAddress()">
-                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
-                            Save
-                        </button>
-                    </div>
-                    <div class="col-12" id="updateAddressDiv" style="display: none">
-                        <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="updateAddress()">
-                            <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
-                            Update
-                        </button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

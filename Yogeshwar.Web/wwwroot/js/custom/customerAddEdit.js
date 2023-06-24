@@ -90,7 +90,7 @@ function populateAddress() {
     $.ajax({
         type: "POST",
         url: "/PartialView/CustomerAddressView/",
-        data: {customerAddresses: customerAddresses},
+        data: { customerAddresses: customerAddresses },
         success: function (html) {
             $('#addressDiv').html(html);
             closePopup();
@@ -162,7 +162,7 @@ function validateAddress() {
     }
 
     if (!isOk) {
-        return {isOk};
+        return { isOk };
     }
 
     const customerId = $('#Id').val();
@@ -177,13 +177,14 @@ function validateAddress() {
 }
 
 function addAddress() {
-    const status = validateAddress();
-
-    if (!status.isOk) {
+    if (!$('#customerAddressForm').valid()) {
         return;
     }
 
-    customerAddresses.push(status.customerAddress);
+    const formData = $("#customerAddressForm").serialize()
+    const modelObj = JSON.parse('{"' + decodeURI(formData.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}')
+
+    customerAddresses.push(modelObj);
 
     populateAddress();
 }

@@ -152,22 +152,22 @@ function BindGrid(pURL, pColumns, pdfColumn, excelColumn, printColumn) {
         columns: pColumns,
         dom: 'Blfrtip',
         buttons: [
-            {
-                extend: 'pdfHtml5',
-                text: 'PDF',
-                titleAttr: 'Generate PDF',
-                exportOptions: {
-                    columns: pdfColumn
-                }
-            },
-            {
-                extend: 'excelHtml5',
-                text: 'Excel',
-                titleAttr: 'Generate Excel',
-                exportOptions: {
-                    columns: excelColumn
-                }
-            },
+            //{
+            //    extend: 'pdfHtml5',
+            //    text: 'PDF',
+            //    titleAttr: 'Generate PDF',
+            //    exportOptions: {
+            //        columns: pdfColumn
+            //    }
+            //},
+            //{
+            //    extend: 'excelHtml5',
+            //    text: 'Excel',
+            //    titleAttr: 'Generate Excel',
+            //    exportOptions: {
+            //        columns: excelColumn
+            //    }
+            //},
             //{
             //    extend: 'csvHtml5',
             //    text: 'CSV',
@@ -184,14 +184,14 @@ function BindGrid(pURL, pColumns, pdfColumn, excelColumn, printColumn) {
             //        columns: [1, 2, 3]
             //    }
             //},
-            {
-                extend: 'print',
-                text: 'Print',
-                titleAttr: 'Copy to clipboard',
-                exportOptions: {
-                    columns: printColumn
-                }
-            },
+            //{
+            //    extend: 'print',
+            //    text: 'Print',
+            //    titleAttr: 'Copy to clipboard',
+            //    exportOptions: {
+            //        columns: printColumn
+            //    }
+            //},
             //{
             //    extend: 'colvis',
             //    text: 'Column Visibility',
