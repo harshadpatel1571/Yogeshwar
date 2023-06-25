@@ -105,12 +105,12 @@ internal sealed class CategoryService : ICategoryService
     }
 
     /// <summary>
-    /// Gets the single asynchronous.
+    /// Get by identifier as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
-    public async Task<CategoryDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
+    public async Task<CategoryDto?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         var data = await _cachingService.GetCategoriesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -118,12 +118,12 @@ internal sealed class CategoryService : ICategoryService
     }
 
     /// <summary>
-    /// Creates or update asynchronous.
+    /// Create or update as an asynchronous operation.
     /// </summary>
     /// <param name="category">The category.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<int> CreateOrUpdateAsync(CategoryDto category, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CategoryDto?> CreateOrUpdateAsync(CategoryDto category, CancellationToken cancellationToken)
     {
         if (category.Id < 1)
         {
@@ -134,12 +134,12 @@ internal sealed class CategoryService : ICategoryService
     }
 
     /// <summary>
-    /// Creates the asynchronous.
+    /// Create as an asynchronous operation.
     /// </summary>
     /// <param name="category">The category.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> CreateAsync(CategoryDto category, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
+    private async Task<CategoryDto> CreateAsync(CategoryDto category, CancellationToken cancellationToken)
     {
         var image = (string?)null;
 
@@ -153,36 +153,39 @@ internal sealed class CategoryService : ICategoryService
                 .ConfigureAwait(false);
         }
 
-        var dbModel = _mappingService.Map(category);
-
-        dbModel.Image = image;
-        dbModel.IsActive = true;
-        dbModel.CreatedDate = DateTime.Now;
-        dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
+        var dbModel = new Category
+        {
+            Name = category.Name,
+            HsnNo = category.HsnNo,
+            Image = image,
+            IsActive = true,
+            CreatedDate = DateTime.Now,
+            CreatedBy = _currentUserService.GetCurrentUserId()
+        };
 
         await _context.Categories.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveCategories();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Updates the asynchronous.
+    /// Update as an asynchronous operation.
     /// </summary>
     /// <param name="category">The category.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> UpdateAsync(CategoryDto category, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
+    private async Task<CategoryDto?> UpdateAsync(CategoryDto category, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Categories
-            .FirstOrDefaultAsync(x => x.Id == category.Id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == category.Id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
         {
-            return 0;
+            return null;
         }
 
         dbModel.Name = category.Name;
@@ -205,23 +208,23 @@ internal sealed class CategoryService : ICategoryService
         }
 
         _context.Categories.Update(dbModel);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveCategories();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Deletes the asynchronous.
+    /// Delete as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;Category&gt; representing the asynchronous operation.</returns>
-    async ValueTask<Category?> ICategoryService.DeleteAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CategoryDto?> DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Categories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
@@ -238,7 +241,7 @@ internal sealed class CategoryService : ICategoryService
 
         _cachingService.RemoveCategories();
 
-        return dbModel;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -254,20 +257,20 @@ internal sealed class CategoryService : ICategoryService
     }
 
     /// <summary>
-    /// Deletes the image asynchronous.
+    /// Delete image as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Boolean&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CategoryDto?> DeleteImageAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Categories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
         {
-            return false;
+            return null;
         }
 
         DeleteFileIfExist(_rootPath + dbModel.Image);
@@ -281,24 +284,24 @@ internal sealed class CategoryService : ICategoryService
 
         _cachingService.RemoveCategories();
 
-        return true;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Actives and in active record asynchronous.
+    /// Active in active record as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;OneOf`2&gt; representing the asynchronous operation.</returns>
-    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CategoryDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CategoryDto?> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Categories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
         {
-            return new NotFound();
+            return null;
         }
 
         dbModel.IsActive = !dbModel.IsActive;
@@ -311,6 +314,6 @@ internal sealed class CategoryService : ICategoryService
 
         _cachingService.RemoveCategories();
 
-        return dbModel.IsActive;
+        return _mappingService.Map(dbModel);
     }
 }

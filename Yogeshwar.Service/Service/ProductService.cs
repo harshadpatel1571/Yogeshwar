@@ -112,12 +112,12 @@ internal sealed class ProductService : IProductService
     }
 
     /// <summary>
-    /// Gets the single asynchronous.
+    /// Get by identifier as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;Yogeshwar.Service.Dto.ProductDto?&gt; representing the asynchronous operation.</returns>
-    public async Task<ProductDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;ProductDto&gt; representing the asynchronous operation.</returns>
+    public async Task<ProductDto?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         var data = await _cachingService.GetProductsAsync(cancellationToken).ConfigureAwait(false);
 
@@ -125,12 +125,12 @@ internal sealed class ProductService : IProductService
     }
 
     /// <summary>
-    /// Creates the or update asynchronous.
+    /// Create or update as an asynchronous operation.
     /// </summary>
     /// <param name="productDto">The product dto.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;int&gt; representing the asynchronous operation.</returns>
-    public async Task<int> CreateOrUpdateAsync(ProductDto productDto, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;ProductDto&gt; representing the asynchronous operation.</returns>
+    public async Task<ProductDto?> CreateOrUpdateAsync(ProductDto productDto, CancellationToken cancellationToken)
     {
         if (productDto.Id < 1)
         {
@@ -145,8 +145,8 @@ internal sealed class ProductService : IProductService
     /// </summary>
     /// <param name="productDto">The product dto.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A System.Threading.Tasks.ValueTask&lt;int&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> CreateAsync(ProductDto productDto, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;Yogeshwar.Service.Dto.ProductDto&gt; representing the asynchronous operation.</returns>
+    private async Task<ProductDto> CreateAsync(ProductDto productDto, CancellationToken cancellationToken)
     {
         var video = (string?)null;
         var images = Array.Empty<string>();
@@ -176,30 +176,34 @@ internal sealed class ProductService : IProductService
             }
         }
 
-        var dbModel = _mappingService.Map(productDto);
-
-        dbModel.IsActive = true;
-        dbModel.CreatedDate = DateTime.Now;
-        dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
-        dbModel.Video = video;
-
-        dbModel.ProductCategories = productDto.CategoryIds
-            .Select(x => new ProductCategory
-            {
-                CategoryId = x
-            }).ToArray();
-
-        dbModel.ProductImages = images.Select(x => new ProductImage
+        var dbModel = new Product
         {
-            Image = x
-        }).ToArray();
+            Name = productDto.Name,
+            HsnNo = productDto.HsnNo,
+            Description = productDto.Description,
+            Price = productDto.Price,
+            Gst = productDto.Gst,
+            IsActive = true,
+            CreatedDate = DateTime.Now,
+            CreatedBy = _currentUserService.GetCurrentUserId(),
+            Video = video,
+            ProductCategories = productDto.CategoryIds
+                .Select(x => new ProductCategory
+                {
+                    CategoryId = x
+                }).ToArray(),
+            ProductImages = images.Select(x => new ProductImage
+            {
+                Image = x
+            }).ToArray()
+        };
 
         await _context.Products.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveProducts();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -207,8 +211,8 @@ internal sealed class ProductService : IProductService
     /// </summary>
     /// <param name="productDto">The product dto.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A System.Threading.Tasks.ValueTask&lt;int&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> UpdateAsync(ProductDto productDto, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;Yogeshwar.Service.Dto.ProductDto?&gt; representing the asynchronous operation.</returns>
+    private async Task<ProductDto?> UpdateAsync(ProductDto productDto, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
             .FirstOrDefaultAsync(x => x.Id == productDto.Id, cancellationToken)
@@ -216,7 +220,7 @@ internal sealed class ProductService : IProductService
 
         if (dbModel == null)
         {
-            return 0;
+            return null;
         }
 
         if (productDto.VideoFile is not null)
@@ -255,11 +259,11 @@ internal sealed class ProductService : IProductService
         dbModel.ModelNo = productDto.ModelNo;
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
         dbModel.ModifiedDate = DateTime.Now;
-        dbModel.Price = productDto.Price!.Value;
+        dbModel.Price = productDto.Price;
         dbModel.HsnNo = productDto.HsnNo;
 
         var newAccessories = productDto.ProductAccessories
-            .Select(x=> new ProductAccessory
+            .Select(x => new ProductAccessory
             {
                 AccessoryId = x.AccessoryId,
                 ProductId = dbModel.Id,
@@ -298,11 +302,11 @@ internal sealed class ProductService : IProductService
         _context.ProductCategories.AddRange(newCategories);
 
         _context.Products.Update(dbModel);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveProducts();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -318,20 +322,20 @@ internal sealed class ProductService : IProductService
     }
 
     /// <summary>
-    /// Deletes the asynchronous.
+    /// Delete as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;int&gt; representing the asynchronous operation.</returns>
-    public async Task<int> DeleteAsync(int id, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;Yogeshwar.Service.Dto.ProductDto?&gt; representing the asynchronous operation.</returns>
+    public async Task<ProductDto?> DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (dbModel == null)
+        if (dbModel is null)
         {
-            return 0;
+            return null;
         }
 
         dbModel.IsDeleted = true;
@@ -339,11 +343,11 @@ internal sealed class ProductService : IProductService
         dbModel.ModifiedDate = DateTime.Now;
 
         _context.Products.Update(dbModel);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveProducts();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -351,16 +355,16 @@ internal sealed class ProductService : IProductService
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A System.Threading.Tasks.ValueTask&lt;bool&gt;&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;Yogeshwar.Service.Dto.ProductImageDto?&gt; representing the asynchronous operation.</returns>
+    public async Task<ProductImageDto?> DeleteImageAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.ProductImages
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (dbModel == null)
+        if (dbModel is null)
         {
-            return false;
+            return null;
         }
 
         DeleteFileIfExist(_rootPath + dbModel.Image);
@@ -370,7 +374,7 @@ internal sealed class ProductService : IProductService
 
         _cachingService.RemoveProducts();
 
-        return true;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -378,16 +382,16 @@ internal sealed class ProductService : IProductService
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A System.Threading.Tasks.ValueTask&lt;bool&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<bool> DeleteVideoAsync(int id, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;Yogeshwar.Service.Dto.ProductDto?&gt; representing the asynchronous operation.</returns>
+    public async Task<ProductDto?> DeleteVideoAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (dbModel == null)
+        if (dbModel is null)
         {
-            return false;
+            return null;
         }
 
         DeleteFileIfExist(_rootPath + dbModel.Video);
@@ -401,7 +405,7 @@ internal sealed class ProductService : IProductService
 
         _cachingService.RemoveProducts();
 
-        return true;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -409,8 +413,8 @@ internal sealed class ProductService : IProductService
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;OneOf.OneOf&lt;bool, OneOf.Types.NotFound&gt;&gt; representing the asynchronous operation.</returns>
-    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;Yogeshwar.Service.Dto.ProductDto?&gt; representing the asynchronous operation.</returns>
+    public async Task<ProductDto?> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Products
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
@@ -418,7 +422,7 @@ internal sealed class ProductService : IProductService
 
         if (dbModel is null)
         {
-            return new NotFound();
+            return null;
         }
 
         dbModel.IsActive = !dbModel.IsActive;
@@ -430,6 +434,6 @@ internal sealed class ProductService : IProductService
 
         _cachingService.RemoveProducts();
 
-        return dbModel.IsActive;
+        return _mappingService.Map(dbModel);
     }
 }

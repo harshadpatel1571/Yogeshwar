@@ -8,17 +8,17 @@
 public interface IConfigurationService : IDisposable
 {
     /// <summary>
-    /// Gets the single asynchronous.
+    /// Gets the asynchronous.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Nullable&lt;ConfigurationDto&gt;&gt;.</returns>
-    Task<ConfigurationDto?> GetSingleAsync(CancellationToken cancellationToken);
+    Task<ConfigurationDto?> GetAsync(CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates the asynchronous.
+    /// Creates the or update asynchronous.
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>Task&lt;System.Int32&gt;.</returns>
-    Task<int> UpdateAsync(ConfigurationDto configuration, CancellationToken cancellationToken);
+    /// <returns>Task&lt;ConfigurationDto&gt;.</returns>
+    Task<ConfigurationDto> CreateOrUpdateAsync(ConfigurationDto configuration, CancellationToken cancellationToken);
 }

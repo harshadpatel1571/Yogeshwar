@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Yogeshwar.DB.Context;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;

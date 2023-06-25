@@ -64,7 +64,7 @@ internal sealed class CustomerService : ICustomerService
     /// <param name="filterDto">The filter dto.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;DataTableResponseCarrier&lt;CustomerDto&gt;&gt;.</returns>
-    async Task<DataTableResponseCarrier<CustomerDto>> ICustomerService.GetByFilterAsync(
+    public async Task<DataTableResponseCarrier<CustomerDto>> GetByFilterAsync(
         DataTableFilterDto filterDto, CancellationToken cancellationToken)
     {
         var result = _context.Customers.Where(x => !x.IsDeleted)
@@ -102,12 +102,12 @@ internal sealed class CustomerService : ICustomerService
     }
 
     /// <summary>
-    /// Gets the single asynchronous.
+    /// Get by identifier as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;CustomerDto&gt; representing the asynchronous operation.</returns>
-    public async Task<CustomerDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
+    public async Task<CustomerDto?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await _context.Customers.AsNoTracking()
             .Where(x => x.Id == id && !x.IsDeleted)
@@ -117,12 +117,12 @@ internal sealed class CustomerService : ICustomerService
     }
 
     /// <summary>
-    /// Creates or update asynchronous.
+    /// Create or update as an asynchronous operation.
     /// </summary>
     /// <param name="customer">The customer.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async Task<int> UpsertAsync(CustomerDto customer, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CustomerDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CustomerDto?> CreateOrUpdateAsync(CustomerDto customer, CancellationToken cancellationToken)
     {
         if (customer.Id < 1)
         {
@@ -133,12 +133,12 @@ internal sealed class CustomerService : ICustomerService
     }
 
     /// <summary>
-    /// Creates the asynchronous.
+    /// Create as an asynchronous operation.
     /// </summary>
-    /// <param name="customerDto">The customer.</param>
+    /// <param name="customerDto">The customer dto.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> CreateAsync(CustomerDto customerDto, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;CustomerDto&gt; representing the asynchronous operation.</returns>
+    private async Task<CustomerDto> CreateAsync(CustomerDto customerDto, CancellationToken cancellationToken)
     {
         var image = (string?)null;
 
@@ -152,33 +152,56 @@ internal sealed class CustomerService : ICustomerService
                 .ConfigureAwait(false);
         }
 
-        var dbModel = _mappingService.Map(customerDto);
-
-        dbModel.Image = image;
-        dbModel.IsActive = true;
-        dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
-        dbModel.CreatedDate = DateTime.Now;
+        var dbModel = new Customer
+        {
+            FirstName = customerDto.FirstName,
+            LastName = customerDto.LastName,
+            Email = customerDto.Email,
+            PhoneNo = customerDto.PhoneNo,
+            GstNumber = customerDto.GstNumber,
+            IfscCode = customerDto.IfscCode,
+            AccountHolderName = customerDto.AccountHolderName,
+            AccountNumber = customerDto.AccountNumber,
+            BankName = customerDto.BankName,
+            BranchName = customerDto.BranchName,
+            Image = image,
+            CustomerAddresses = customerDto.CustomerAddresses
+                .Select(x => new CustomerAddress
+                {
+                    Address = x.Address,
+                    PinCode = x.PinCode,
+                    PhoneNo = x.PhoneNo,
+                    City = x.City,
+                    District = x.District,
+                    State = x.State,
+                }).ToArray(),
+            IsActive = true,
+            CreatedBy = _currentUserService.GetCurrentUserId(),
+            CreatedDate = DateTime.Now
+        };
 
         await _context.Customers.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Updates the asynchronous.
+    /// Update as an asynchronous operation.
     /// </summary>
-    /// <param name="customerDto">The customer.</param>
+    /// <param name="customerDto">The customer dto.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> UpdateAsync(CustomerDto customerDto, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;CustomerDto&gt; representing the asynchronous operation.</returns>
+    private async Task<CustomerDto?> UpdateAsync(CustomerDto customerDto, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Customers
-            .FirstOrDefaultAsync(x => x.Id == customerDto.Id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == customerDto.Id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
-        if (dbModel == null)
+        if (dbModel is null)
         {
-            return 0;
+            return null;
         }
 
         if (customerDto.ImageFile is not null)
@@ -212,13 +235,25 @@ internal sealed class CustomerService : ICustomerService
             .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        var newAddresses = customerDto.CustomerAddresses.Select(_mappingService.Map);
+        var newAddresses = customerDto.CustomerAddresses
+            .Select(x => new CustomerAddress
+            {
+                Address = x.Address,
+                PinCode = x.PinCode,
+                PhoneNo = x.PhoneNo,
+                City = x.City,
+                District = x.District,
+                State = x.State,
+                CustomerId = dbModel.Id,
+            });
 
         _context.CustomerAddresses.AddRange(newAddresses);
 
         _context.Customers.Update(dbModel);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -234,20 +269,20 @@ internal sealed class CustomerService : ICustomerService
     }
 
     /// <summary>
-    /// Deletes the asynchronous.
+    /// Delete as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async Task<int> DeleteAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CustomerDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CustomerDto?> DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Customers
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
         {
-            return 0;
+            return null;
         }
 
         dbModel.IsDeleted = true;
@@ -256,24 +291,26 @@ internal sealed class CustomerService : ICustomerService
 
         _context.Customers.Update(dbModel);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Deletes the image asynchronous.
+    /// Delete image as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Boolean&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;CustomerDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CustomerDto?> DeleteImageAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Customers
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
         {
-            return false;
+            return null;
         }
 
         DeleteFileIfExist(_rootPath + dbModel.Image);
@@ -285,24 +322,24 @@ internal sealed class CustomerService : ICustomerService
         _context.Customers.Update(dbModel);
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        return true;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Actives and in active record asynchronous.
+    /// Active in active record as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;OneOf`2&gt; representing the asynchronous operation.</returns>
-    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;CustomerDto&gt; representing the asynchronous operation.</returns>
+    public async Task<CustomerDto?> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Customers
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
         {
-            return new NotFound();
+            return null;
         }
 
         dbModel.IsActive = !dbModel.IsActive;
@@ -313,6 +350,6 @@ internal sealed class CustomerService : ICustomerService
 
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        return dbModel.IsActive;
+        return _mappingService.Map(dbModel);
     }
 }

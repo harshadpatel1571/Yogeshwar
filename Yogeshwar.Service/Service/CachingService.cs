@@ -36,7 +36,7 @@ internal class CachingService : ICachingService
     /// <summary>
     /// The products caching key
     /// </summary>
-    private const string ProductsCachingKey = "Products";    
+    private const string ProductsCachingKey = "Products";
 
     /// <summary>
     /// The mapping service
@@ -73,7 +73,7 @@ internal class CachingService : ICachingService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IList&lt;AccessoriesDto&gt;&gt;.</returns>
-    async Task<IList<AccessoriesDto>> ICachingService.GetAccessoriesAsync(CancellationToken cancellationToken)
+    public async Task<IList<AccessoriesDto>> GetAccessoriesAsync(CancellationToken cancellationToken)
     {
         if (_memoryCache.TryGetValue(AccessoriesCachingKey, out var value))
         {
@@ -124,7 +124,7 @@ internal class CachingService : ICachingService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IList&lt;CategoryDto&gt;&gt;.</returns>
-    async Task<IList<CategoryDto>> ICachingService.GetCategoriesAsync(CancellationToken cancellationToken)
+    public async Task<IList<CategoryDto>> GetCategoriesAsync(CancellationToken cancellationToken)
     {
         if (_memoryCache.TryGetValue(CategoriesCachingKey, out var value))
         {
@@ -175,7 +175,7 @@ internal class CachingService : ICachingService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IList&lt;ProductDto&gt;&gt;.</returns>
-    async Task<IList<ProductDto>> ICachingService.GetProductsAsync(CancellationToken cancellationToken)
+    public async Task<IList<ProductDto>> GetProductsAsync(CancellationToken cancellationToken)
     {
         if (_memoryCache.TryGetValue(ProductsCachingKey, out var value))
         {
@@ -197,6 +197,22 @@ internal class CachingService : ICachingService
             var data = CachingQueryExpression.Products(_context);
 
             var result = await data.ToListAsync(cancellationToken).ConfigureAwait(false);
+
+            var accessories = await ((ICachingService)this).GetAccessoriesAsync(cancellationToken).ConfigureAwait(false);
+            var categories = await ((ICachingService)this).GetCategoriesAsync(cancellationToken).ConfigureAwait(false);
+
+            result.ForEach(p =>
+            {
+                p.ProductAccessories.ForEach(pa =>
+                {
+                    pa.Accessory = accessories.FirstOrDefault(a => a.Id == pa.AccessoryId);
+                });
+
+                p.ProductCategories!.ForEach(pc =>
+                {
+                    pc.Category = categories.FirstOrDefault(a => a.Id == pc.CategoryId);
+                });
+            });
 
             x.SetValue(result);
 
@@ -220,21 +236,34 @@ internal class CachingService : ICachingService
     #endregion
 
     #region Configuration
-    async Task<ConfigurationDto> ICachingService.GetConfigurationSingleAsync(CancellationToken cancellationToken)
+
+    /// <summary>
+    /// Get configurations as an asynchronous operation.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;IList`1&gt; representing the asynchronous operation.</returns>
+    public async Task<IList<ConfigurationDto>> GetConfigurationsAsync(CancellationToken cancellationToken)
     {
         if (_memoryCache.TryGetValue(ConfigurationCachingKey, out var value))
         {
-            return await Task.FromResult((ConfigurationDto)value).ConfigureAwait(false);
+            return await Task.FromResult((IList<ConfigurationDto>)value).ConfigureAwait(false);
         }
 
         return await GetConfigurationInternalAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task<ConfigurationDto> GetConfigurationInternalAsync(CancellationToken cancellationToken)
+    /// <summary>
+    /// Get configuration internal as an asynchronous operation.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;IList`1&gt; representing the asynchronous operation.</returns>
+    private async Task<IList<ConfigurationDto>> GetConfigurationInternalAsync(CancellationToken cancellationToken)
     {
-        async Task<ConfigurationDto> FetchData(ICacheEntry x)
+        async Task<IList<ConfigurationDto>> FetchData(ICacheEntry x)
         {
-            var result = await CachingQueryExpression.configuration(_context, _mappingService);
+            var data = CachingQueryExpression.Configurations(_context, _mappingService);
+
+            var result = await data.ToListAsync(cancellationToken).ConfigureAwait(false);
 
             x.SetValue(result);
 
@@ -247,10 +276,14 @@ internal class CachingService : ICachingService
         return await _memoryCache.GetOrCreateAsync(ConfigurationCachingKey, FetchData).ConfigureAwait(false);
     }
 
-    void ICachingService.RemoveConfiguration()
+    /// <summary>
+    /// Removes the configurations.
+    /// </summary>
+    void ICachingService.RemoveConfigurations()
     {
         _memoryCache.Remove(ConfigurationCachingKey);
     }
+
     #endregion
 }
 
@@ -291,9 +324,7 @@ file static class CachingQueryExpression
                     .AsNoTracking()
                     .Where(c => !c.IsDeleted)
                     .Include(x => x.ProductCategories)
-                    .ThenInclude(x => x.Category)
                     .Include(x => x.ProductAccessories)
-                    .ThenInclude(x => x.Accessory)
                     .Include(x => x.ProductImages)
                     .Select(x => new ProductDto
                     {
@@ -316,35 +347,12 @@ file static class CachingQueryExpression
                             AccessoryId = c.AccessoryId,
                             ProductId = c.ProductId,
                             Quantity = c.Quantity,
-                            Accessory = new AccessoriesDto
-                            {
-                                Id = c.Accessory.Id,
-                                CreatedDate = c.Accessory.CreatedDate,
-                                ModifiedDate = c.Accessory.ModifiedDate,
-                                IsActive = c.Accessory.IsActive,
-                                Name = c.Accessory.Name,
-                                Image = c.Accessory.Image,
-                                Quantity = c.Accessory.Quantity,
-                                MeasurementType = c.Accessory.MeasurementType,
-                                Price = c.Accessory.Price,
-                                Description = c.Accessory.Description
-                            }
                         }).ToArray(),
                         ProductCategories = x.ProductCategories.Select(c => new ProductCategoryDto
                         {
                             ProductId = c.ProductId,
                             CategoryId = c.CategoryId,
                             Id = c.Id,
-                            Category = new CategoryDto
-                            {
-                                Id = c.Category.Id,
-                                Name = c.Category.Name,
-                                HsnNo = c.Category.HsnNo,
-                                Image = c.Category.Image,
-                                CreatedDate = c.Category.CreatedDate,
-                                ModifiedDate = c.Category.ModifiedDate,
-                                IsActive = c.Category.IsActive,
-                            }
                         }).ToArray(),
                         ProductImages = x.ProductImages.Select(c => new ProductImageDto
                         {
@@ -355,13 +363,12 @@ file static class CachingQueryExpression
                     }));
 
     /// <summary>
-    /// The configuration
+    /// The configurations
     /// </summary>
-    public static readonly Func<YogeshwarContext, IMappingService, Task<ConfigurationDto>> configuration =
+    public static readonly Func<YogeshwarContext, IMappingService, IAsyncEnumerable<ConfigurationDto>> Configurations =
         EF.CompileAsyncQuery(
             (YogeshwarContext context, IMappingService mappingService) =>
                 context.Configurations
                     .AsNoTracking()
-                    .Select(c => mappingService.Map(c))
-                    .FirstOrDefault());
+                    .Select(c => mappingService.Map(c)));
 }

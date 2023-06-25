@@ -83,7 +83,7 @@ public class CategoriesController : Controller
             return await Task.FromResult(view).ConfigureAwait(false);
         }
 
-        var model = await _categoryService.Value.GetSingleAsync(id, cancellationToken).ConfigureAwait(false);
+        var model = await _categoryService.Value.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
 
         if (model is null)
         {
@@ -167,11 +167,11 @@ public class CategoriesController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
-        var isDeleted = await _categoryService.Value
+        var model = await _categoryService.Value
             .DeleteImageAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (isDeleted)
+        if (model is not null)
         {
             return NoContent();
         }
@@ -188,15 +188,15 @@ public class CategoriesController : Controller
     [HttpPost]
     public async Task<IActionResult> ActiveInActiveRecord(int id, CancellationToken cancellationToken)
     {
-        var result = await _categoryService.Value
+        var model = await _categoryService.Value
             .ActiveInActiveRecordAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (result.Value is NotFound)
+        if (model is null)
         {
             return NotFound();
         }
 
-        return Ok(result.Value);
+        return Ok(model.IsActive);
     }
 }

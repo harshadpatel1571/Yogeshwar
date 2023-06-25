@@ -34,7 +34,7 @@ public sealed class ProductDto : BaseDto
     /// </summary>
     /// <value>The price.</value>
     [Required(ErrorMessage = "Price is required.")]
-    public decimal? Price { get; set; }
+    public decimal Price { get; set; }
 
     /// <summary>
     /// Gets or sets the model no.
@@ -97,9 +97,9 @@ public sealed class ProductDto : BaseDto
     public SelectList? SelectListsForAccessories { get; set; }
 
     /// <summary>
-    /// Gets or sets the categori ids.
+    /// Gets or sets the category ids.
     /// </summary>
-    /// <value>The categori ids.</value>
+    /// <value>The category ids.</value>
     [Required(ErrorMessage = "Categories are required.")]
     public IList<int> CategoryIds { get; set; }
 
@@ -114,6 +114,7 @@ public sealed class ProductDto : BaseDto
     /// </summary>
     /// <value>The image files.</value>
     [ValidateFile]
+    [JsonIgnore]
     public IList<IFormFile>? ImageFiles { get; set; }
 
     /// <summary>
@@ -121,5 +122,6 @@ public sealed class ProductDto : BaseDto
     /// </summary>
     /// <value>The video file.</value>
     [ValidateFile]
+    [JsonIgnore]
     public IFormFile? VideoFile { get; set; }
 }

@@ -45,7 +45,7 @@ public class ConfigurationController : Controller
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var model = await _configurationService.Value
-            .GetSingleAsync(cancellationToken)
+            .GetAsync(cancellationToken)
             .ConfigureAwait(false);
 
         return View(model);
@@ -66,7 +66,7 @@ public class ConfigurationController : Controller
             return RedirectToActionPermanent(nameof(Index));
         }
 
-        await _configurationService.Value.UpdateAsync(configurationDto, cancellationToken).ConfigureAwait(false);
+        await _configurationService.Value.CreateOrUpdateAsync(configurationDto, cancellationToken).ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
     }

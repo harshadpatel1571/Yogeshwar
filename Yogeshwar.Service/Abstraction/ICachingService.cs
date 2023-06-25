@@ -12,46 +12,46 @@ internal interface ICachingService : IDisposable
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IList&lt;AccessoriesDto&gt;&gt;.</returns>
-    internal Task<IList<AccessoriesDto>> GetAccessoriesAsync(CancellationToken cancellationToken);
+    Task<IList<AccessoriesDto>> GetAccessoriesAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes the accessories.
     /// </summary>
-    internal void RemoveAccessories();
+    void RemoveAccessories();
 
     /// <summary>
     /// Gets the categories asynchronous.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IList&lt;CategoryDto&gt;&gt;.</returns>
-    internal Task<IList<CategoryDto>> GetCategoriesAsync(CancellationToken cancellationToken);
+    Task<IList<CategoryDto>> GetCategoriesAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes the categories.
     /// </summary>
-    internal void RemoveCategories();
+    void RemoveCategories();
 
     /// <summary>
     /// Gets the products asynchronous.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IList&lt;ProductDto&gt;&gt;.</returns>
-    internal Task<IList<ProductDto>> GetProductsAsync(CancellationToken cancellationToken);
+    Task<IList<ProductDto>> GetProductsAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes the products.
     /// </summary>
-    internal void RemoveProducts();
+    void RemoveProducts();
 
     /// <summary>
-    /// Gets the configuration single asynchronous.
+    /// Gets the configurations asynchronous.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>Task&lt;ConfigurationDto&gt;.</returns>
-    internal Task<ConfigurationDto> GetConfigurationSingleAsync(CancellationToken cancellationToken);
+    /// <returns>Task&lt;IList&lt;ConfigurationDto&gt;&gt;.</returns>
+    Task<IList<ConfigurationDto>> GetConfigurationsAsync(CancellationToken cancellationToken);
 
     /// <summary>
-    /// Removes the configuration.
+    /// Removes the configurations.
     /// </summary>
-    internal void RemoveConfiguration();
+    void RemoveConfigurations();
 }

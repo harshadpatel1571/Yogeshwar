@@ -1,6 +1,4 @@
-﻿using Yogeshwar.DB.DbModels;
-
-namespace Yogeshwar.Service.Abstraction;
+﻿namespace Yogeshwar.Service.Abstraction;
 
 /// <summary>
 /// Interface ICategoryService
@@ -15,45 +13,45 @@ public interface ICategoryService : IDisposable
     /// <param name="filterDto">The filter dto.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;DataTableResponseCarrier&lt;CategoryDto&gt;&gt;.</returns>
-    internal Task<DataTableResponseCarrier<CategoryDto>> GetByFilterAsync(DataTableFilterDto filterDto, CancellationToken cancellationToken);
+    Task<DataTableResponseCarrier<CategoryDto>> GetByFilterAsync(DataTableFilterDto filterDto, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the single asynchronous.
+    /// Gets the by identifier asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Nullable&lt;CategoryDto&gt;&gt;.</returns>
-    Task<CategoryDto?> GetSingleAsync(int id, CancellationToken cancellationToken);
+    Task<CategoryDto?> GetByIdAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Creates or update asynchronous.
+    /// Creates the or update asynchronous.
     /// </summary>
     /// <param name="category">The category.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>ValueTask&lt;System.Int32&gt;.</returns>
-    ValueTask<int> CreateOrUpdateAsync(CategoryDto category, CancellationToken cancellationToken);
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;System.Nullable&lt;CategoryDto&gt;&gt;.</returns>
+    Task<CategoryDto?> CreateOrUpdateAsync(CategoryDto category, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>ValueTask&lt;System.Nullable&lt;Category&gt;&gt;.</returns>
-    internal ValueTask<Category?> DeleteAsync(int id, CancellationToken cancellationToken);
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;System.Nullable&lt;CategoryDto&gt;&gt;.</returns>
+    Task<CategoryDto?> DeleteAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the image asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>ValueTask&lt;System.Boolean&gt;.</returns>
-    ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken);
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;System.Nullable&lt;CategoryDto&gt;&gt;.</returns>
+    Task<CategoryDto?> DeleteImageAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Actives and in active record asynchronous.
+    /// Actives the in active record asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Task&lt;OneOf&lt;System.Boolean, NotFound&gt;&gt;.</returns>
-    Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken);
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;System.Nullable&lt;CategoryDto&gt;&gt;.</returns>
+    Task<CategoryDto?> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken);
 }

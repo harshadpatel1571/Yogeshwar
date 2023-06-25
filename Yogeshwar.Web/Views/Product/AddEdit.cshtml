@@ -123,7 +123,7 @@
                         <span class="text-info">(Fill Accessories quantity for stock management purpose.)</span>
                         <br />
                         <ul class="list-group" id="PAList">
-                            @await Html.PartialAsync("_AccessoryQuantity", Model)
+                            @await Html.PartialAsync("_AccessoryQuantity", Model).ConfigureAwait(false)
                         </ul>
                     </div>
                     <div class="col-md-12">

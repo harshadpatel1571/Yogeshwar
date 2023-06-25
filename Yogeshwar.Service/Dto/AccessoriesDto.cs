@@ -62,5 +62,6 @@ public sealed class AccessoriesDto : BaseDto
     /// </summary>
     /// <value>The file.</value>
     [ValidateFile]
+    [JsonIgnore]
     public IFormFile? ImageFile { get; set; }
 }

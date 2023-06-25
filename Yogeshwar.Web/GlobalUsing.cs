@@ -14,3 +14,5 @@ global using System.Data;
 global using Dapper;
 global using Microsoft.Data.SqlClient;
 global using OneOf.Types;
+global using Microsoft.EntityFrameworkCore;
+global using Yogeshwar.DB.Context;

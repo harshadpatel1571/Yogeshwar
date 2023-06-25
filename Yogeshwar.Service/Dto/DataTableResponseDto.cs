@@ -1,6 +1,6 @@
 ﻿namespace Yogeshwar.Service.Dto;
 
-internal record struct DataTableResponseDto<T>
+public sealed class DataTableResponseDto<T>
 {
     /// <summary>
     /// Gets or sets the draw.
@@ -24,14 +24,14 @@ internal record struct DataTableResponseDto<T>
     /// Gets or sets the data.
     /// </summary>
     /// <value>The data.</value>
-    public IEnumerable<T> Data { get; set; }
+    public IList<T> Data { get; set; }
 }
 
 /// <summary>
 /// Class DataTableResponseCarrier.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal sealed class DataTableResponseCarrier<T>
+public sealed class DataTableResponseCarrier<T>
 {
     /// <summary>
     /// Gets or sets the total count.
@@ -43,5 +43,5 @@ internal sealed class DataTableResponseCarrier<T>
     /// Gets or sets the data.
     /// </summary>
     /// <value>The data.</value>
-    public ICollection<T> Data { get; set; }
+    public IList<T> Data { get; set; }
 }

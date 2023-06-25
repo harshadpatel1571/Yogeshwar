@@ -4,7 +4,7 @@
 /// Struct DropDownDto
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal record struct DropDownDto<T>
+public record struct DropDownDto<T>
 {
     /// <summary>
     /// Gets or sets the key.

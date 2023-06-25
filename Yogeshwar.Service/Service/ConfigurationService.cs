@@ -31,8 +31,7 @@ internal class ConfigurationService : IConfigurationService
     /// <summary>
     /// The prefix path
     /// </summary>
-    private const string PrefixPath = "/DataImages/CompanyLogo/";
-
+    private const string PrefixPath = "/DataImages/Configuration/";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConfigurationService"/> class.
@@ -60,31 +59,31 @@ internal class ConfigurationService : IConfigurationService
     }
 
     /// <summary>
-    /// Get single as an asynchronous operation.
+    /// Get as an asynchronous operation.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;ConfigurationDto&gt; representing the asynchronous operation.</returns>
-    public async Task<ConfigurationDto?> GetSingleAsync(CancellationToken cancellationToken)
+    public async Task<ConfigurationDto?> GetAsync(CancellationToken cancellationToken)
     {
-        return await _cachingService.GetConfigurationSingleAsync(cancellationToken).ConfigureAwait(false);
+        var data = await _cachingService.GetConfigurationsAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return data.FirstOrDefault();
     }
 
     /// <summary>
-    /// Update as an asynchronous operation.
+    /// Create or update as an asynchronous operation.
     /// </summary>
     /// <param name="configurationDto">The configuration dto.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async Task<int> UpdateAsync(ConfigurationDto configurationDto, CancellationToken cancellationToken)
+    /// <returns>A Task&lt;ConfigurationDto&gt; representing the asynchronous operation.</returns>
+    public async Task<ConfigurationDto> CreateOrUpdateAsync(ConfigurationDto configurationDto, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Configurations
             .FirstOrDefaultAsync(x => x.Id == configurationDto.Id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (dbModel == null)
-        {
-            dbModel = new Configuration();
-        }
+        dbModel ??= new Configuration();
 
         if (configurationDto.ImageFile is not null)
         {
@@ -94,7 +93,7 @@ internal class ConfigurationService : IConfigurationService
 
             await configurationDto.ImageFile.SaveAsync(_rootPath + image, cancellationToken).ConfigureAwait(false);
 
-            if (dbModel != null)
+            if (dbModel.Id > 0)
             {
                 DeleteFileIfExist(_rootPath + dbModel.CompanyLogo);
             }
@@ -116,10 +115,10 @@ internal class ConfigurationService : IConfigurationService
             _context.Configurations.Add(dbModel);
         }
 
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        _cachingService.RemoveConfiguration();
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        _cachingService.RemoveConfigurations();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>

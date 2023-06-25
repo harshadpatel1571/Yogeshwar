@@ -39,6 +39,10 @@ public class OrderDto : BaseDto
     [Required(ErrorMessage = "Order date is required.")]
     public DateTime OrderDate { get; set; }
 
+    /// <summary>
+    /// Gets or sets the customer.
+    /// </summary>
+    /// <value>The customer.</value>
     public CustomerDto Customer { get; set; }
 
     /// <summary>

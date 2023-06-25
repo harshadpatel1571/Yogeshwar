@@ -19,9 +19,10 @@ internal sealed class DropDownService : IDropDownService
     private readonly ICachingService _cachingService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DropDownService" /> class.
+    /// Initializes a new instance of the <see cref="DropDownService"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
+    /// <param name="cachingService">The caching service.</param>
     public DropDownService(YogeshwarContext context, ICachingService cachingService)
     {
         _context = context;
@@ -42,7 +43,7 @@ internal sealed class DropDownService : IDropDownService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForAccessoriesAsync(
+    public async Task<IList<DropDownDto<int>>> BindDropDownForAccessoriesAsync(
         CancellationToken cancellationToken)
     {
         var data = await _cachingService.GetAccessoriesAsync(cancellationToken)
@@ -61,7 +62,7 @@ internal sealed class DropDownService : IDropDownService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCategoriesAsync(
+    public async Task<IList<DropDownDto<int>>> BindDropDownForCategoriesAsync(
         CancellationToken cancellationToken)
     {
         var data = await _cachingService.GetCategoriesAsync(cancellationToken)
@@ -80,7 +81,7 @@ internal sealed class DropDownService : IDropDownService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForOrdersAsync(
+    public async Task<IList<DropDownDto<int>>> BindDropDownForOrdersAsync(
         CancellationToken cancellationToken)
     {
         return await _context.Orders
@@ -98,7 +99,7 @@ internal sealed class DropDownService : IDropDownService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="ids">The ids.</param>
     /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForCustomersAsync(
+    public async Task<IList<DropDownDto<int>>> BindDropDownForCustomersAsync(
         CancellationToken cancellationToken, params int[] ids)
     {
         return await _context.Customers
@@ -115,7 +116,7 @@ internal sealed class DropDownService : IDropDownService
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;IList&lt;DropDownDto&lt;System.Int32&gt;&gt;&gt;.</returns>
-    async Task<IList<DropDownDto<int>>> IDropDownService.BindDropDownForProductsAsync(
+    public async Task<IList<DropDownDto<int>>> BindDropDownForProductsAsync(
         CancellationToken cancellationToken)
     {
         var data = await _cachingService.GetProductsAsync(cancellationToken)
@@ -133,7 +134,7 @@ internal sealed class DropDownService : IDropDownService
     /// Binds the drop down for status.
     /// </summary>
     /// <returns>IList&lt;DropDownDto&lt;System.Byte&gt;&gt;.</returns>
-    IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderStatus()
+    public IList<DropDownDto<byte>> BindDropDownForOrderStatus()
     {
         return OrderStatus;
     }
@@ -153,7 +154,7 @@ internal sealed class DropDownService : IDropDownService
     /// Binds the drop down for order status.
     /// </summary>
     /// <returns>IList&lt;DropDownDto&lt;System.Byte&gt;&gt;.</returns>
-    IList<DropDownDto<byte>> IDropDownService.BindDropDownForOrderDetailStatus()
+    public IList<DropDownDto<byte>> BindDropDownForOrderDetailStatus()
     {
         return OrderDetailStatus;
     }
@@ -173,7 +174,7 @@ internal sealed class DropDownService : IDropDownService
     /// Binds the drop down for service.
     /// </summary>
     /// <returns>IList&lt;DropDownDto&lt;System.Byte&gt;&gt;.</returns>
-    IList<DropDownDto<byte>> IDropDownService.BindDropDownForService()
+    public IList<DropDownDto<byte>> BindDropDownForService()
     {
         return Services;
     }

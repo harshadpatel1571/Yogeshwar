@@ -61,7 +61,6 @@ internal sealed class OrderDetail
     /// </summary>
     /// <value>The created date.</value>
     [Column(TypeName = GlobalDataType.DateDataType)]
-
     public DateTime CreatedDate { get; set; }
 
     /// <summary>
@@ -75,7 +74,6 @@ internal sealed class OrderDetail
     /// </summary>
     /// <value>The modified date.</value>
     [Column(TypeName = GlobalDataType.DateDataType)]
-
     public DateTime? ModifiedDate { get; set; }
 
     /// <summary>

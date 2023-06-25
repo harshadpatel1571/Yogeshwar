@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="Controller" />
 [Authorize]
-public class ProductController : Controller
+public sealed class ProductController : Controller
 {
     /// <summary>
     /// The product service
@@ -99,7 +99,7 @@ public class ProductController : Controller
             SortColumn = "Name",
             SortOrder = "Asc"
 
-        }, cancellationToken)).Data;
+        }, cancellationToken).ConfigureAwait(false)).Data;
 
         ProductDto model;
 
@@ -109,13 +109,13 @@ public class ProductController : Controller
             {
                 SelectListsForAccessories = new SelectList(accessories, "Key", "Text"),
                 SelectListsForCategories = new SelectList(categories, "Key", "Text"),
-                Gst = ((await configurationService.GetSingleAsync(cancellationToken))?.Gst) ?? 0
+                Gst = ((await configurationService.GetAsync(cancellationToken).ConfigureAwait(false))?.Gst) ?? 0
             };
 
             return View(model);
         }
 
-        model = await _productService.Value.GetSingleAsync(id, cancellationToken).ConfigureAwait(false);
+        model = await _productService.Value.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
 
         if (model is null)
         {
@@ -173,11 +173,11 @@ public class ProductController : Controller
     {
         try
         {
-            var count = await _productService.Value
+            var model = await _productService.Value
                 .DeleteAsync(id, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (count == 0)
+            if (model is null)
             {
                 return NotFound();
             }
@@ -201,7 +201,7 @@ public class ProductController : Controller
         CancellationToken cancellationToken)
     {
         var model = await _productService.Value
-            .GetSingleAsync(id, cancellationToken)
+            .GetByIdAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (model is null)
@@ -226,11 +226,11 @@ public class ProductController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
-        var isDeleted = await _productService.Value
+        var model = await _productService.Value
             .DeleteImageAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (isDeleted)
+        if (model is not null)
         {
             return NoContent();
         }
@@ -247,11 +247,11 @@ public class ProductController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteVideo(int id, CancellationToken cancellationToken)
     {
-        var isDeleted = await _productService.Value
+        var model = await _productService.Value
             .DeleteVideoAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (isDeleted)
+        if (model is not null)
         {
             return NoContent();
         }
@@ -268,15 +268,15 @@ public class ProductController : Controller
     [HttpPost]
     public async Task<IActionResult> ActiveInActiveRecord(int id, CancellationToken cancellationToken)
     {
-        var result = await _productService.Value
+        var model = await _productService.Value
             .ActiveInActiveRecordAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (result.Value is NotFound)
+        if (model is null)
         {
             return NotFound();
         }
 
-        return Ok(result.Value);
+        return Ok(model.IsActive);
     }
 }

@@ -33,6 +33,12 @@ internal sealed class Order
     public DateTime OrderDate { get; set; }
 
     /// <summary>
+    /// Gets or sets the amount.
+    /// </summary>
+    /// <value>The amount.</value>
+    public decimal Amount { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether this instance is completed.
     /// </summary>
     /// <value><c>true</c> if this instance is completed; otherwise, <c>false</c>.</value>

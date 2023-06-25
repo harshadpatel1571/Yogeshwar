@@ -86,7 +86,7 @@ public class AccessoriesController : Controller
         }
 
         var model = await _accessoriesService.Value
-            .GetSingleAsync(id, cancellationToken)
+            .GetByIdAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (model is null)
@@ -152,11 +152,11 @@ public class AccessoriesController : Controller
     {
         try
         {
-            var count = await _accessoriesService.Value
+            var model = await _accessoriesService.Value
                 .DeleteAsync(id, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (count == 0)
+            if (model is null)
             {
                 return NotFound();
             }
@@ -178,11 +178,11 @@ public class AccessoriesController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
-        var isDeleted = await _accessoriesService.Value
+        var model = await _accessoriesService.Value
             .DeleteImageAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (isDeleted)
+        if (model is not null)
         {
             return NoContent();
         }
@@ -199,7 +199,7 @@ public class AccessoriesController : Controller
     public async Task<IActionResult> Detail(int id, CancellationToken cancellationToken)
     {
         var model = await _accessoriesService.Value
-            .GetSingleAsync(id, cancellationToken)
+            .GetByIdAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (model is null)
@@ -219,15 +219,15 @@ public class AccessoriesController : Controller
     [HttpPost]
     public async Task<IActionResult> ActiveInActiveRecord(int id, CancellationToken cancellationToken)
     {
-        var result = await _accessoriesService.Value
+        var model = await _accessoriesService.Value
             .ActiveInActiveRecordAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (result.Value is NotFound)
+        if (model is null)
         {
             return NotFound();
         }
 
-        return Ok(result.Value);
+        return Ok(model.IsActive);
     }
 }

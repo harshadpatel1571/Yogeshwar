@@ -85,7 +85,7 @@ public sealed class CustomerController : Controller
         }
 
         var model = await _customerService.Value
-            .GetSingleAsync(id, cancellationToken)
+            .GetByIdAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (model is null)
@@ -114,7 +114,7 @@ public sealed class CustomerController : Controller
         }
 
         await _customerService.Value
-            .UpsertAsync(customer, cancellationToken)
+            .CreateOrUpdateAsync(customer, cancellationToken)
             .ConfigureAwait(false);
 
         return RedirectToActionPermanent(nameof(Index), new { msg = "success" });
@@ -131,11 +131,11 @@ public sealed class CustomerController : Controller
     {
         try
         {
-            var count = await _customerService.Value
+            var model = await _customerService.Value
                 .DeleteAsync(id, cancellationToken)
                 .ConfigureAwait(false);
 
-            if (count == 0)
+            if (model is null)
             {
                 return NotFound();
             }
@@ -157,7 +157,7 @@ public sealed class CustomerController : Controller
     public async Task<IActionResult> Detail(int id, CancellationToken cancellationToken)
     {
         var model = await _customerService.Value
-            .GetSingleAsync(id, cancellationToken)
+            .GetByIdAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
         if (model is null)
@@ -177,16 +177,16 @@ public sealed class CustomerController : Controller
     [HttpPost]
     public async Task<IActionResult> ActiveInActiveRecord(int id, CancellationToken cancellationToken)
     {
-        var result = await _customerService.Value
+        var model = await _customerService.Value
             .ActiveInActiveRecordAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (result.Value is NotFound)
+        if (model is null)
         {
             return NotFound();
         }
 
-        return Ok(result.Value);
+        return Ok(model.IsActive);
     }
 
     /// <summary>
@@ -198,11 +198,11 @@ public sealed class CustomerController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
     {
-        var isDeleted = await _customerService.Value
+        var model = await _customerService.Value
             .DeleteImageAsync(id, cancellationToken)
             .ConfigureAwait(false);
 
-        if (isDeleted)
+        if (model is not null)
         {
             return NoContent();
         }

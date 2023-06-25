@@ -39,7 +39,7 @@ internal sealed class AccessoriesService : IAccessoriesService
     private const string PrefixPath = "/DataImages/Accessories/";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AccessoriesService" /> class.
+    /// Initializes a new instance of the <see cref="AccessoriesService"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="hostEnvironment">The host environment.</param>
@@ -47,8 +47,7 @@ internal sealed class AccessoriesService : IAccessoriesService
     /// <param name="cachingService">The caching service.</param>
     /// <param name="mappingService">The mapping service.</param>
     public AccessoriesService(YogeshwarContext context, IWebHostEnvironment hostEnvironment,
-        ICurrentUserService currentUserService, ICachingService cachingService,
-        IMappingService mappingService)
+        ICurrentUserService currentUserService, ICachingService cachingService, IMappingService mappingService)
     {
         _context = context;
         _currentUserService = currentUserService;
@@ -72,10 +71,11 @@ internal sealed class AccessoriesService : IAccessoriesService
     /// <param name="filterDto">The filter dto.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Task&lt;DataTableResponseCarrier&lt;AccessoriesDto&gt;&gt;.</returns>
-    async Task<DataTableResponseCarrier<AccessoriesDto>> IAccessoriesService.GetByFilterAsync(
-        DataTableFilterDto filterDto, CancellationToken cancellationToken)
+    public async Task<DataTableResponseCarrier<AccessoriesDto>> GetByFilterAsync(DataTableFilterDto filterDto,
+        CancellationToken cancellationToken)
     {
-        var cachedData = await _cachingService.GetAccessoriesAsync(cancellationToken).ConfigureAwait(false);
+        var cachedData = await _cachingService.GetAccessoriesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         var result = cachedData.AsQueryable();
 
@@ -114,20 +114,22 @@ internal sealed class AccessoriesService : IAccessoriesService
     public async Task<IList<AccessoriesDto>> GetByIdsAsync(IList<int> ids,
         CancellationToken cancellationToken)
     {
-        var data = await _cachingService.GetAccessoriesAsync(cancellationToken).ConfigureAwait(false);
+        var data = await _cachingService.GetAccessoriesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return data.Where(x => ids.Contains(x.Id)).ToArray();
     }
 
     /// <summary>
-    /// Gets the single asynchronous.
+    /// Get by identifier as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
-    public async Task<AccessoriesDto?> GetSingleAsync(int id, CancellationToken cancellationToken)
+    public async Task<AccessoriesDto?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var data = await _cachingService.GetAccessoriesAsync(cancellationToken).ConfigureAwait(false);
+        var data = await _cachingService.GetAccessoriesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return data.FirstOrDefault(x => x.Id == id);
     }
@@ -138,7 +140,8 @@ internal sealed class AccessoriesService : IAccessoriesService
     /// <param name="accessoriesDto">The customer.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    public async Task<int> CreateOrUpdateAsync(AccessoriesDto accessoriesDto, CancellationToken cancellationToken)
+    public async Task<AccessoriesDto?> CreateOrUpdateAsync(AccessoriesDto accessoriesDto,
+        CancellationToken cancellationToken)
     {
         if (accessoriesDto.Id < 1)
         {
@@ -149,12 +152,12 @@ internal sealed class AccessoriesService : IAccessoriesService
     }
 
     /// <summary>
-    /// Creates the asynchronous.
+    /// Create as an asynchronous operation.
     /// </summary>
     /// <param name="accessory">The accessory.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> CreateAsync(AccessoriesDto accessory, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
+    private async Task<AccessoriesDto> CreateAsync(AccessoriesDto accessory, CancellationToken cancellationToken)
     {
         var image = (string?)null;
 
@@ -168,38 +171,42 @@ internal sealed class AccessoriesService : IAccessoriesService
                 .ConfigureAwait(false);
         }
 
-        var dbModel = _mappingService.Map(accessory);
-
-        dbModel.Image = image;
-        dbModel.IsActive = true;
-        dbModel.CreatedDate = DateTime.Now;
-        dbModel.CreatedBy = _currentUserService.GetCurrentUserId();
+        var dbModel = new Accessory
+        {
+            Name = accessory.Name,
+            Description = accessory.Description,
+            Quantity = accessory.Quantity,
+            MeasurementType = accessory.MeasurementType,
+            Price = accessory.Price,
+            Image = image,
+            IsActive = true,
+            CreatedDate = DateTime.Now,
+            CreatedBy = _currentUserService.GetCurrentUserId()
+        };
 
         await _context.Accessories.AddAsync(dbModel, cancellationToken).ConfigureAwait(false);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-        accessory.Id = dbModel.Id;
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveAccessories();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Updates the asynchronous.
+    /// Update as an asynchronous operation.
     /// </summary>
     /// <param name="accessory">The accessory.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    private async ValueTask<int> UpdateAsync(AccessoriesDto accessory, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
+    private async ValueTask<AccessoriesDto?> UpdateAsync(AccessoriesDto accessory, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == accessory.Id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == accessory.Id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
         {
-            return 0;
+            return null;
         }
 
         if (accessory.ImageFile is not null)
@@ -223,11 +230,11 @@ internal sealed class AccessoriesService : IAccessoriesService
         dbModel.ModifiedBy = _currentUserService.GetCurrentUserId();
 
         _context.Accessories.Update(dbModel);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveAccessories();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
@@ -243,20 +250,20 @@ internal sealed class AccessoriesService : IAccessoriesService
     }
 
     /// <summary>
-    /// Deletes the asynchronous.
+    /// Delete as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Int32&gt; representing the asynchronous operation.</returns>
-    async Task<int> IAccessoriesService.DeleteAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
+    public async Task<AccessoriesDto?> DeleteAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
         {
-            return 0;
+            return null;
         }
 
         dbModel.IsDeleted = true;
@@ -264,28 +271,28 @@ internal sealed class AccessoriesService : IAccessoriesService
         dbModel.ModifiedDate = DateTime.Now;
 
         _context.Accessories.Update(dbModel);
-        var count = await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         _cachingService.RemoveAccessories();
 
-        return count;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Deletes the image asynchronous.
+    /// Delete image as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;System.Boolean&gt; representing the asynchronous operation.</returns>
-    public async ValueTask<bool> DeleteImageAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
+    public async Task<AccessoriesDto?> DeleteImageAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel == null)
         {
-            return false;
+            return null;
         }
 
         DeleteFileIfExist(_rootPath + dbModel.Image);
@@ -299,24 +306,24 @@ internal sealed class AccessoriesService : IAccessoriesService
 
         _cachingService.RemoveAccessories();
 
-        return true;
+        return _mappingService.Map(dbModel);
     }
 
     /// <summary>
-    /// Actives and in active record asynchronous.
+    /// Active in active record as an asynchronous operation.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A Task&lt;OneOf`2&gt; representing the asynchronous operation.</returns>
-    public async Task<OneOf<bool, NotFound>> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;AccessoriesDto&gt; representing the asynchronous operation.</returns>
+    public async Task<AccessoriesDto?> ActiveInActiveRecordAsync(int id, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Accessories
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
         if (dbModel is null)
         {
-            return new NotFound();
+            return null;
         }
 
         dbModel.IsActive = !dbModel.IsActive;
@@ -328,6 +335,6 @@ internal sealed class AccessoriesService : IAccessoriesService
 
         _cachingService.RemoveAccessories();
 
-        return dbModel.IsActive;
+        return _mappingService.Map(dbModel);
     }
 }

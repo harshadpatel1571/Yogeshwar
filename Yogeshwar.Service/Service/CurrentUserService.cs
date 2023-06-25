@@ -19,6 +19,9 @@ internal sealed class CurrentUserService : ICurrentUserService
     /// <param name="httpContext">The HTTP context.</param>
     public CurrentUserService(IHttpContextAccessor httpContext)
     {
+        if (httpContext?.HttpContext?.User == null)
+            throw new ArgumentNullException(nameof(httpContext));
+        
         _claimsPrincipal = httpContext.HttpContext!.User;
     }
 

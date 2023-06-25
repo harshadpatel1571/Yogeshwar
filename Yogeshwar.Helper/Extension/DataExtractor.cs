@@ -60,7 +60,7 @@ internal static class DataExtractor
 /// <summary>
 /// Class DataTableFilterDto.
 /// </summary>
-internal class DataTableFilterDto
+public class DataTableFilterDto
 {
     /// <summary>
     /// Gets or sets the draw.

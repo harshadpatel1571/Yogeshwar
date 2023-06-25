@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="Controller" />
 [Authorize]
-public class PartialViewController : Controller
+public sealed class PartialViewController : Controller
 {
     /// <summary>
     /// The accessories service
@@ -45,7 +45,7 @@ public class PartialViewController : Controller
     [HttpPost]
     public async Task<IActionResult> AccessoryQuantityView(int[] accessoryIds, CancellationToken cancellationToken)
     {
-        var data = await _accessoriesService.GetByIdsAsync(accessoryIds, cancellationToken);
+        var data = await _accessoriesService.GetByIdsAsync(accessoryIds, cancellationToken).ConfigureAwait(false);
 
         var productAccessories = data.Select(x => new ProductAccessoryDto
         {
