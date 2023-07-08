@@ -1,16 +1,22 @@
 ﻿$(function () {
     const columns = [
-        {data: "id", name: "Id", "autoWidth": true},
+        { data: "id", name: "Id", "autoWidth": true },
         {
             name: "Customer Name", "autoWidth": true,
             sDefaultContent: "--",
-            render: function (data, type, row) {
-                return "<a href='/order/detail/" + row.id + "' style='color:hotpink'>" + row.customerName + "</a>";
+            render: function (_, _, row) {
+                return "<a href='/order/detail/" + row.id + "' style='color:hotpink'>" + row.customer.firstName + " " + row.customer.lastName + "</a>";
             }
         },
-        {data: "amount", name: "Amount", "autoWidth": true},
-        {data: "orderDate", name: "Order Date", "autoWidth": true},
-        {data: "orderCount", name: "Order Items", "autoWidth": true},
+        { data: "amount", name: "Amount", "autoWidth": true },
+        { data: "orderDate", name: "Order Date", "autoWidth": true },
+        {
+            name: "Order Items", "autoWidth": true,
+            sDefaultContent: "--",
+            render: function (_, _, row) {
+                return `${row.orderDetails.length} items`;
+            }
+        },
         {
             bSortable: false,
             autoWidth: true,
@@ -22,7 +28,7 @@
                 "                                        <i class=\"ri-delete-bin-line\"></i>\n" +
                 "                                    </a>\n" +
                 "                                </div>",
-            render: function (data, type, row) {
+            render: function (_, _, row) {
                 return "<div class=\"hstack gap-3 flex-wrap\">\n" +
                     // "                                    <a href='/Order/AddEdit/" + row.id + "' class=\"link-success fs-20\">\n" +
                     // "                                        <i class=\"ri-edit-2-line\"></i>\n" +

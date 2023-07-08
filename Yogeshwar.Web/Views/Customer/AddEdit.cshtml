@@ -122,7 +122,7 @@
                 <div class="card-body row g-3" id="addressDiv">
                     @if (Model?.CustomerAddresses is { Count: > 0 })
                     {
-                        <input type="hidden" id="jsonDataHolder" disabled value="@JsonSerializer.Serialize(Model.CustomerAddresses, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })"/>
+                        <input type="hidden" id="jsonDataHolder" disabled value="@JsonSerializer.Serialize(Model.CustomerAddresses, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })" />
                         @await Html.PartialAsync("_Address.cshtml", Model).ConfigureAwait(false)
                         @*<partial name="_Address.cshtml" model="@Model"></partial>*@
                     }
@@ -177,8 +177,7 @@
     </div>
 </div>
 
-@await Html.PartialAsync("_AddressPopup.cshtml").ConfigureAwait(false)
-@*<partial name="_AddressPopup.cshtml"></partial>*@
+@await Html.PartialAsync("_AddressPopup.cshtml",(CustomerAddressDto)null).ConfigureAwait(false)
 
 @section Scripts {
     <script src="~/js/custom/customeraddedit.js"></script>

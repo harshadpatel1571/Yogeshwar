@@ -1,4 +1,4 @@
-﻿@model CustomerAddressDto
+﻿@model CustomerAddressDto?
 
 <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -36,7 +36,7 @@
                             <span asp-validation-for="State" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Pincode</label>
+                            <label class="form-label">PinCode</label>
                             <span class="text-danger">*</span>
                             <input class="form-control" asp-for="PinCode" maxlength="6">
                             <span asp-validation-for="PinCode" class="text-danger"></span>

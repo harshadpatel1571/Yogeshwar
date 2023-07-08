@@ -6,7 +6,7 @@
 /// </summary>
 /// <seealso cref="Controller" />
 [Authorize]
-public class AccessoriesController : Controller
+public sealed class AccessoriesController : Controller
 {
     /// <summary>
     /// The accessories service
