@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header bg-light p-3">
                 <h5 class="modal-title" id="addressModalModalLabel">Add Customer Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal" onclick="closePopup()"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
             </div>
             <div class="modal-body">
                 <form id="customerAddressForm">
@@ -46,24 +46,21 @@
                             <input class="form-control" asp-for="PhoneNo" maxlength="13">
                             <span asp-validation-for="PhoneNo" class="text-danger"></span>
                         </div>
-                        @if (Model is null)
-                        {
-                            <div class="col-12" id="addAddressDiv">
-                                <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="addAddress()">
-                                    <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
-                                    Save
-                                </button>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-12" id="updateAddressDiv">
-                                <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="updateAddress()">
-                                    <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
-                                    Update
-                                </button>
-                            </div>
-                        }
+
+                        <div class="col-12" id="addAddressDiv">
+                            <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="addAddress()">
+                                <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                                Save
+                            </button>
+                        </div>
+
+                        <div class="col-12" id="updateAddressDiv">
+                            <button type="button" class="btn btn-secondary btn-label waves-effect waves-light" onclick="updateAddress()">
+                                <i class="ri-check-double-line label-icon align-middle fs-16 me-2"></i>
+                                Update
+                            </button>
+                        </div>
+
                     </div>
                 </form>
             </div>

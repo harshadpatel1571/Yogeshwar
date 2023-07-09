@@ -400,3 +400,28 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+function toCamelObj(obj) {
+    var newO, origKey, newKey, value
+    if (obj instanceof Array) {
+        return obj.map(function (value) {
+            if (typeof value === "object") {
+                value = toCamel(value)
+            }
+            return value
+        })
+    } else {
+        newO = {}
+        for (origKey in obj) {
+            if (obj.hasOwnProperty(origKey)) {
+                newKey = (origKey.charAt(0).toLowerCase() + origKey.slice(1) || origKey).toString()
+                value = obj[origKey]
+                if (value instanceof Array || (value !== null && value.constructor === Object)) {
+                    value = toCamel(value)
+                }
+                newO[newKey] = value
+            }
+        }
+    }
+    return newO
+}

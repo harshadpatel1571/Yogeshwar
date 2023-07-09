@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Dto;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace Yogeshwar.Service.Dto;
 
 /// <summary>
 /// Class ProductDto.
@@ -69,6 +71,7 @@ public sealed class ProductDto : BaseDto
     /// Gets or sets the product accessories.
     /// </summary>
     /// <value>The product accessories.</value>
+    [ValidateNever]
     public IList<ProductAccessoryDto> ProductAccessories { get; set; }
 
     /// <summary>

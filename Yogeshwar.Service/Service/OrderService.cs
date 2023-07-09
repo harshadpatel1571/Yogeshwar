@@ -205,6 +205,7 @@ internal sealed class OrderService : IOrderService
     private async Task<OneOf<int, NotFound>> UpdateAsync(OrderDto orderDto, CancellationToken cancellationToken)
     {
         var dbModel = await _context.Orders
+            .Include(x => x.OrderDetails)
             .FirstOrDefaultAsync(c => c.Id == orderDto.Id && !c.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
@@ -213,8 +214,7 @@ internal sealed class OrderService : IOrderService
             return new NotFound();
         }
 
-        var existingOrderDetails = await _context.OrderDetails.Where(x => x.OrderId == dbModel.Id)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        var existingOrderDetails = dbModel.OrderDetails;
 
         var products = await _cachingService.GetProductsAsync(cancellationToken).ConfigureAwait(false);
 

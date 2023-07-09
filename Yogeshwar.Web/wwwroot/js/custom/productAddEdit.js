@@ -45,6 +45,8 @@ $("#VideoFile").change(function () {
 
 function displayImage(input) {
 
+    let lastLength = 0
+
     for (let i = 0; i < lastLength; i++) {
         $('#newImageDiv_' + i.toString()).remove();
     }

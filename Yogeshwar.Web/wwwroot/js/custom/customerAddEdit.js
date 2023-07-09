@@ -93,7 +93,7 @@ function populateAddress() {
         data: { customerAddresses: customerAddresses },
         success: function (html) {
             $('#addressDiv').html(html);
-            closePopup();
+            $('#addressModal').modal('hide');
         },
         error: function (error) {
             console.log(error)
@@ -101,90 +101,39 @@ function populateAddress() {
     });
 }
 
-function closePopup() {
+$('#addressModal').on('hidden.bs.modal', function () {
     $('#addressModal').modal('hide');
 
-    $('#fullAddress').val('')
-    $('#city').val('')
-    $('#district').val('')
-    $('#state').val('')
-    $('#pincode').val('')
-    $('#phoneNo').val('')
+    $('#customerAddressForm #Address').val('');
+    $('#customerAddressForm #City').val('');
+    $('#customerAddressForm #District').val('');
+    $('#customerAddressForm #State').val('');
+    $('#customerAddressForm #PinCode').val('');
+    $('#customerAddressForm #PhoneNo').val('');
 
-    $('#ValidationFullAddress').text('')
-    $('#ValidationCity').text('')
-    $('#ValidationDistrict').text('')
-    $('#ValidationState').text('')
-    $('#ValidationPincode').text('')
-    $('#ValidationPhoneNo').text('')
+    $('#customerAddressForm #Address-error').text('');
+    $('#customerAddressForm #City-error').text('');
+    $('#customerAddressForm #District-error').text('');
+    $('#customerAddressForm #State-error').text('');
+    $('#customerAddressForm #PinCode-error').text('');
+    $('#customerAddressForm #PhoneNo-error').text('');
+
 
     $('#updateAddressDiv').hide();
     $('#addAddressDiv').show();
-}
+})
 
-function validateAddress() {
-    let isOk = true;
-
-    const address = $('#fullAddress').val().trim();
-    if (address.length < 10 || address.length > 250) {
-        $('#ValidationFullAddress').text('Address must be 10 to 250 character long.')
-        isOk = false;
-    }
-
-    const city = $('#city').val().trim();
-    if (city.length < 3 || city.length > 25) {
-        $('#ValidationCity').text('City must be 3 to 50 character long.')
-        isOk = false;
-    }
-
-    const district = $('#district').val().trim();
-    if (city.length < 3 || city.length > 25) {
-        $('#ValidationDistrict').text('District must be 3 to 50 character long.')
-        isOk = false;
-    }
-
-    const state = $('#state').val().trim();
-    if (city.length < 3 || city.length > 25) {
-        $('#ValidationState').text('State must be 3 to 50 character long.')
-        isOk = false;
-    }
-
-    const pinCode = $('#pincode').val().trim();
-    if (city.length < 3 || city.length > 25) {
-        $('#ValidationPincode').text('Pincode must be 3 to 50 character long.')
-        isOk = false;
-    }
-
-    const phoneNo = $('#phoneNo').val().trim();
-    if (phoneNo.length < 10 || phoneNo.length > 13) {
-        $('#ValidationPhoneNo').text('Phone no must be 10 to 13 character long.')
-        isOk = false;
-    }
-
-    if (!isOk) {
-        return { isOk };
-    }
-
-    const customerId = $('#Id').val();
-
-    const customerAddress = {
-        id: 0, customerId: customerId ? parseInt(customerId) : 0, city, district, state, address, pinCode, phoneNo,
-    };
-
-    return {
-        isOk, customerAddress
-    }
-}
 
 function addAddress() {
+    debugger;
     if (!$('#customerAddressForm').valid()) {
         return;
     }
 
-    const formData = $("#customerAddressForm").serialize()
-    const modelObj = JSON.parse('{"' + decodeURI(formData.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}')
+    const formData = $("#customerAddressForm").serialize();
+    const modelObj = JSON.parse('{"' + decodeURI(formData.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}');
 
-    customerAddresses.push(modelObj);
+    customerAddresses.push(toCamelObj(modelObj));
 
     populateAddress();
 }
@@ -196,6 +145,7 @@ function removeAddress(num) {
 }
 
 function openEditPopup(num) {
+    debugger;
     const data = customerAddresses[num];
 
     if (!data) return;
@@ -203,31 +153,37 @@ function openEditPopup(num) {
     $('#updateAddressDiv').show();
     $('#addAddressDiv').hide();
 
-    $('#fullAddress').val(data.address)
-    $('#city').val(data.city)
-    $('#district').val(data.district)
-    $('#state').val(data.state)
-    $('#pincode').val(data.pinCode)
-    $('#phoneNo').val(data.phoneNo)
+    $('#customerAddressForm #Address').val(data.address);
+    $('#customerAddressForm #City').val(data.city);
+    $('#customerAddressForm #District').val(data.district);
+    $('#customerAddressForm #State').val(data.state);
+    $('#customerAddressForm #PinCode').val(data.pinCode);
+    $('#customerAddressForm #PhoneNo').val(data.phoneNo);
 
     $('#addressModal').modal('show');
 
-    $('#updateListId').val(num)
+    $('#customerAddressForm #updateListId').val(num);
+}
+
+function openAddPopup() {
+    $('#updateAddressDiv').hide();
+    $('#addAddressDiv').show();
+    $('#addressModal').modal('show');
 }
 
 function updateAddress() {
-    const updateId = parseInt($('#updateListId').val());
+    const updateId = parseInt($('#customerAddressForm #updateListId').val());
 
     const data = customerAddresses[updateId];
 
     if (!data) return;
 
-    data.address = $('#fullAddress').val();
-    data.city = $('#city').val();
-    data.district = $('#district').val();
-    data.state = $('#state').val();
-    data.pinCode = $('#pincode').val();
-    data.phoneNo = $('#phoneNo').val();
+    data.address = $('#customerAddressForm #Address').val();
+    data.city = $('#customerAddressForm #City').val();
+    data.district = $('#customerAddressForm #District').val();
+    data.state = $('#customerAddressForm #State').val();
+    data.pinCode = $('#customerAddressForm #PinCode').val();
+    data.phoneNo = $('#customerAddressForm #PhoneNo').val();
 
     populateAddress();
 }

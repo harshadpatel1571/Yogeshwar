@@ -179,6 +179,7 @@ internal sealed class ProductService : IProductService
         var dbModel = new Product
         {
             Name = productDto.Name,
+            ModelNo = productDto.ModelNo,
             HsnNo = productDto.HsnNo,
             Description = productDto.Description,
             Price = productDto.Price,

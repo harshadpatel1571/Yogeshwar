@@ -75,7 +75,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accessories");
+                    b.ToTable("Accessories", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.Category", b =>
@@ -122,7 +122,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.Configuration", b =>
@@ -160,7 +160,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Configuration");
+                    b.ToTable("Configuration", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.Customer", b =>
@@ -247,7 +247,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.CustomerAddress", b =>
@@ -299,7 +299,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("CustomerAddress");
+                    b.ToTable("CustomerAddress", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.CustomerService", b =>
@@ -338,7 +338,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("CustomerService");
+                    b.ToTable("CustomerService", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.Notification", b =>
@@ -367,7 +367,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("ProductAccessoriesId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notification", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.Order", b =>
@@ -415,7 +415,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.OrderDetail", b =>
@@ -465,7 +465,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.Product", b =>
@@ -527,7 +527,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.ProductAccessory", b =>
@@ -553,7 +553,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductAccessories");
+                    b.ToTable("ProductAccessories", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.ProductCategory", b =>
@@ -576,7 +576,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.ProductImage", b =>
@@ -600,7 +600,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.User", b =>
@@ -649,7 +649,7 @@ namespace Yogeshwar.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Yogeshwar.DB.DbModels.CustomerAddress", b =>
