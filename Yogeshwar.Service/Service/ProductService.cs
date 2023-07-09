@@ -307,6 +307,9 @@ internal sealed class ProductService : IProductService
 
         _cachingService.RemoveProducts();
 
+        dbModel.ProductAccessories = Array.Empty<ProductAccessory>();
+        dbModel.ProductCategories = Array.Empty<ProductCategory>();
+
         return _mappingService.Map(dbModel);
     }
 
