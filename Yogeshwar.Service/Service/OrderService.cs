@@ -78,25 +78,14 @@ internal sealed class OrderService : IOrderService
 
         var data = await result
             .Include(x => x.OrderDetails)
+            .ThenInclude(x => x.Product)
             .Include(x => x.Customer)
             .ThenInclude(x => x.CustomerAddresses)
             .Select(x => _mappingService.Map(x))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        var resultData = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
-
-        var products = await _cachingService.GetProductsAsync(cancellationToken).ConfigureAwait(false);
-
-        resultData.ForEach(o =>
-        {
-            o.OrderDetails.ForEach(od =>
-            {
-                od.Product = products.FirstOrDefault(p => p.Id == od.ProductId)!;
-            });
-        });
-
-        model.Data = resultData;
+        model.Data = data.AsQueryable().OrderBy(filterDto.SortColumn + " " + filterDto.SortOrder).ToArray();
 
         return model;
     }
@@ -192,7 +181,15 @@ internal sealed class OrderService : IOrderService
 
         await _context.Orders.AddAsync(order, cancellationToken).ConfigureAwait(false);
 
-        return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            return await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     /// <summary>

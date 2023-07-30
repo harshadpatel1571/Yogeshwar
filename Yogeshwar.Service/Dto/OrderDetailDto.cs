@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Service.Dto;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace Yogeshwar.Service.Dto;
 
 /// <summary>
 /// Class OrderDetailDto.
@@ -56,5 +58,6 @@ public class OrderDetailDto : BaseDto
     /// Gets or sets the product.
     /// </summary>
     /// <value>The product.</value>
+    [ValidateNever]
     public ProductDto Product { get; set; }
 }

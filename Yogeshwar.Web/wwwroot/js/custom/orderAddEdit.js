@@ -391,7 +391,7 @@ function create(obj) {
         url: "/Order/AddEdit",
         data: obj,
         success: function () {
-            window.location.href = window.location.origin;
+            window.location.href = '/Order';
         },
         error: function (x) {
             console.log(x.responseJSON);
