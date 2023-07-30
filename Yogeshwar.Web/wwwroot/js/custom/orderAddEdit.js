@@ -154,12 +154,15 @@ function reBindProduct(obj) {
 
         $.ajax({
             type: "POST",
-            url: "/Order/GetAccessoriesDetail?productId=" + $('#selectAccessories_' + id).val(),
+            url: "/Order/GetProductById?id=" + val,
             success: function (data) {
+                console.log(data);
+                console.log(data.price);
+                console.log(data.productImages[0].image);
                 // showAccessoriesStockLabel(id);
                 // showAccessoriesStock(id);
                 //
-                displayProductImage(id, data.image);
+                displayProductImage(id, data.productImages[0].image);
                 displayQuantityDiv(id);
 
                 displayDeliveredDate(id);
@@ -169,7 +172,7 @@ function reBindProduct(obj) {
                 //    displayAccessories(id, value);
                 //});
 
-                updatePrice(id, data.amount + " RS")
+                updatePrice(id, data.price + " RS")
 
                 updateTotalAmount();
             },

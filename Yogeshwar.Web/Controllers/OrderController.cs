@@ -1,4 +1,6 @@
-﻿namespace Yogeshwar.Web.Controllers;
+﻿using System.Threading;
+
+namespace Yogeshwar.Web.Controllers;
 
 /// <summary>
 /// Class OrderController.
@@ -12,14 +14,16 @@ public sealed class OrderController : Controller
     /// The order service
     /// </summary>
     private readonly Lazy<IOrderService> _orderService;
+    private readonly Lazy<IProductService> _productService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OrderController" /> class.
     /// </summary>
     /// <param name="orderService">The order service.</param>
-    public OrderController(Lazy<IOrderService> orderService)
+    public OrderController(Lazy<IOrderService> orderService, Lazy<IProductService> productService)
     {
         _orderService = orderService;
+        _productService = productService;
     }
 
     /// <summary>
@@ -167,6 +171,23 @@ public sealed class OrderController : Controller
         catch
         {
             return BadRequest();
+        }
+    }
+
+    [HttpPost]
+    public async Task<ProductDto> GetProductById(int id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var dbModel = await _productService.Value
+                .GetByIdAsync(id, cancellationToken)
+                .ConfigureAwait(false);
+
+            return dbModel;
+        }
+        catch
+        {
+            return null;
         }
     }
 }

@@ -249,7 +249,7 @@ function renderAction(row, editUrl, deleteUrl, activeUrl, orderUrl) {
         "   <a href='" + editUrl + "' class=\"link-success fs-20\">\n" +
         "       <i class=\"ri-pencil-fill fs-20\" Title=\"Edit Record.\"></i>\n" +
         "   </a>\n" +
-        "   <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick=\"deleteRecord('" + deleteUrl + "')\">\n" +
+        "   <a href=\"javascript:void(0);\" class=\"link-danger fs-20 sa-warning\" onclick=\"DeleteRecord('" + deleteUrl + "')\">\n" +
         "       <i class=\"ri-delete-bin-5-fill fs-20\" Title=\"Delete Record.\"></i>\n" +
         "   </a>\n" + getActiveInActiveHTML(row.isActive, row.id, activeUrl) + getExtraButtonsHTML(row,orderUrl);
         "</div>";
