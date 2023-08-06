@@ -101,6 +101,8 @@ internal sealed class OrderService : IOrderService
         var order = await _context.Orders.Where(x => x.Id == id && !x.IsDeleted)
             .AsNoTracking()
             .Include(x => x.OrderDetails)
+            .ThenInclude(x => x.Product)
+            .ThenInclude(x=>x.ProductImages)
             .Include(x => x.Customer)
             .ThenInclude(x => x.CustomerAddresses)
             .Select(x => _mappingService.Map(x))
@@ -173,7 +175,7 @@ internal sealed class OrderService : IOrderService
             CreatedDate = DateTime.Now,
             CreatedBy = _currentUserService.GetCurrentUserId(),
             OrderDetails = orderDetails,
-            Amount = orderDetails.Sum(x => x.Amount),
+            Amount = orderDetails.Sum(x => x.Amount) - Convert.ToDecimal(orderDto.Discount),
             CustomerId = orderDto.CustomerId,
             Discount = orderDto.Discount,
             OrderDate = orderDto.OrderDate
@@ -257,7 +259,7 @@ internal sealed class OrderService : IOrderService
 
         dbModel.Discount = orderDto.Discount;
         dbModel.OrderDate = orderDto.OrderDate;
-        dbModel.Amount = insertOrderDetails.Sum(x => x.Amount) + updateOrderDetails.Sum(x => x.Amount);
+        dbModel.Amount = (insertOrderDetails.Sum(x => x.Amount) + updateOrderDetails.Sum(x => x.Amount)) - Convert.ToDecimal(orderDto.Discount);
 
         await _context.OrderDetails.AddRangeAsync(insertOrderDetails, cancellationToken).ConfigureAwait(false);
         _context.OrderDetails.UpdateRange(updateOrderDetails);

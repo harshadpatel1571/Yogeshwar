@@ -316,7 +316,7 @@ function submit() {
             break;
         }
 
-        const deliveredDate = $('#deliverDate_' + i).val();
+        const receiveDate = $('#deliverDate_' + i).val();
 
         const orderStatus = $('#orderStatus_' + i).val();
 
@@ -335,7 +335,7 @@ function submit() {
             productId: parseInt(product),
             status: parseInt(orderStatus),
             quantity: parseInt(quantity),
-            deliveredDate,
+            receiveDate,
             accessories
         };
 
@@ -384,14 +384,12 @@ function submit() {
 }
 
 function create(obj) {
-    console.log(obj);
-
     $.ajax({
         type: "POST",
         url: "/Order/AddEdit",
         data: obj,
         success: function () {
-            window.location.href = '/Order';
+            window.location.href = '/order';
         },
         error: function (x) {
             console.log(x.responseJSON);

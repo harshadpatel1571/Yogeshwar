@@ -1,4 +1,4 @@
-﻿@* @model OrderDetailViewModel
+﻿@model OrderDto
 @{
     ViewData["Title"] = "Detail Order";
     Layout = "_Layout";
@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center">
-                    <h5 class="card-title flex-grow-1 mb-0">@Model.OrderId</h5>
+                    <h5 class="card-title flex-grow-1 mb-0">OrderId : @Model.Id</h5>
                     <div class="flex-shrink-0">
                         <a href="#" class="btn btn-success btn-sm">
                             <i class="ri-download-2-fill align-middle me-1"></i> Invoice
@@ -36,24 +36,27 @@
                                         <td>
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                                    @if (detail.Image is not null)
+                                                    @if (@detail.Product.ProductImages.FirstOrDefault().Image is not null)
                                                     {
-                                                        <img src="@detail.Image" alt="" class="img-fluid d-block">
+                                                        <img src="@detail.Product.ProductImages.FirstOrDefault().Image" alt="" class="img-fluid d-block">
                                                     }
                                                 </div>
                                                 <div class="flex-grow-1 ms-3">
                                                     <h5 class="fs-15">
-                                                        <a href="#" class="link-primary">@detail.ProductName</a>
+                                                        <a href="#" class="link-primary">@detail.Product.Name</a>
                                                     </h5>
                                                     <p class="text-muted mb-0">Status: <span class="fw-medium">@detail.Status</span></p>
-                                                    <p class="text-muted mb-0">Deliverd Date: <span class="fw-medium">@detail.DeliveredDate</span></p>
+                                                    <p class="text-muted mb-0">Deliverd Date: <span class="fw-medium">@detail.ReceiveDate</span></p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>@detail.Price</td>
-                                        <td>02</td>
+                                        @{
+                                            var productAmount = Convert.ToDecimal(detail.Amount) / Convert.ToDecimal(detail.Quantity);
+                                        }
+                                        <td>@productAmount</td>
+                                        <td>@detail.Quantity</td>
                                         <td class="fw-medium text-end">
-                                            @detail.TotalAmount
+                                            @detail.Amount
                                         </td>
                                     </tr>
                                 }
@@ -65,7 +68,10 @@
                                         <tbody>
                                             <tr>
                                                 <td>Sub Total :</td>
-                                                <td class="text-end">@Model.SubTotal</td>
+                                                @{
+                                                    var subTotal = Convert.ToDecimal(Model.Amount) + Convert.ToDecimal(Model.Discount);
+                                                }
+                                                <td class="text-end">@subTotal</td>
                                             </tr>
                                             <tr>
                                                 <td>Discount :</td>
@@ -73,7 +79,7 @@
                                             </tr>
                                             <tr class="border-top border-top-dashed">
                                                 <th scope="row">Total :</th>
-                                                <th class="text-end">@Model.Total</th>
+                                                <th class="text-end">@Model.Amount</th>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -103,7 +109,7 @@
                                 <img src="~/images/users/avatar-1.jpg" alt="" class="avatar-sm rounded shadow">
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <h6 class="fs-14 mb-1">@Model.Customer.Name</h6>
+                                <h6 class="fs-14 mb-1">@Model.Customer.FirstName @Model.Customer.LastName</h6>
                                 <p class="text-muted mb-0">Customer</p>
                             </div>
                         </div>
@@ -123,10 +129,10 @@
             </div>
             <div class="card-body">
                 <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
-                    <li class="fw-medium fs-14">@Model.Customer.Name</li>
-                    <li>@Model.Customer.Address</li>
+                    <li class="fw-medium fs-14">@Model.Customer.FirstName @Model.Customer.LastName</li>
+                    <li>@Model.Customer.CustomerAddresses.Select(x=>x.Address).FirstOrDefault()</li>
                 </ul>
             </div>
         </div>
     </div>
-</div> *@
+</div> 
